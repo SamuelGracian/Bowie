@@ -44,3 +44,5 @@ function(set_engine_defaults target_name)
   set_engine_warning_level(${target_name})
   disable_engine_rtti(${target_name})
 endfunction()
+
+add_subdirectory(bowUtilities)

@@ -34,14 +34,14 @@
 #define BOW_ENDIAN_BIG     2
 
 //Define the actual endian typpe (little enian type for windows, linux, Apple and ps4?)
-#define BOW_ENDIAN_CH_ENDIAN_LITTLE
+#define BOW_ENDIAN BOW_ENDIAN_LITTLE
 #define BOW_VERSION_MAJOR    0                   //Engine version major
-#define BOW_VERSION_MINOR    2
+#define BOW_VERSION_MINOR    1
 #define BOW_VERSION_PATCH    0
 #define BOW_VERSION_BUILD    1
 
 //define if on create we want to report warnings on unkown symbols
-#define BOW_DEBUD_DETAILED_SYMBOLS   1
+#define BOW_DEBUG_DETAILED_SYMBOLS   1
 
 /************************************************************************/
 /*
@@ -63,7 +63,7 @@
 #   define BOW_STDCALL __attribute__ ((stdcall))
 #   define BOW_CDECL __attribute__ ((cdecl))
 #   define BOW_FALLTHROHG __attribute__ ((fallthrough))
-#elif defined (__INTEL_COMPILER__) //???
+#elif defined (__INTEL_COMPILER) //???
 #   define BOW_COMPILER BOW_COMPILER_INTEL
 #   define BOW_COMP_VER __INTEL_COMPILER
 #   define BOW_STDCALL __stdcall
@@ -94,13 +94,13 @@
  */
 /************************************************************************/
 
-#if BW_COMPILER == BOW_COMPILER_MSVC
+#if BOW_COMPILER == BOW_COMPILER_MSVC
 # if BOW_COMP_VER >= 1200
 #   define FORCELINE __forceline
 #   ifndef RESTRICT __restrict
 #   endif
 #endif
-#elif definded (__MINGW32__)
+#elif defined (__MINGW32__)
 # if !defined (FORCELINE)
 #   define FORCELINE __inline
 #   ifndef RESTRICT 
@@ -122,7 +122,7 @@
 #if defined (__WIN32__) || defined (_WIN32)
 # define BOW_PLATFORM BOW_PLATFORM_WIN32
 #elif defined (__APPLE_CC__)
-# defined BOW_PLATFORM BOW_PLATFORM_OSX
+# define BOW_PLATFORM BOW_PLATFORM_OSX
 #elif defined (__ORBIS__)
 # define BOW_PLATFORM BOW_PLATFORM_LINUX
 #endif
@@ -132,7 +132,7 @@
  * Find architecture type
  */
 /************************************************************************/
-#if defined (__x86_x64__) || defind (_M_X64) // compile if is x64
+#if defined (__x86_x64__) || defined (_M_X64) // compile if is x64
 # define BOW_ARCH_TYPE BOW_ARCHITECTURE_X86_64
 #else 
 #  define BOW_ARCH_TYPE BOW_ARCHITECTURE_X86_32 
@@ -143,22 +143,10 @@
  * Memory aligment macros
  */
 /************************************************************************/
-#if BOW_COMPILER  == BOW_COMPILER_MSVC
-# define BOW_ALIGN(n) __declspec(align(n))
-# ifndef GCC_PACK
-#   define GCC_PACK(n)
-# endif
-# ifndef GCCALIGN
-#   define GCC_ALIGN (n)
-# endif
-#elif (BOW_COMPILER == BOW_COMPILER_GNUC)
-# define MS_ALIGN (n)
-# define GCC_PACK (n)
-# define GCC_ALIGN (n) __attribute__ ((__aligned__(n)))
-#else
-# define MS_ALIGN(n)
-# define GCCPACK (n) __attribute ((packed, aligned (n)))
-# define GCC_ALIGN (n) __attribute ((__aligned(n)))
+#if  BOW_COMPILER == BOW_COMPILER_MSVC  
+#   define ALIGN_AS(n)  __declspec(align(n))
+#elif BOW_COMPILER == BOW_COMPILER_GNUC || BOW_COMPILER == BOW_COMPILER_CLANG
+#   define ALIGN_AS(n) __attribute__((aligned(n)))
 #endif
 
 /************************************************************************/
@@ -170,7 +158,7 @@
 # define _NOEXCEPT noexcept
 #elif BOW_COMPILER == BOW_COMPILER_INTEL
 # define _NOEXCEPT noexcept
-#elif BOW_COMPILER = BOW_COMPILER_GNUC
+#elif BOW_COMPILER == BOW_COMPILER_GNUC
 # define _NOEXCEPT noexcept
 #else
 #define _NOEXCEPT
@@ -187,7 +175,7 @@
 #       define BOW_UTILITY_EXPORT
 #   else
 #       if defiend (BOW_UTILITY_EXPORTS)
-#           define BOW_UTIILTY_EXPORT __declspec(dllexport)
+#           define BOW_UTILTY_EXPORT __declspec(dllexport)
 #   else
 #       define BOW_UTILITY_EXPORT __declspec(dllimport)
 #       endif
@@ -203,10 +191,10 @@
 #       endif
 #   endif
 #endif
-# define BOW_UTILITY__HIDDEN
+# define BOW_UTILITY_HIDDEN
 #else
 # define BOW_UTILITY_EXPORT __attitude__ ((visibility ("default")))
-# define BOW_utilityHIDDEN __attitude__ ((visibility("hidden")))
+# define BOW_UTILITY_HIDDEN __attitude__ ((visibility("hidden")))
 #endif
 
 //DLL export plg ins
@@ -226,12 +214,12 @@
  */
 /************************************************************************/
 //WIN32
-#if BOE_PLATFORM == BOW_PLATFORM_WIN32 
 # if defined (_DEBUG) || defined (DEBUG)
 #   define BOW_DEBUG_MODE 1
 #else
 #   define BOW_DEBUG_MODE 0
 # endif
+#if BOW_PLATFORM == BOW_PLATFORM_WIN32
 # if BOW_COMPILER == BOW_COMPILER_INTEL
 #   define BOW_TRHEADLOCAL __declspec(thread)
 # endif
@@ -262,7 +250,7 @@
 /************************************************************************/
 #if BOW_DEBUG_MODE
 # define BOW_DEBUG_ONLY (x) x
-# define BOW_ASSERT (x) assert x
+# define BOW_ASSERT (x) assert (x)
 #else
 # define BOW_DEBUG_ONLY (x)
 # define BOW_ASSERT (x)
@@ -317,4 +305,4 @@
     * example, one of the override specifiers that also works under /clr.
     */
     //# pragma warning(disable : 4481)
-#endif/
+#endif
