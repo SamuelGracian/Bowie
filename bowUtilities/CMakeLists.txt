@@ -1,3 +1,3 @@
-add_library (bowUtilities, main.cpp)
+add_library (bowUtilities source/main.cpp)
 
 SET_ENGINE_DEFAULTS(bowUtilities)
