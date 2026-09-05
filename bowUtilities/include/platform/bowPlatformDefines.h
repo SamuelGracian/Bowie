@@ -97,7 +97,8 @@
 #if BOW_COMPILER == BOW_COMPILER_MSVC
 # if BOW_COMP_VER >= 1200
 #   define FORCELINE __forceline
-#   ifndef RESTRICT __restrict
+#   ifndef RESTRICT 
+# define RESTRICT __restrict
 #   endif
 #endif
 #elif defined (__MINGW32__)

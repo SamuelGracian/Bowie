@@ -1,4 +1,4 @@
-cmake_minimum_required( VERSION 3.5)
+cmake_minimum_required( VERSION 4.0)
 
 project (Bowie)
 
@@ -46,3 +46,4 @@ function(set_engine_defaults target_name)
 endfunction()
 
 add_subdirectory(bowUtilities)
+add_subdirectory(bowUtilitiesTest)
