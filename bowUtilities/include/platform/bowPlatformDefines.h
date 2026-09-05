@@ -56,7 +56,7 @@
 #   define BOW_STDCALL __attribute__((stdcall))
 #   define BOW_CDECL __attribute __((cdecl))
 #   define BOW_FALLTHROUHG [[clang::fallthrough]];
-#elif defined (__GNUC___) //Check after Cland, as Clang defines this too
+#elif defined (__GNUC__) //Check after Cland, as Clang defines this too
 #   define BOW_COMPILER BOW_COMPILER_GNUC
 #   define BOW_COMPILER_VER (((__GNUC__)*100)+(__GNUC_MINOR__*10)+__GNUC_PATCHLEVEL__)
 #   define BOW_THREADLOCAL __thread
