@@ -21,5 +21,5 @@ namespace bowEngineSDK
   using UNICHAR = WCHAR16;
 
   using TYPE_OF_NULL = int32;
-  using size_t = std::size_t;
+  using SIZE_T = std::size_t;
 }
