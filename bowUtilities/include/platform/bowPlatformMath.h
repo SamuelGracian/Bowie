@@ -17,11 +17,19 @@ public:
 
   /*
    * @brief Calculates the cosine of an angle
-   * @param Angle, The angel is in radians
+   * @param Angle, The angle is in radians
    * @return The cousine of an angle
   */
-   static float
-   cos(float angleInRadians);
+  static float
+  cos(float angleInRadians);
+
+  /**
+   *@brief Calculates the Sin of an angle.
+   @param Angle, The angle is in radians.
+   @return The sin of an angle.
+  */
+  static float 
+  sin (float angleInRadians);
 
    /**
     * @brief Computes the square root of a given number
