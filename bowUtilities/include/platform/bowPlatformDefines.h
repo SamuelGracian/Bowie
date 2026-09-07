@@ -124,7 +124,7 @@
 # define BOW_PLATFORM BOW_PLATFORM_WIN32
 #elif defined (__APPLE_CC__)
 # define BOW_PLATFORM BOW_PLATFORM_OSX
-#elif defined (__ORBIS__)
+#elif defined (__linux__)
 # define BOW_PLATFORM BOW_PLATFORM_LINUX
 #endif
 
@@ -234,7 +234,7 @@
 #if BOW_PLATFORM == BOW_PLATFORM_LINUX || BOW_PLATFORM == BOW_PLATFORM_OSX
 
 // If we're in debug mode 
-# if defined (_DEBUG) || deined (DEBUG)
+# if defined (_DEBUG) || defined (DEBUG)
 #   define BOW_DEBUG_MODE 1
 # else
 #   define BOW_DEBUG_MODE 0
