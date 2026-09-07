@@ -17,4 +17,7 @@ TEST_CASE("Math::Trigonometry", "[Math]") {
   SECTION("Inverse square root") {
     REQUIRE (Math::invSqrt(9) == .3333f);// MINIMUM DIFFERENCE
   }
+  SECTION("Tangent") {
+    REQUIRE(Math::tan(20) == 2.2371);
+  }
 }
