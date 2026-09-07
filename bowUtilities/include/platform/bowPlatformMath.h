@@ -31,6 +31,15 @@ public:
   static float 
   sin (float angleInRadians);
 
+
+  /**
+    *@brief Calculates the tangent of an angle in radians.
+    *@param angle. The angle is in radians.
+    *@return The tangent fo an angle.
+  */
+  static float 
+  tan(float angleInRadians);
+
    /**
     * @brief Computes the square root of a given number
     * @param value, value to compute

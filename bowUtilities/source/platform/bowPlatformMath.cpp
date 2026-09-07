@@ -15,6 +15,11 @@ PlatformMath::sin(float angleInRadians){
   return std::sin(angleInRadians);
 }
 
+float
+PlatformMath::tan(float angleInRadians){
+  return std::tan(angleInRadians);
+}
+
 float 
 PlatformMath::sqrt (float value){
   return std::sqrt(value);
