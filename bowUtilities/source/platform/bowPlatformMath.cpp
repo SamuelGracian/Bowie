@@ -1,6 +1,7 @@
 #include "bowPlatformMath.h"
 
 #include <cmath>
+#include<algorithm>
 
 namespace bowEngineSDK
 {
@@ -33,5 +34,25 @@ PlatformMath::invSqrt(float value){
 float 
 PlatformMath::pow (float value, const float vPow){
   return std::pow(value, vPow);
+}
+
+float 
+PlatformMath::atan(float angleInRadians) {
+  return std::atan(angleInRadians);
+}
+
+float
+PlatformMath::asin(float angleInRadians) {
+  return std::asin(angleInRadians);
+}
+
+float
+PlatformMath::lerp(float valueA, float valueB, float valueT) {
+  return std::lerp(valueA, valueB, valueT);
+}
+
+float 
+PlatformMath::clamp(float valueA, float minValue, float maxValue) {
+  return std::clamp(valueA, minValue, maxValue);
 }
 }

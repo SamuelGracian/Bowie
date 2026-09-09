@@ -1,5 +1,7 @@
 #pragma once
 
+#include <numbers>
+
 namespace bowEngineSDK
 {
 class PlatformMath
@@ -15,7 +17,9 @@ public:
   */
   ~PlatformMath() = default;
 
-  /*
+  inline static const float pi = std::numbers::pi_v <float>;
+
+  /**
    * @brief Calculates the cosine of an angle
    * @param Angle, The angle is in radians
    * @return The cousine of an angle
@@ -30,7 +34,6 @@ public:
   */
   static float 
   sin (float angleInRadians);
-
 
   /**
     *@brief Calculates the tangent of an angle in radians.
@@ -63,5 +66,40 @@ public:
   */
   static float
   pow(float value, const float vPow);
+
+  /**
+  * @brief Computes the arc tangent of a value.
+  * @param angle
+  * @return The arctangent of an angle
+  */
+  static float
+  atan(float angleInRadians);
+
+  /**
+  * @brief Computes the arcsin of an angle.
+  * @param Angle in radians.
+  * @return The Arc sin of an angle.
+  */
+  static float
+  asin(float angleInRadians);
+
+  /**
+  * @brief Computes the linear interpolation between A and B, if the parameter T
+  * is inside [ 0,1 ] (the linear interpolation otherwise) the result of a+t(b-a)
+  * with accounting for floating point calculation imprecision.
+  * @param A,B,T floating point or interger values;
+  * @return A+T(B-A)
+  */
+  static float
+  lerp(float valueA, float vaalueB, float valueT);
+
+  /**
+  * @brief  Clamps a variable to a given range
+  * @param valueA, the value to clamp, minValue, maxValue the boundries to clamp A to
+  * @return, reference to minValue if A is less than minValue,
+  * reference to maxValue if maxValue is less than A, otherwise reference to A
+  */
+  static float
+  clamp(float valueA, float minValue, float maxValue);
 };
 }
