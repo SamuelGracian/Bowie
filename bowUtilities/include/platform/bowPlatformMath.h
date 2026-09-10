@@ -8,12 +8,12 @@ class BOW_UTILITIES_EXPORT PlatformMath
 {
 public:
   /*
-   * @brief Default contructor for platformMath
+  * @brief Default contructor for platformMath
   */
   PlatformMath() = default;
   
   /*
-   * @brief Default destructor for platformMath
+  * @brief Default destructor for platformMath
   */
   ~PlatformMath() = default;
 
@@ -75,7 +75,7 @@ public:
 
   /**
   * @brief Computes the arcsin of an angle.
-  * @param Angle in radians.
+  * @param Angle in radians, Only takes values between -1 and 1.
   * @return The Arc sin of an angle.
   */
   static float
