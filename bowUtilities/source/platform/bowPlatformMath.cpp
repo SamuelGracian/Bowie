@@ -1,10 +1,20 @@
 #include "bowPlatformMath.h"
 
 #include <cmath>
-#include<algorithm>
+#include <algorithm>
+#include <numbers>
 
 namespace bowEngineSDK
 {
+
+const float
+PlatformMath::PI = std::numbers::pi_v <float>;
+
+const float
+PlatformMath::SMALL_NUMBER = (1.e-6f);
+
+const float
+PlatformMath::KINDA_SMALL_NUMBER = (1.e-4f);
 
 float
 PlatformMath::cos(float angleInRadians) {

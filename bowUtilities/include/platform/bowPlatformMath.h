@@ -1,10 +1,10 @@
 #pragma once
 
-#include <numbers>
+#include "bowUtilitiesRequisites.h"
 
 namespace bowEngineSDK
 {
-class PlatformMath
+class BOW_UTILITIES_EXPORT PlatformMath
 {
 public:
   /*
@@ -16,8 +16,6 @@ public:
    * @brief Default destructor for platformMath
   */
   ~PlatformMath() = default;
-
-  inline static const float pi = std::numbers::pi_v <float>;
 
   /**
    * @brief Calculates the cosine of an angle
@@ -101,5 +99,11 @@ public:
   */
   static float
   clamp(float valueA, float minValue, float maxValue);
+
+  static const float PI;
+
+  static const float SMALL_NUMBER;
+
+  static const float KINDA_SMALL_NUMBER;
 };
 }
