@@ -18,49 +18,49 @@ public:
   ~PlatformMath() = default;
 
   /**
-   * @brief Calculates the cosine of an angle
-   * @param Angle, The angle is in radians
-   * @return The cousine of an angle
+  * @brief Calculates the cosine of an angle
+  * @param Angle, The angle is in radians
+  * @return The cousine of an angle
   */
   static float
   cos(float angleInRadians);
 
   /**
-   *@brief Calculates the Sin of an angle.
-   @param Angle, The angle is in radians.
-   @return The sin of an angle.
+  * @brief Calculates the Sin of an angle.
+  * @param Angle, The angle is in radians.
+  * @return The sin of an angle.
   */
   static float 
   sin (float angleInRadians);
 
   /**
-    *@brief Calculates the tangent of an angle in radians.
-    *@param angle. The angle is in radians.
-    *@return The tangent fo an angle.
+  * @brief Calculates the tangent of an angle in radians.
+  * @param angle. The angle is in radians.
+  * @return The tangent fo an angle.
   */
   static float 
   tan(float angleInRadians);
 
    /**
-    * @brief Computes the square root of a given number
-    * @param value, value to compute
-    * @return float, The result of the square root of the value
+   * @brief Computes the square root of a given number
+   * @param value, value to compute
+   * @return float, The result of the square root of the value
    */
   static float
   sqrt(float value);
 
    /**
-    * @brief inverse square root of a value
-    * @param value, value to compute
-    * @return float, The inverse square root of a vlue.
+   * @brief inverse square root of a value
+   * @param value, value to compute
+   * @return float, The inverse square root of a vlue.
    */
   static float 
   invSqrt (float value);
 
   /**
-   * @brief computes pow of a given value
-   * @param value, Value to apply pow
-   * @return float, The calculated pow.
+  * @brief computes pow of a given value
+  * @param value, Value to apply pow
+  * @return float, The calculated pow.
   */
   static float
   pow(float value, const float vPow);
