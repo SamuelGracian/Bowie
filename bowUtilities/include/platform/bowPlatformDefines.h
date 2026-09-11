@@ -96,17 +96,17 @@
 
 #if BOW_COMPILER == BOW_COMPILER_MSVC
 # if BOW_COMP_VER >= 1200
-#   define FORCELINE __forceline
-#     ifndef RESTRICT 
-#       define RESTRICT __restrict
-#     endif
+#  define FORCELINE __forceline
+#   ifndef RESTRICT 
+#     define RESTRICT __restrict
+#   endif
 #endif
 #elif defined (__MINGW32__)
 # if !defined (FORCELINE)
 #   define FORCELINE __inline
-#   ifndef RESTRICT 
-#       define RESTRICT
-#   endif
+#  ifndef RESTRICT 
+#     define RESTRICT
+#  endif
 #endif
 #else
 #define FORCELINE __inline
@@ -194,7 +194,7 @@
 #   endif
 #   define BOW_UTILITY_HIDDEN
 #else // Any other platform (Linux, macOS, etc.)
-#   define BOW_UTILITIES_HIDDEN __attribute__((visibility("default")))
+#   define BOW_UTILITIES_EXPORT __attribute__((visibility("default")))
 #   define BOW_UTILITIES_HIDDEN __attribute__((visibility("hidden")))
 #endif
 
@@ -203,10 +203,10 @@
 # if BOW_COMPILER == BOW_COMPILER_MSVC
 #   define BOW_PLUGIN_EXPORT __declspec (dllexport)
 # else
-#   define BOW_PLUGIN_EXPORT __attitude__ ((dllexport))
+#   define BOW_PLUGIN_EXPORT __attribute__ ((dllexport))
 # endif
 #else
-#   define BOW_PLUGIN_EXPORT __attitude__ ((visibility("default")))
+#   define BOW_PLUGIN_EXPORT __attribute__ ((visibility("default")))
 #endif
 
 /************************************************************************/

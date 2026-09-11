@@ -50,12 +50,22 @@ TEST_CASE("Math::Trigonometry", "[Math]") {
     REQUIRE(Math::pow(8, 6) == 262144);
   }
   SECTION("Lerp") {
-    REQUIRE(std::cout << "Lerp: " << Math::lerp(10, 20, 100) << std::endl);
+    float result = Math::lerp(10, 20, 100);
+    INFO("Lerp: " << result);
+    REQUIRE_THAT(
+      result,
+      Catch::Matchers::WithinRel(1010.0f, Math::KINDA_SMALL_NUMBER));
   }
   SECTION("Clamp") {
-    REQUIRE(std::cout <<"Clamp: " << Math::clamp(25, 8, 20) << std::endl);
+    float result = Math::clamp(25, 8, 20);
+    INFO("Clamp: " << result);
+    REQUIRE(result == 20);
   }
   SECTION("PI with atan") {
-    REQUIRE(std::cout << "Get pi with math functions: " << 4*Math::atan(1) << std::endl);
+    float result = 4 * Math::atan(1);
+    INFO("Get pi with math functions: " << result);
+    REQUIRE_THAT(
+      result,
+      Catch::Matchers::WithinRel(3.14159265f, Math::KINDA_SMALL_NUMBER));
   }
 }

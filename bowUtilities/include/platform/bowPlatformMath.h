@@ -102,8 +102,14 @@ public:
 
   static const float PI;
 
+  /*
+  * @brief 0.000001
+  */
   static const float SMALL_NUMBER;
 
+  /*
+  * @brief 0.0001
+  */
   static const float KINDA_SMALL_NUMBER;
 };
 }
