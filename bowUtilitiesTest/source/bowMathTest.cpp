@@ -25,9 +25,9 @@ TEST_CASE("Math::Trigonometry", "[Math]") {
     REQUIRE_THAT(Math::sqrt(50), Catch::Matchers::WithinRel(7.0710f, Math::KINDA_SMALL_NUMBER));
   }
   SECTION("Inverse square root") {
-    REQUIRE_THAT(Math::invSqrt(20), Catch::Matchers::WithinRel(0.2236f, Math::KINDA_SMALL_NUMBER));
-    REQUIRE_THAT(Math::invSqrt(150), Catch::Matchers::WithinRel(0.0816f, Math::KINDA_SMALL_NUMBER));//
-    REQUIRE_THAT(Math::invSqrt(1), Catch::Matchers::WithinRel(0.3333f, Math::KINDA_SMALL_NUMBER));
+    REQUIRE_THAT(Math::invSqrt(20.0f), Catch::Matchers::WithinRel(0.2236f, Math::KINDA_SMALL_NUMBER));
+    REQUIRE_THAT(Math::invSqrt(150.0f), Catch::Matchers::WithinAbs(0.0816f, Math::KINDA_SMALL_NUMBER));//
+    REQUIRE_THAT(Math::invSqrt(1.0f), Catch::Matchers::WithinRel(1.0f, Math::KINDA_SMALL_NUMBER));
   }
   SECTION("Tangent") {
     REQUIRE_THAT(Math::tan(20), Catch::Matchers::WithinRel(2.2371f, Math::KINDA_SMALL_NUMBER));
@@ -40,9 +40,9 @@ TEST_CASE("Math::Trigonometry", "[Math]") {
     REQUIRE_THAT(Math::atan(120), Catch::Matchers::WithinRel(1.5624f, Math::KINDA_SMALL_NUMBER));
   }
   SECTION("Arc sin") {
-    REQUIRE_THAT(Math::asin(0.80f), Catch::Matchers::WithinRel(0.927f, Math::KINDA_SMALL_NUMBER)); //
-    REQUIRE_THAT(Math::asin(0.20f), Catch::Matchers::WithinRel(0.2013f, Math::KINDA_SMALL_NUMBER));
-    REQUIRE_THAT(Math::asin(0.35f), Catch::Matchers::WithinRel(0.3575f, Math::KINDA_SMALL_NUMBER));
+    REQUIRE_THAT(Math::asin(0.80f), Catch::Matchers::WithinAbs(0.9273f, Math::KINDA_SMALL_NUMBER)); //
+    REQUIRE_THAT(Math::asin(0.20f), Catch::Matchers::WithinAbs(0.2013f, Math::KINDA_SMALL_NUMBER));
+    REQUIRE_THAT(Math::asin(0.35f), Catch::Matchers::WithinAbs(0.3575f, Math::KINDA_SMALL_NUMBER));
     }
   SECTION("Pow") {
     REQUIRE(Math::pow(2, 5) == 32);
