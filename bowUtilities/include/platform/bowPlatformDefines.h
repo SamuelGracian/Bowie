@@ -104,9 +104,9 @@
 #elif defined (__MINGW32__)
 # if !defined (FORCELINE)
 #   define FORCELINE __inline
-#   ifndef RESTRICT 
-#       define RESTRICT
-#   endif
+#  ifndef RESTRICT 
+#     define RESTRICT
+#  endif
 #endif
 #else
 #define FORCELINE __inline
@@ -124,7 +124,7 @@
 # define BOW_PLATFORM BOW_PLATFORM_WIN32
 #elif defined (__APPLE_CC__)
 # define BOW_PLATFORM BOW_PLATFORM_OSX
-#elif defined (__ORBIS__)
+#elif defined (__linux__)
 # define BOW_PLATFORM BOW_PLATFORM_LINUX
 #endif
 
@@ -170,43 +170,43 @@
  * Library export specifics
  */
 /************************************************************************/
-#if BOW_PLAFORM == BOW_PLATFORM_WIN32
-# if BOW_COMPILER == BOW_COMPILER_MSVC
-#   if defined (BOW_STATIC_LIB)
-#       define BOW_UTILITY_EXPORT
-#   else
-#       if defiend (BOW_UTILITY_EXPORTS)
-#           define BOW_UTILTY_EXPORT __declspec(dllexport)
-#   else
-#       define BOW_UTILITY_EXPORT __declspec(dllimport)
-#       endif
-#   endif
-#else //Any other compiler
-#   if defined (BOW_STATIC_LIB)
-#       define BOW_UTILITY_EXPORT
-#   else
-#       if defined (BOW_UTILITY_EXPORTS)
-#           define BOW_UTILITY_EXPORT __attitude__ ((dllexport))
+#if BOW_PLATFORM == BOW_PLATFORM_WIN32
+#   if BOW_COMPILER == BOW_COMPILER_MSVC
+#       if defined(BOW_STATIC_LIB)
+#           define BOW_UTILITIES_EXPORT
 #       else
-#           define BOW_UTILITY_EXPORT __attitude__ ((dllimport))
+#           if defined(BOW_UTILITIES_EXPORTS)
+#               define BOW_UTILITIES_EXPORT __declspec(dllexport)
+#           else
+#               define BOW_UTILITIES_EXPORT __declspec(dllimport)
+#           endif
+#       endif
+#   else // Any other compiler on Windows (e.g. MinGW)
+#       if defined(BOW_STATIC_LIB)
+#           define BOW_UTILITIES_EXPORT
+#       else
+#           if defined(BOW_UTILITIES_EXPORTS)
+#               define BOW_UTILITIES_EXPORTS __attribute__((dllexport))
+#           else
+#               define BOW_UTILITIES_EXPORTS __attribute__((dllimport))
+#           endif
 #       endif
 #   endif
-#endif
-# define BOW_UTILITY_HIDDEN
-#else
-# define BOW_UTILITY_EXPORT __attitude__ ((visibility ("default")))
-# define BOW_UTILITY_HIDDEN __attitude__ ((visibility("hidden")))
+#   define BOW_UTILITY_HIDDEN
+#else // Any other platform (Linux, macOS, etc.)
+#   define BOW_UTILITIES_EXPORT __attribute__((visibility("default")))
+#   define BOW_UTILITIES_HIDDEN __attribute__((visibility("hidden")))
 #endif
 
-//DLL export plg ins
+//DLL export plugins
 #if BOW_PLATFORM == BOW_PLATFORM_WIN32
 # if BOW_COMPILER == BOW_COMPILER_MSVC
 #   define BOW_PLUGIN_EXPORT __declspec (dllexport)
 # else
-#   define BOW_PLUGIN_EXPORT __attitude__ ((dllexport))
+#   define BOW_PLUGIN_EXPORT __attribute__ ((dllexport))
 # endif
 #else
-#   define BOW_PLUGIN_EXPORT __attitude__ ((visibility("default")))
+#   define BOW_PLUGIN_EXPORT __attribute__ ((visibility("default")))
 #endif
 
 /************************************************************************/
@@ -234,7 +234,7 @@
 #if BOW_PLATFORM == BOW_PLATFORM_LINUX || BOW_PLATFORM == BOW_PLATFORM_OSX
 
 // If we're in debug mode 
-# if defined (_DEBUG) || deined (DEBUG)
+# if defined (_DEBUG) || defined (DEBUG)
 #   define BOW_DEBUG_MODE 1
 # else
 #   define BOW_DEBUG_MODE 0
