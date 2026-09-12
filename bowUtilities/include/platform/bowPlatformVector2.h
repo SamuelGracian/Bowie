@@ -63,10 +63,21 @@ public:
   */
   float
   sqrMagnitude() const;
-  
+ 
   /*
   * @brief
-  *  Calculates the square distence betweeen 2 vectors.
+  *  Calculates the diatance between two vectors.
+  * @param Vector2
+  *  The vector to calculate the distance with.
+  * @return float
+  * 
+  */
+  float
+  distance(const Vector2 vector);
+
+  /*
+  * @brief
+  *  Calculates the square distence betweeen 2 vectors without using sqrt.
   * @param Vector2
   *  The vector to calculate the square distance to.
   * @return float
@@ -74,6 +85,15 @@ public:
   */
   float
   sqrDistance(Vector2 vector) const;
+
+  /*
+  * @brief
+  *  Normalize this vector.
+  * @return
+  *  This as a normalized vector.
+  */
+  Vector2
+  normalize()const;
 
 private:
   float m_x;

@@ -30,9 +30,25 @@ Vector2::sqrMagnitude()const{
 }
 
 float
-Vector2::sqrDistance(Vector2 vector) const {
+Vector2::distance(const Vector2 vector){
+  return Math::sqrt(sqrDistance(vector));
+}
+
+float
+Vector2::sqrDistance(Vector2 vector) const{
   const float deltaX = m_x - vector.m_x;
   const float deltaY = m_y - vector.m_y;
   return (deltaX * deltaX) + (deltaY * deltaY);
+}
+
+Vector2
+Vector2::normalize() const {
+  const float magnitude = Math::sqrt(m_x * m_x) + (m_y * m_y));
+
+  Vector2 normalizedVector;
+  normalizedVector.m_x = m_x / magnitude;
+  normalizedVector.m_y = m_y / magnitude;
+
+  return normalizedVector;
 }
 }
