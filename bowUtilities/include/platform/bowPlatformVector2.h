@@ -19,6 +19,12 @@ public:
   */
   Vector2(float X, float Y);
 
+  /*
+  * @brief
+  *  Constructor from array.
+  */
+  Vector2(const float values[2]);
+
  /*
  * @brief
     Default destructor.
@@ -73,7 +79,7 @@ public:
   * 
   */
   float
-  distance(const Vector2 vector);
+  distance(const Vector2 vector)const;
 
   /*
   * @brief
@@ -94,6 +100,15 @@ public:
   */
   Vector2
   normalize()const;
+
+  float
+  GetXValue()const;
+
+  float
+  GetYValue()const;
+
+  void
+  UpdateValues(float newX, float newY);
 
 private:
   float m_x;

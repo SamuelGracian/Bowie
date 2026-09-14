@@ -9,6 +9,12 @@ Vector2::Vector2(float X, float Y)
    m_y(Y){
 }
 
+Vector2::Vector2(const float values[2])
+  : m_x(values[0]),
+    m_y(values[1]){
+
+}
+
 float
 Vector2::dot(Vector2& vector2){
   return (m_x * vector2.m_x) + (m_y * vector2.m_y);
@@ -30,7 +36,7 @@ Vector2::sqrMagnitude()const{
 }
 
 float
-Vector2::distance(const Vector2 vector){
+Vector2::distance(const Vector2 vector)const{
   return Math::sqrt(sqrDistance(vector));
 }
 
@@ -43,7 +49,7 @@ Vector2::sqrDistance(Vector2 vector) const{
 
 Vector2
 Vector2::normalize() const {
-  const float magnitude = Math::sqrt(m_x * m_x) + (m_y * m_y));
+  const float magnitude = Math::sqrt(Math::pow(m_x,2) + (Math::pow(m_y,2)));
 
   Vector2 normalizedVector;
   normalizedVector.m_x = m_x / magnitude;
@@ -51,4 +57,21 @@ Vector2::normalize() const {
 
   return normalizedVector;
 }
+
+float
+Vector2::GetXValue()const{
+  return m_x;
+}
+
+float
+Vector2::GetYValue()const {
+  return m_y;
+}
+
+void
+Vector2::UpdateValues(float newX, float newY) {
+  m_x = newX;
+  m_y = newY;
+}
+
 }
