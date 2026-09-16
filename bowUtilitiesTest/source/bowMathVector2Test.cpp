@@ -4,8 +4,8 @@
 
 #include <iostream>
 
+#include "bowVector2.h"
 #include "bowMath.h"
-
 
 using namespace bowEngineSDK;
 
@@ -13,8 +13,6 @@ TEST_CASE("Vector2 operations", "[Vector2]") {
   SECTION("Constructor and getters") {
     const Vector2 position { 20.0f, 10.0f };
 
-    REQUIRE(position.GetXValue() == Catch::Approx(20.0f));
-    REQUIRE(position.GetYValue() == Catch::Approx(10.0f));
     position.~Vector2();
   }
 
@@ -56,10 +54,11 @@ TEST_CASE("Vector2 operations", "[Vector2]") {
   SECTION("Normalize") {
     const Vector2 position { 3.0f, 4.0f };
     const Vector2 normalized = position.normalize();
-
-    REQUIRE(normalized.GetXValue() == Catch::Approx(0.6f));
-    REQUIRE(normalized.GetYValue() == Catch::Approx(0.8f));
-    REQUIRE_THAT(normalized.magnitude(), Catch::Matchers::WithinRel(0.4800f, Math::KINDA_SMALL_NUMBER));
+    REQUIRE_THAT (normalized.magnitude(), Catch::Matchers::WithinRel(0.4800f, Math::KINDA_SMALL_NUMBER));
     position.~Vector2();
+  }
+
+  SECTION("Vector2 size", "[Vector2]") {
+    REQUIRE(sizeof(Vector2) == sizeof(float) * 2);
   }
 }

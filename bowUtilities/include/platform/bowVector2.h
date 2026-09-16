@@ -23,7 +23,7 @@ public:
   * @brief
   *  Constructor from array.
   */
-  Vector2(const float values[2]);
+  explicit Vector2(const float values[2]);
 
  /*
  * @brief
@@ -40,7 +40,7 @@ public:
      float The dot product from this vector2 and the param.
   */
   float
-  dot(Vector2& vector2);
+  dot(const Vector2& vector2) const;
 
   /*
   * @brief 
@@ -50,7 +50,7 @@ public:
   *  Corss product from 2 vectors.
   */
   float
-  cross(Vector2& vector2);
+  cross(const Vector2& vector2) const;
 
   /*
   * @brief
@@ -79,7 +79,7 @@ public:
   * 
   */
   float
-  distance(const Vector2 vector)const;
+  distance(const Vector2& vector) const;
 
   /*
   * @brief
@@ -90,7 +90,7 @@ public:
   *  The square distance between this vector and the one given as param.
   */
   float
-  sqrDistance(Vector2 vector) const;
+  sqrDistance(const Vector2& vector) const;
 
   /*
   * @brief
@@ -99,18 +99,22 @@ public:
   *  This as a normalized vector.
   */
   Vector2
-  normalize()const;
+  normalize() const;
 
-  float
-  GetXValue()const;
+  /*
+  * @brief
+  *  Getter for the X value.
+  */
+  inline float
+  getXValue() const;
 
-  float
-  GetYValue()const;
+  /*
+  * @brief
+  *  Getter for the Y value.
+  */
+  inline float
+  getYValue() const;
 
-  void
-  UpdateValues(float newX, float newY);
-
-private:
   float m_x;
   float m_y;
 
