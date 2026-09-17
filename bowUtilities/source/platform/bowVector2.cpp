@@ -5,23 +5,23 @@
 namespace bowEngineSDK
 {
 Vector2::Vector2(float X, float Y)
-  : m_x(X),
-    m_y(Y) 
+  : x(X),
+    y(Y) 
 {}
 
 Vector2::Vector2(const float values[2])
-  : m_x(values[0]),
-    m_y(values[1]) 
+  : x(values[0]),
+    y(values[1]) 
 {}
 
 float
 Vector2::dot(const Vector2& vector2)const {
-  return (m_x * vector2.m_x) + (m_y * vector2.m_y);
+  return (x * vector2.x) + (y * vector2.y);
 }
 
 float
 Vector2::cross(const Vector2& vector2)const {
-  return (m_x * vector2.m_y) - (m_y * vector2.m_x);
+  return (x * vector2.y) - (y * vector2.x);
 }
 
 float
@@ -31,7 +31,7 @@ Vector2::magnitude()const {
 
 float
 Vector2::sqrMagnitude()const {
-  return Math::pow(m_x, 2) * Math::pow(m_y, 2);
+  return Math::pow(x, 2) * Math::pow(y, 2);
 }
 
 float
@@ -41,24 +41,24 @@ Vector2::distance(const Vector2& vector)const {
 
 float
 Vector2::sqrDistance(const Vector2& vector) const {
-  const float deltaX = m_x - vector.m_x;
-  const float deltaY = m_y - vector.m_y;
+  const float deltaX = x - vector.x;
+  const float deltaY = y - vector.y;
   return (deltaX * deltaX) + (deltaY * deltaY);
 }
 
 Vector2
 Vector2::normalize() const {
   const float invMag = 1 / magnitude();
-  return Vector2(m_x * invMag, m_y * invMag);
+  return Vector2(x * invMag, y * invMag);
 }
 
 float
 Vector2::getXValue()const {
-  return m_x;
+  return x;
 }
 
 float
 Vector2::getYValue()const {
-  return m_y;
+  return y;
 }
 }

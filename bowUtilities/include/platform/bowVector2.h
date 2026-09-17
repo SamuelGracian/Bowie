@@ -2,7 +2,8 @@
 
 #include"bowUtilitiesRequisites.h"
 
-namespace bowEngineSDK{
+namespace bowEngineSDK
+{
 class BOW_UTILITIES_EXPORT Vector2
 {
 public:
@@ -105,18 +106,18 @@ public:
   * @brief
   *  Getter for the X value.
   */
-  inline float
+  FORCELINE float
   getXValue() const;
 
   /*
   * @brief
   *  Getter for the Y value.
   */
-  inline float
+  FORCELINE float
   getYValue() const;
 
-  float m_x;
-  float m_y;
+  float x;
+  float y;
 
 };
 }
