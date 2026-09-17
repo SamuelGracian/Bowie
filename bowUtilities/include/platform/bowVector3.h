@@ -30,7 +30,7 @@ public:
   * @brief
   *  Cosntructor from vector2.
   */
-  //Vector3(Vector2 vector, float Z);
+  //Vector3(const Vector2 vector, float Z);
 
   /*
   * @brief
@@ -47,7 +47,7 @@ public:
   *  The dot product from 2 vectors.
   */
   float
-  dot(Vector3& vector);
+  dot(const Vector3& vector) const ;
   
   /*
   * @brief
@@ -56,8 +56,8 @@ public:
   * @return float
   * Returns the cross product from 2 vectors.
   */
-  float
-  cross(const Vector3& vector);
+  Vector3
+  cross(const Vector3& vector) const;
 
   /*
   * @brief
@@ -85,7 +85,7 @@ public:
   * Returns the distance in float values.
   */
   float
-  distance(const Vector3& vector);
+  distance(const Vector3& vector) const;
 
   /*
   * @brief
@@ -93,7 +93,7 @@ public:
   * @return Float
   */
   float
-  sqrDistance(const Vector3& vector);
+  sqrDistance(const Vector3& vector) const;
 
   /*
   * @brief

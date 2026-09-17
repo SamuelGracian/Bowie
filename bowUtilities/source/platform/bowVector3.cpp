@@ -14,14 +14,21 @@ Vector3::Vector3(const float values[3])
   y(values[1]),
   z(values[2]) {}
 
+//Vector3::Vector3(const Vector2 vector, float Z)
+//  : x (vector.x),
+//    y (vector.y),
+//    z(Z)
+//{}
 
-float
-Vector3::cross(const Vector3& vector) {
-  return (x * vector.y - y * vector.x);
+Vector3
+Vector3::cross(const Vector3& vector) const {
+  return Vector3 (y * vector.z - z * vector.y,
+          z * vector.x - x * vector.z,
+          x * vector.y - y * vector.x);
 }
 
 float
-Vector3::dot(Vector3& vector) {
+Vector3::dot(const Vector3& vector) const {
   return (x * vector.x
           + y * vector.y
           + z * vector.z);
@@ -38,12 +45,12 @@ Vector3::sqrMagnitude()const {
 }
 
 float
-Vector3::distance(const Vector3& vector) {
+Vector3::distance(const Vector3& vector) const {
   return Math::sqrt(sqrDistance(vector));
 }
 
 float
-Vector3::sqrDistance(const Vector3& vector) {
+Vector3::sqrDistance(const Vector3& vector) const {
   const float deltaX = x - vector.x;
   const float deltaY = y - vector.y;
   const float deltaZ = z - vector.z;
