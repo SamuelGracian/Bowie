@@ -5,7 +5,7 @@
   BOW_PLATFORM == BOW_PLATFORM_LINUX ||     \
   BOW_PLATFORM == BOW_PLATFORM_OSX
 #include "bowPlatformMath.h"
-#include "bowPlatformVector3.h"
+#include "bowVector3.h"
 #endif
 
 namespace bowEngineSDK
@@ -14,8 +14,6 @@ namespace bowEngineSDK
     BOW_PLATFORM == BOW_PLATFORM_LINUX || \
     BOW_PLATFORM == BOW_PLATFORM_OSX
 using Math = PlatformMath;
-//using Vector2 = Vector2;
-using Vector3 = Vector3;
 #else
 
 #pragma error "No known platform"

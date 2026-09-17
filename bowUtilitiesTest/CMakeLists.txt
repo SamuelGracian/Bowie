@@ -11,7 +11,7 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(Catch2)
 
-add_executable (bowUtilitiesTest ${SOURCES} ${HEADERS})
+add_executable (bowUtilitiesTest ${SOURCES} ${HEADERS} "source/bowMathVector3Test.cpp")
 
 SET_ENGINE_DEFAULTS(bowUtilitiesTest)
 
