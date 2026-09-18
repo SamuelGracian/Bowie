@@ -52,13 +52,4 @@ Vector2::normalize() const {
   return Vector2(x * invMag, y * invMag);
 }
 
-float
-Vector2::getXValue()const {
-  return x;
-}
-
-float
-Vector2::getYValue()const {
-  return y;
-}
 }
