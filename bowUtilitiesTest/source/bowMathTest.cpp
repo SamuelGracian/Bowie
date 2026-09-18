@@ -68,4 +68,5 @@ TEST_CASE("Math::Trigonometry", "[Math]") {
       result,
       Catch::Matchers::WithinRel(3.14159265f, Math::KINDA_SMALL_NUMBER));
   }
+
 }
