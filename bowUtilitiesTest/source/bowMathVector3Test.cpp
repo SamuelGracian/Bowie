@@ -55,4 +55,7 @@ TEST_CASE("Vector3 operations", " [vector 3]") {
     REQUIRE_THAT(position.magnitude(), Catch::Matchers::WithinRel(7.8102f, Math::KINDA_SMALL_NUMBER));
 
   }
+  SECTION("Vector3 size") {
+    REQUIRE(sizeof(Vector3) == sizeof(float) * 3);
+  }
 }

@@ -28,9 +28,9 @@ public:
 
   /*
   * @brief
-  *  Cosntructor from vector2.
+  *  Cosntructor from Vector3.
   */
-  //Vector3(const Vector2 vector, float Z);
+  //Vector3(const Vector3 vector, float Z);
 
   /*
   * @brief
@@ -47,7 +47,7 @@ public:
   *  The dot product from 2 vectors.
   */
   float
-  dot(const Vector3& vector) const ;
+  dot(const Vector3& vector) const;
   
   /*
   * @brief
@@ -67,7 +67,7 @@ public:
   *  Return the magnitude from this vector.
   */
   float
-  magnitude()const;
+  magnitude() const;
   
   /*
   * @brief
@@ -75,7 +75,7 @@ public:
   * @return float
   */
   float
-  sqrMagnitude()const;
+  sqrMagnitude() const;
 
   /*
   * @brief
@@ -105,9 +105,192 @@ public:
   Vector3
   normalize() const;
 
+  /********************************************/
+/*  OPERTATORS  */
+/********************************************/
+
+/*
+* @brief
+*  Makes an addition to the values of the vector with a given value.
+* @param cons Vector3
+* @return Vector3&
+*/
+  Vector3&
+    operator+=(const Vector3& vector) noexcept;
+
+
+  /*
+  * @brief
+  *  Substracts the value in the vector for a given value.
+  * @param Const Vector3
+  * @return Vector3&
+  */
+  Vector3&
+    operator-=(const Vector3& vector) noexcept;
+
+  /*
+  * @brief
+  *  Multiplies the vector for a given value.
+  * @param float
+  * @return Vector3&
+  */
+  Vector3&
+    operator*=(float scalar) noexcept;
+
+  /*
+  * @brief
+  * @param float
+  * @return Vector3&
+  */
+  Vector3&
+    operator/=(float scalar) noexcept;
+
+  /*
+  * @brief
+  *  Makes the addition between a value and the values in the vector.
+  * @param Vector3
+  * @return Vector3&
+  *  Returns the
+  */
+  Vector3&
+    operator+(Vector3 value) noexcept;
+
+  /*
+  * @brief
+  *  Makes the substraction between a value and the values in the vector.
+  * @param Vector3
+  * @return Vector3&
+  *  Returns a pointer to a substracted vector.
+  */
+  Vector3&
+    operator-(Vector3 value) noexcept;
+
+  /*
+  * @brief
+  *  Multiplies the values of this for the scalar.
+  * @param float Scalar.
+  * @return Vector3&
+  *  Returns pointer to this as a multiplied vector.
+  */
+  Vector3&
+    operator*(float scalar) noexcept;
+
+  /*
+  * @brief
+  *  Divides the values in a vector vector
+  * @param float
+  *  Scalar to divide the vector to.
+  * @return Vector3
+  */
+  Vector3&
+    operator/(float scalar) noexcept;
+
+  /*
+  * @brief
+  *  Checks if all the values in the vectors are the same.
+  * @param Vector3
+  * @return bool
+  *  Returns true if both values are the same.
+  */
+  bool
+    operator==(const Vector3& value) noexcept;
+
+  /*
+  * @brief
+  *  Checks if any of the values inside a vector are different to this.
+  * @param Vector3&
+  * @return true
+  *  Returns true if any of the values are different.
+  */
+  bool
+    operator!=(const Vector3& vector) noexcept;
+
+
   float x;
   float y;
   float z;
 };
+
+FORCELINE Vector3&
+Vector3::operator+=(const Vector3& vector) noexcept {
+  x += vector.x;
+  y += vector.y;
+  z += vector.z;
+  return *this;
+}
+
+FORCELINE Vector3&
+Vector3::operator-=(const Vector3& vector) noexcept {
+  x -= vector.x;
+  y -= vector.y;
+  z -= vector.z;
+  return *this;
+}
+
+FORCELINE Vector3&
+Vector3::operator*=(float scalar) noexcept {
+  x *= scalar;
+  y *= scalar;
+  z *= scalar;
+  return *this;
+}
+
+FORCELINE Vector3&
+Vector3::operator/=(float scalar) noexcept {
+  x /= scalar;
+  y /= scalar;
+  z /= scalar;
+  return *this;
+}
+
+FORCELINE Vector3&
+Vector3::operator* (float scalar) noexcept {
+  x *= scalar;
+  y *= scalar;
+  z *= scalar;
+  return *this;
+}
+
+FORCELINE Vector3&
+Vector3::operator+(Vector3 value) noexcept {
+  x += value.x;
+  y += value.y;
+  z += value.z;
+  return *this;
+}
+
+FORCELINE Vector3&
+Vector3::operator-(Vector3 value) noexcept {
+  x -= value.x;
+  y -= value.y;
+  z -= value.z;
+  return *this;
+}
+
+FORCELINE Vector3&
+Vector3:: operator/(float scalar) noexcept {
+  x /= scalar;
+  y /= scalar;
+  z /= scalar;
+  return *this;
+}
+
+FORCELINE bool
+Vector3::operator==(const Vector3& vector) noexcept {
+  if (x == vector.x && y == vector.y && z == vector.z) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+
+FORCELINE bool
+Vector3::operator!=(const Vector3& vector) noexcept {
+  return x != vector.x ||
+    y != vector.y ||
+    z != vector.z;
+}
 
 }

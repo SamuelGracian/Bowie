@@ -5,7 +5,6 @@
   BOW_PLATFORM == BOW_PLATFORM_LINUX ||     \
   BOW_PLATFORM == BOW_PLATFORM_OSX
 #include "bowPlatformMath.h"
-#include "bowVector3.h"
 #endif
 
 namespace bowEngineSDK
