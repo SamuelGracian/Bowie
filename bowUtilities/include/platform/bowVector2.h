@@ -156,7 +156,7 @@ public:
   *  Returns the 
   */
   Vector2&
-  operator+(Vector2 value) noexcept;
+  operator+(Vector2& value) const noexcept;
 
   /*
   * @brief
@@ -165,8 +165,8 @@ public:
   * @return Vector2&
   *  Returns a pointer to a substracted vector.
   */
-  Vector2&
-  operator-(Vector2 value) noexcept;
+  Vector2
+  operator-(Vector2& value) const noexcept;
 
   /*
   * @brief
@@ -175,8 +175,8 @@ public:
   * @return Vector2&
   *  Returns pointer to this as a multiplied vector.
   */
-  Vector2&
-  operator*(float scalar) noexcept;
+  Vector2
+  operator*(float scalar)const noexcept;
 
   /*
   * @brief
@@ -185,8 +185,8 @@ public:
   *  Scalar to divide the vector to.
   * @return Vector2
   */
-  Vector2&
-  operator/(float scalar) noexcept;
+  Vector2
+  operator/(float scalar) const noexcept;
 
   /*
   * @brief
@@ -196,7 +196,7 @@ public:
   *  Returns true if both values are the same.
   */
   bool
-  operator==(const Vector2& value) noexcept;
+  operator==(const Vector2& value) const noexcept;
 
   /*
   * @brief
@@ -206,7 +206,7 @@ public:
   *  Returns true if any of the values are different.
   */
   bool
-  operator!=(const Vector2& vector) noexcept;
+  operator!=(const Vector2& vector) const noexcept;
 
   /********************************************/
   /*  MEMBERS  */
@@ -245,55 +245,35 @@ Vector2::operator/=(float scalar) noexcept {
   return *this;
 }
 
-FORCELINE Vector2&
-Vector2::operator* (float scalar) noexcept {
-  x *= scalar;
-  y *= scalar;
-  return *this;
+FORCELINE Vector2
+Vector2::operator* (float scalar) const noexcept {
+  return Vector2(x * scalar, y * scalar);
 }
 
-FORCELINE Vector2&
-Vector2::operator+(Vector2 value) noexcept {
-  x += value.x;
-  y += value.y;
-  return *this;
+FORCELINE Vector2
+Vector2::operator+(Vector2& vector) const noexcept {
+  return Vector2(x + vector.x, y + vector.y)
 }
 
-FORCELINE Vector2&
-Vector2::operator-(Vector2 value) noexcept {
-  x -= value.x;
-  y -= value.y;
-  return *this;
+FORCELINE Vector2
+Vector2::operator-(Vector2& vector) const noexcept {
+  return Vector2(x - vector.x, y - vector.y);
 }
 
-FORCELINE Vector2&
-Vector2:: operator/(float scalar) noexcept {
-  x /= scalar;
-  y /= scalar;
-  return *this;
+FORCELINE Vector2
+Vector2:: operator/(float scalar) const noexcept{
+ return Vector2(x / scalar, y / scalar);
 }
 
 FORCELINE bool
-Vector2::operator==(const Vector2& vector) noexcept {
-  if (x == vector.x && y == vector.y) {
-    return true;
-  }
-  else {
-    return false;
-  }
+Vector2::operator==(const Vector2& vector) const noexcept {
+  return x == vector.x && y == vector.y;
 }
 
 
 FORCELINE bool
-Vector2::operator!=(const Vector2& vector) noexcept {
-  if (vector.x != x) {
-    return true;
-  }
-  else if (vector.y != y) {
-    return true;
-  }
-  else {
-    return false;
+Vector2::operator!=(const Vector2& vector) const noexcept {
+  return x != vector, x || y != vector.y;
   }
 }
 }
