@@ -49,7 +49,7 @@ public:
   *  Returns the dot product claculates with another vector.
   */
   int
-    dot(const Vector2_int& vector) const;
+  dot(const Vector2_int& vector) const;
 
   /*
   * @brief
@@ -59,7 +59,7 @@ public:
   *  Cross product from 2 vectors.
   */
   int
-    cross(const Vector2_int& vector) const;
+  cross(const Vector2_int& vector) const;
 
   /*
   * @brief
@@ -69,7 +69,7 @@ public:
   *  The lenght of the vector.
   */
   float
-    magnitude() const;
+  magnitude() const;
 
   /*
   * @brief
@@ -79,7 +79,7 @@ public:
   *  The lenght of the vector.
   */
   int
-    sqrMagitude()const;
+  sqrMagitude()const;
 
   /*
   * @brief
@@ -89,7 +89,7 @@ public:
   *  Returns the distance between two vectors.
   */
   int
-    distance(const Vector2_int& vector) const;
+  distance(const Vector2_int& vector) const;
 
   /*
   * @brief
@@ -99,7 +99,7 @@ public:
   *  Returns the raw distance between two vectors.
   */
   int
-    sqrDistance(const Vector2_int& vector) const;
+  sqrDistance(const Vector2_int& vector) const;
 
   /*
   * @brief
@@ -121,7 +121,7 @@ public:
   * @return Vector2&
   */
   Vector2_int&
-    operator+=(const Vector2_int& vector) noexcept;
+  operator+=(const Vector2_int& vector) noexcept;
 
 
   /*
@@ -131,7 +131,7 @@ public:
   * @return Vector2_int&
   */
   Vector2_int&
-    operator-=(const Vector2_int& vector) noexcept;
+  operator-=(const Vector2_int& vector) noexcept;
 
   /*
   * @brief
@@ -140,7 +140,7 @@ public:
   * @return Vector2&
   */
   Vector2_int&
-    operator*=(float scalar) noexcept;
+  operator*=(float scalar) noexcept;
 
   /*
   * @brief
@@ -148,7 +148,7 @@ public:
   * @return Vector2&
   */
   Vector2_int&
-    operator/=(float scalar) noexcept;
+  operator/=(float scalar) noexcept;
 
   /*
   * @brief
@@ -158,7 +158,7 @@ public:
   *  Returns the
   */
   Vector2_int
-    operator+(const Vector2_int& value) const noexcept;
+  operator+(const Vector2_int& value) const noexcept;
 
   /*
   * @brief
@@ -168,7 +168,7 @@ public:
   *  Returns a pointer to a substracted vector.
   */
   Vector2_int
-    operator-(const Vector2_int& value) const noexcept;
+  operator-(const Vector2_int& value) const noexcept;
 
   /*
   * @brief
@@ -178,7 +178,7 @@ public:
   *  Returns pointer to this as a multiplied vector.
   */
   Vector2_int
-    operator*(float scalar)const noexcept;
+  operator*(float scalar)const noexcept;
 
   /*
   * @brief
@@ -198,7 +198,7 @@ public:
   *  Returns true if both values are the same.
   */
   bool
-    operator==(const Vector2_int& value) const noexcept;
+  operator==(const Vector2_int& value) const noexcept;
 
   /*
   * @brief
@@ -208,7 +208,7 @@ public:
   *  Returns true if any of the values are different.
   */
   bool
-    operator!=(const Vector2_int& vector) const noexcept;
+  operator!=(const Vector2_int& vector) const noexcept;
 
   /********************************************/
   /*  MEMBERS  */
