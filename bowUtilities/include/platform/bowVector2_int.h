@@ -267,4 +267,15 @@ Vector2_int:: operator/(float scalar) const noexcept {
   return Vector2_int(x / scalar, y / scalar);
 }
 
+FORCELINE bool
+Vector2_int::operator==(const Vector2_int& vector) const noexcept {
+  return x == vector.x && y == vector.y;
+}
+
+
+FORCELINE bool
+Vector2_int::operator!=(const Vector2_int& vector) const noexcept {
+  return x != vector. x || y != vector.y;
+}
+
 } 
