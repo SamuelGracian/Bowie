@@ -2,6 +2,8 @@
 
 #include "bowMath.h"
 
+#include<cmath>
+
 namespace bowEngineSDK
 {
 Vector2_int::Vector2_int(int X, int Y)
@@ -24,20 +26,30 @@ Vector2_int::cross(const Vector2_int& vector) const {
   return (x * vector.y) - (y * vector.x);
 }
 
-float
-Vector2_int::magnitude() const {
-  return Math::sqrt(sqrMagitude());
-}
+//float
+//Vector2_int::magnitude() const {
+//  //return Math::sqrt(sqrMagitude());
+//}
+/*
+* TO DO:
+*  override function sqr with int
+*/
 
 int
 Vector2_int::sqrMagitude() const {
-  return Math::pow(x, 2) * Math::pow(y, 2);
+  return (( x * x ) * ( y * y ));
 }
 
-int
-Vector2_int::distance(const Vector2_int& vector) const {
-  return Math::sqrt(sqrDistance(vector);
-}
+//int
+//Vector2_int::distance(const Vector2_int& vector) const {
+//  return std::sqrt(sqrDistance(vector));
+//}
+/*
+* TO DO:
+*  override function sqr with int
+* ERORR MSG:
+*  possible data loss.
+*/
 
 int
 Vector2_int::sqrDistance(const Vector2_int& vector) const {

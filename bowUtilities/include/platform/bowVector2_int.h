@@ -68,8 +68,8 @@ public:
   * @return int
   *  The lenght of the vector.
   */
-  float
-  magnitude() const;
+  //float
+  //magnitude() const;
 
   /*
   * @brief
@@ -88,14 +88,14 @@ public:
   * @return int
   *  Returns the distance between two vectors.
   */
-  int
-  distance(const Vector2_int& vector) const;
+  //int
+  //distance(const Vector2_int& vector) const;
 
   /*
   * @brief
   *  Calculates the distance between two vectors without using sqr.
   * @param cosnt Vector2_int
-  * @return float
+  * @return INT
   *  Returns the raw distance between two vectors.
   */
   int
@@ -136,19 +136,19 @@ public:
   /*
   * @brief
   *  Multiplies the vector for a given value.
-  * @param float
+  * @param INT 
   * @return Vector2&
   */
   Vector2_int&
-  operator*=(float scalar) noexcept;
+  operator*=(int scalar) noexcept;
 
   /*
   * @brief
-  * @param float
+  * @param INT
   * @return Vector2&
   */
   Vector2_int&
-  operator/=(float scalar) noexcept;
+  operator/=(int scalar) noexcept;
 
   /*
   * @brief
@@ -173,22 +173,22 @@ public:
   /*
   * @brief
   *  Multiplies the values of this for the scalar.
-  * @param float Scalar.
+  * @param INT
   * @return Vector2_int&
   *  Returns pointer to this as a multiplied vector.
   */
   Vector2_int
-  operator*(float scalar)const noexcept;
+  operator*(int scalar)const noexcept;
 
   /*
   * @brief
   *  Divides the values in a vector vector
-  * @param float
+  * @param INT.
   *  Scalar to divide the vector to.
   * @return Vector2_int
   */
   Vector2_int
-    operator/(float scalar) const noexcept;
+  operator/(int scalar) const noexcept;
 
   /*
   * @brief
@@ -234,21 +234,21 @@ Vector2_int::operator-=(const Vector2_int& vector) noexcept {
 }
 
 FORCELINE Vector2_int&
-Vector2_int::operator*=(float scalar) noexcept {
+Vector2_int::operator*=(int scalar) noexcept {
   x *= scalar;
   y *= scalar;
   return *this;
 }
 
 FORCELINE Vector2_int&
-Vector2_int::operator/=(float scalar) noexcept {
+Vector2_int::operator/=(int scalar) noexcept {
   x /= scalar;
   y /= scalar;
   return *this;
 }
 
 FORCELINE Vector2_int
-Vector2_int::operator* (float scalar) const noexcept {
+Vector2_int::operator* (int scalar) const noexcept {
   return Vector2_int(x * scalar, y * scalar);
 }
 
@@ -263,7 +263,7 @@ Vector2_int::operator-(const Vector2_int& vector) const noexcept {
 }
 
 FORCELINE Vector2_int
-Vector2_int:: operator/(float scalar) const noexcept {
+Vector2_int:: operator/(int scalar) const noexcept {
   return Vector2_int(x / scalar, y / scalar);
 }
 
