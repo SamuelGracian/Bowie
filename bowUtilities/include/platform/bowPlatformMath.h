@@ -31,7 +31,7 @@ public:
    @return The sin of an angle.
   */
   static float 
-  sin (float angleInRadians);
+  sin(float angleInRadians);
 
   /**
     *@brief Calculates the tangent of an angle in radians.

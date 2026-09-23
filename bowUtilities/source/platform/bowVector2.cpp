@@ -14,6 +14,11 @@ Vector2::Vector2(const float values[2])
     y(values[1]) 
 {}
 
+Vector2::Vector2(const Vector2& vector)
+  : x(vector.x),
+    y(vector.y)
+{}
+
 float
 Vector2::dot(const Vector2& vector2)const {
   return (x * vector2.x) + (y * vector2.y);
@@ -51,5 +56,4 @@ Vector2::normalize() const {
   const float invMag = 1 / magnitude();
   return Vector2(x * invMag, y * invMag);
 }
-
 }

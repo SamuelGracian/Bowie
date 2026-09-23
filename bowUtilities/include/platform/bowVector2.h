@@ -28,6 +28,14 @@ public:
 
   /*
   * @brief
+  *  Copy constructor
+  * @param CONST VECTOR2 
+  *  Reference to another vector 2 class.
+  */
+  Vector2(const Vector2& vector);
+
+  /*
+  * @brief
      Default destructor.
   */
   ~Vector2() = default;
@@ -45,7 +53,7 @@ public:
      float The dot product from this vector2 and the param.
   */
   float
-    dot(const Vector2& vector2) const;
+  dot(const Vector2& vector2) const;
 
   /*
   * @brief
@@ -55,7 +63,7 @@ public:
   *  Cross product from 2 vectors.
   */
   float
-    cross(const Vector2& vector2) const;
+  cross(const Vector2& vector2) const;
 
   /*
   * @brief
@@ -65,7 +73,7 @@ public:
   *  The lenght of the vector.
   */
   float
-    magnitude() const;
+  magnitude() const;
 
   /*
   * @brief
@@ -75,7 +83,7 @@ public:
   *  The square lenght of this vector.
   */
   float
-    sqrMagnitude() const;
+  sqrMagnitude() const;
 
   /*
   * @brief
@@ -97,7 +105,7 @@ public:
   *  The square distance between this vector and the one given as param.
   */
   float
-    sqrDistance(const Vector2& vector) const;
+  sqrDistance(const Vector2& vector) const;
 
   /*
   * @brief
@@ -106,7 +114,7 @@ public:
   *  This as a normalized vector.
   */
   Vector2
-    normalize() const;
+  normalize() const;
 
   /********************************************/
   /*  OPERTATORS  */
@@ -119,7 +127,7 @@ public:
   * @return Vector2&
   */
   Vector2&
-    operator+=(const Vector2& vector) noexcept;
+  operator+=(const Vector2& vector) noexcept;
 
 
   /*
@@ -129,7 +137,7 @@ public:
   * @return Vector2&
   */
   Vector2&
-    operator-=(const Vector2& vector) noexcept;
+  operator-=(const Vector2& vector) noexcept;
 
   /*
   * @brief
@@ -155,7 +163,7 @@ public:
   * @return Vector2&
   *  Returns the 
   */
-  Vector2&
+  Vector2
   operator+(Vector2& value) const noexcept;
 
   /*
@@ -246,13 +254,13 @@ Vector2::operator/=(float scalar) noexcept {
 }
 
 FORCELINE Vector2
-Vector2::operator* (float scalar) const noexcept {
+Vector2::operator*(float scalar) const noexcept {
   return Vector2(x * scalar, y * scalar);
 }
 
 FORCELINE Vector2
 Vector2::operator+(Vector2& vector) const noexcept {
-  return Vector2(x + vector.x, y + vector.y)
+  return Vector2(x + vector.x, y + vector.y);
 }
 
 FORCELINE Vector2
@@ -273,7 +281,6 @@ Vector2::operator==(const Vector2& vector) const noexcept {
 
 FORCELINE bool
 Vector2::operator!=(const Vector2& vector) const noexcept {
-  return x != vector, x || y != vector.y;
+  return x != vector.x || y != vector.y;
   }
-}
 }
