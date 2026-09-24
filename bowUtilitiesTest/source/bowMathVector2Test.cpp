@@ -37,8 +37,8 @@ TEST_CASE("Vector2 operations", "[Vector2]") {
   SECTION("Magnitude") {
     const Vector2 position { 3.0f, 4.0f };
 
-    REQUIRE(position.sqrMagnitude() == Catch::Approx(144.0f));
-    REQUIRE(position.magnitude() == Catch::Approx(12.0f));
+    REQUIRE(position.sqrMagnitude() == Catch::Approx(25.0f));
+    REQUIRE(position.magnitude() == Catch::Approx(5.0f));
     position.~Vector2();
   }
 
@@ -54,7 +54,7 @@ TEST_CASE("Vector2 operations", "[Vector2]") {
   SECTION("Normalize") {
     const Vector2 position { 3.0f, 4.0f };
     const Vector2 normalized = position.normalize();
-    REQUIRE_THAT (normalized.magnitude(), Catch::Matchers::WithinRel(0.4800f, Math::KINDA_SMALL_NUMBER));
+    REQUIRE_THAT (normalized.magnitude(), Catch::Matchers::WithinRel(1.0f, Math::KINDA_SMALL_NUMBER));
     position.~Vector2();
   }
 

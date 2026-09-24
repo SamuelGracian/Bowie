@@ -94,7 +94,7 @@ public:
   *  Returns the distance between two vectors
   */
   float
-    distance(const Vector2& vector) const;
+  distance(const Vector2& vector) const;
 
   /*
   * @brief
@@ -126,7 +126,7 @@ public:
   * @param cons vector2 
   * @return Vector2&
   */
-  Vector2&
+  FORCELINE Vector2&
   operator+=(const Vector2& vector) noexcept;
 
 
@@ -136,7 +136,7 @@ public:
   * @param Const Vector2
   * @return Vector2&
   */
-  Vector2&
+  FORCELINE Vector2&
   operator-=(const Vector2& vector) noexcept;
 
   /*
@@ -145,7 +145,7 @@ public:
   * @param float
   * @return Vector2&
   */
-  Vector2&
+  FORCELINE Vector2&
   operator*=(float scalar) noexcept;
   
   /*
@@ -153,7 +153,7 @@ public:
   * @param float
   * @return Vector2&
   */
-  Vector2&
+  FORCELINE Vector2&
   operator/=(float scalar) noexcept;
   
   /*
@@ -163,7 +163,7 @@ public:
   * @return Vector2&
   *  Returns the 
   */
-  Vector2
+  FORCELINE Vector2
   operator+(Vector2& value) const noexcept;
 
   /*
@@ -173,7 +173,7 @@ public:
   * @return Vector2&
   *  Returns a pointer to a substracted vector.
   */
-  Vector2
+  FORCELINE Vector2
   operator-(Vector2& value) const noexcept;
 
   /*
@@ -183,7 +183,7 @@ public:
   * @return Vector2&
   *  Returns pointer to this as a multiplied vector.
   */
-  Vector2
+  FORCELINE Vector2
   operator*(float scalar)const noexcept;
 
   /*
@@ -193,7 +193,7 @@ public:
   *  Scalar to divide the vector to.
   * @return Vector2
   */
-  Vector2
+  FORCELINE Vector2
   operator/(float scalar) const noexcept;
 
   /*
@@ -203,7 +203,7 @@ public:
   * @return bool
   *  Returns true if both values are the same.
   */
-  bool
+  FORCELINE bool
   operator==(const Vector2& value) const noexcept;
 
   /*
@@ -213,7 +213,7 @@ public:
   * @return true
   *  Returns true if any of the values are different.
   */
-  bool
+  FORCELINE bool
   operator!=(const Vector2& vector) const noexcept;
 
   /********************************************/

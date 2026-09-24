@@ -36,7 +36,7 @@ Vector2::magnitude()const {
 
 float
 Vector2::sqrMagnitude()const {
-  return Math::pow(x, 2) * Math::pow(y, 2);
+  return Math::pow(x, 2) + Math::pow(y, 2);
 }
 
 float
