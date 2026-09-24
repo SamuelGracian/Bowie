@@ -11,7 +11,7 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(Catch2)
 
-add_executable (bowUtilitiesTest ${SOURCES} ${HEADERS} )
+add_executable (bowUtilitiesTest ${SOURCES} ${HEADERS})
 
 SET_ENGINE_DEFAULTS(bowUtilitiesTest)
 
