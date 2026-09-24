@@ -2,7 +2,7 @@
 #include "bowUtilitiesRequisites.h"
 
 #if BOW_PLATFORM == BOW_PLATFORM_WIN32 || \
-  BOW_PLATFORM == BOW_PLATFORM_LINUX ||     \
+  BOW_PLATFORM == BOW_PLATFORM_LINUX   || \
   BOW_PLATFORM == BOW_PLATFORM_OSX
 #include "bowPlatformMath.h"
 #endif
