@@ -1,33 +1,29 @@
-#include "bowVector2_int.h"
-
-#include "bowMath.h"
-
-#include<cmath>
+#include "bowVector2Int.h"
 
 namespace bowEngineSDK
 {
-Vector2_int::Vector2_int(int X, int Y)
+Vector2Int::Vector2Int(int32 X, int32 Y)
   : x(X),
     y(Y)
 {}
 
-Vector2_int::Vector2_int(const int vector[2])
+Vector2Int::Vector2Int(const int32 vector[2])
   :x(vector[0]),
    y(vector[1])
 {}
 
-int
-Vector2_int::dot(const Vector2_int& vector) const {
+int32
+Vector2Int::dot(const Vector2Int& vector) const {
   return (x * vector.x) + (y * vector.y);
 }
 
-int
-Vector2_int::cross(const Vector2_int& vector) const {
+int32
+Vector2Int::cross(const Vector2Int& vector) const {
   return (x * vector.y) - (y * vector.x);
 }
 
 //float
-//Vector2_int::magnitude() const {
+//Vector2Int::magnitude() const {
 //  //return Math::sqrt(sqrMagitude());
 //}
 /*
@@ -35,13 +31,13 @@ Vector2_int::cross(const Vector2_int& vector) const {
 *  override function sqr with int
 */
 
-int
-Vector2_int::sqrMagitude() const {
+int32
+Vector2Int::sqrMagitude() const {
   return (( x * x ) * ( y * y ));
 }
 
 //int
-//Vector2_int::distance(const Vector2_int& vector) const {
+//Vector2Int::distance(const Vector2Int& vector) const {
 //  return std::sqrt(sqrDistance(vector));
 //}
 /*
@@ -51,15 +47,15 @@ Vector2_int::sqrMagitude() const {
 *  possible data loss.
 */
 
-int
-Vector2_int::sqrDistance(const Vector2_int& vector) const {
+int32
+Vector2Int::sqrDistance(const Vector2Int& vector) const {
   const int deltaX = x - vector.x;
   const int deltaY = y - vector.y;
   return (deltaX * deltaX) + (deltaY * deltaY);
 }
 
 //Vector2
-//Vector2_int::normalize() const {
+//Vector2Int::normalize() const {
 //  const float invMag = 1 / magnitude();
 //  return Vector2(x * invMag, y * invMag);
 //}

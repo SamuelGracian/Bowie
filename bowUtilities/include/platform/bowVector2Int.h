@@ -4,9 +4,9 @@
 
 namespace bowEngineSDK
 {
-class BOW_UTILITIES_EXPORT Vector2_int
+class BOW_UTILITIES_EXPORT Vector2Int
 {
-public:
+ public:
 
   /********************************************/
   /*  CONSTRUCTORS, DESTRUCTORS  */
@@ -16,26 +16,26 @@ public:
   *  Default constructor.
   * @parma NONE
   */
-  Vector2_int() = default;
+  Vector2Int() = default;
 
   /* @brief
   *  Constructor from given values
   * @param int int
   */
-  Vector2_int(int x, int y);
+  Vector2Int(int32 x, int32 y);
 
   /*
   * @brief
   *  Constructor from an array.
   * @param int [2]
   */
-  explicit Vector2_int(const int values[2]);
+  explicit Vector2Int(const int32 values[2]);
 
   /*
   * @brief
   *  Default destructor.
   */
-  ~Vector2_int() = default;
+  ~Vector2Int() = default;
 
   /********************************************/
   /*  METHODS  */
@@ -44,22 +44,22 @@ public:
   /*
   * @brief
   *  Calculates the dot product with another vector.
-  * @param const Vector2_int&
+  * @param const Vector2Int&
   * @return
   *  Returns the dot product claculates with another vector.
   */
-  int
-  dot(const Vector2_int& vector) const;
+  int32
+  dot(const Vector2Int& vector) const;
 
   /*
   * @brief
   *  Calculates the cross product with another vector.
-  * @param const Vector2_int&
+  * @param const Vector2Int&
   * @return
   *  Cross product from 2 vectors.
   */
-  int
-  cross(const Vector2_int& vector) const;
+  int32
+  cross(const Vector2Int& vector) const;
 
   /*
   * @brief
@@ -78,28 +78,28 @@ public:
   * @return
   *  The lenght of the vector.
   */
-  int
-  sqrMagitude()const;
+  int32
+  sqrMagitude() const;
 
   /*
   * @brief
   *  Calculates the distance between this and another vector.
-  * @param const Vector2_int&
+  * @param const Vector2Int&
   * @return int
   *  Returns the distance between two vectors.
   */
   //int
-  //distance(const Vector2_int& vector) const;
+  //distance(const Vector2Int& vector) const;
 
   /*
   * @brief
   *  Calculates the distance between two vectors without using sqr.
-  * @param cosnt Vector2_int
+  * @param cosnt Vector2Int
   * @return INT
   *  Returns the raw distance between two vectors.
   */
-  int
-  sqrDistance(const Vector2_int& vector) const;
+  int32
+  sqrDistance(const Vector2Int& vector) const;
 
   /*
   * @brief
@@ -112,6 +112,14 @@ public:
   //  normalize() const;
 
   /********************************************/
+  /*  MEMBERS  */
+
+  /********************************************/
+  
+  int x;
+  int y;
+
+  /********************************************/
   /*  OPERATORS  */
   /********************************************/
   /*
@@ -120,18 +128,18 @@ public:
   * @param cons vector2
   * @return Vector2&
   */
-  Vector2_int&
-  operator+=(const Vector2_int& vector) noexcept;
+  FORCELINE Vector2Int&
+  operator+=(const Vector2Int& vector) noexcept;
 
 
   /*
   * @brief
   *  Substracts the value in the vector for a given value.
-  * @param Const Vector2_int
-  * @return Vector2_int&
+  * @param Const Vector2Int
+  * @return Vector2Int&
   */
-  Vector2_int&
-  operator-=(const Vector2_int& vector) noexcept;
+  FORCELINE Vector2Int&
+  operator-=(const Vector2Int& vector) noexcept;
 
   /*
   * @brief
@@ -139,7 +147,7 @@ public:
   * @param INT 
   * @return Vector2&
   */
-  Vector2_int&
+  FORCELINE Vector2Int&
   operator*=(int scalar) noexcept;
 
   /*
@@ -147,134 +155,128 @@ public:
   * @param INT
   * @return Vector2&
   */
-  Vector2_int&
+  FORCELINE Vector2Int&
   operator/=(int scalar) noexcept;
 
   /*
   * @brief
   *  Makes the addition between a value and the values in the vector.
-  * @param Vector2_int
-  * @return Vector2_int&
+  * @param Vector2Int
+  * @return Vector2Int&
   *  Returns the
   */
-  Vector2_int
-  operator+(const Vector2_int& value) const noexcept;
+  FORCELINE Vector2Int
+  operator+(const Vector2Int& value) const noexcept;
 
   /*
   * @brief
   *  Makes the substraction between a value and the values in the vector.
-  * @param Vector2_int
-  * @return Vector2_int&
+  * @param Vector2Int
+  * @return Vector2Int&
   *  Returns a pointer to a substracted vector.
   */
-  Vector2_int
-  operator-(const Vector2_int& value) const noexcept;
+  FORCELINE Vector2Int
+  operator-(const Vector2Int& value) const noexcept;
 
   /*
   * @brief
   *  Multiplies the values of this for the scalar.
   * @param INT
-  * @return Vector2_int&
+  * @return Vector2Int&
   *  Returns pointer to this as a multiplied vector.
   */
-  Vector2_int
-  operator*(int scalar)const noexcept;
+  FORCELINE Vector2Int
+  operator*(int scalar) const noexcept;
 
   /*
   * @brief
   *  Divides the values in a vector vector
   * @param INT.
   *  Scalar to divide the vector to.
-  * @return Vector2_int
+  * @return Vector2Int
   */
-  Vector2_int
+  FORCELINE Vector2Int
   operator/(int scalar) const noexcept;
 
   /*
   * @brief
   *  Checks if all the values in the vectors are the same.
-  * @param Vector2_int
+  * @param Vector2Int
   * @return bool
   *  Returns true if both values are the same.
   */
-  bool
-  operator==(const Vector2_int& value) const noexcept;
+  FORCELINE bool
+  operator==(const Vector2Int& value) const noexcept;
 
   /*
   * @brief
   *  Checks if any of the values inside a vector are different to this.
-  * @param Vector2_int&
+  * @param Vector2Int&
   * @return true
   *  Returns true if any of the values are different.
   */
-  bool
-  operator!=(const Vector2_int& vector) const noexcept;
+  FORCELINE bool
+  operator!=(const Vector2Int& vector) const noexcept;
 
-  /********************************************/
-  /*  MEMBERS  */
-  /********************************************/
-  int x;
-  int y;
-
-}; // end class Vector2_int
+};
 
 // Method definitions remain inside the namespace
-FORCELINE Vector2_int&
-Vector2_int::operator+=(const Vector2_int& vector) noexcept {
+FORCELINE Vector2Int&
+Vector2Int::operator+=(const Vector2Int& vector) noexcept {
   x += vector.x;
   y += vector.y;
   return *this;
 }
 
-FORCELINE Vector2_int&
-Vector2_int::operator-=(const Vector2_int& vector) noexcept {
+FORCELINE Vector2Int&
+Vector2Int::operator-=(const Vector2Int& vector) noexcept {
   x -= vector.x;
   y -= vector.y;
   return *this;
 }
 
-FORCELINE Vector2_int&
-Vector2_int::operator*=(int scalar) noexcept {
+FORCELINE Vector2Int&
+Vector2Int::operator*=(int scalar) noexcept {
   x *= scalar;
   y *= scalar;
   return *this;
 }
 
-FORCELINE Vector2_int&
-Vector2_int::operator/=(int scalar) noexcept {
+FORCELINE Vector2Int&
+Vector2Int::operator/=(int scalar) noexcept {
   x /= scalar;
   y /= scalar;
   return *this;
 }
 
-FORCELINE Vector2_int
-Vector2_int::operator* (int scalar) const noexcept {
-  return Vector2_int(x * scalar, y * scalar);
+FORCELINE Vector2Int
+Vector2Int::operator* (int scalar) const noexcept {
+  return Vector2Int(x * scalar, y * scalar);
 }
 
-FORCELINE Vector2_int
-Vector2_int::operator+(const Vector2_int& vector) const noexcept {
-  return Vector2_int(x + vector.x, y + vector.y);
+FORCELINE Vector2Int
+Vector2Int::operator+(const Vector2Int& vector) const noexcept {
+  return Vector2Int(x + vector.x, y + vector.y);
 }
 
-FORCELINE Vector2_int
-Vector2_int::operator-(const Vector2_int& vector) const noexcept {
-  return Vector2_int(x - vector.x, y - vector.y);
+FORCELINE Vector2Int
+Vector2Int::operator-(const Vector2Int& vector) const noexcept {
+  return Vector2Int(x - vector.x, y - vector.y);
 }
 
-FORCELINE Vector2_int
-Vector2_int:: operator/(int scalar) const noexcept {
-  return Vector2_int(x / scalar, y / scalar);
+FORCELINE Vector2Int
+Vector2Int:: operator/(int scalar) const noexcept {
+  return Vector2Int(x / scalar, y / scalar);
 }
 
 FORCELINE bool
-Vector2_int::operator==(const Vector2_int& vector) const noexcept {
+Vector2Int::operator==(const Vector2Int& vector) const noexcept {
   return x == vector.x && y == vector.y;
 }
 
 
 FORCELINE bool
-Vector2_int::operator!=(const Vector2_int& vector) const noexcept {
+Vector2Int::operator!=(const Vector2Int& vector) const noexcept {
   return x != vector. x || y != vector.y;
 }
 
