@@ -27,7 +27,7 @@ public:
   * @brief
   *  Constructor fom a vector 2.
   //*/
-  //Vector4(Vector2&,float Z, float W);
+  //Vector4(Vector4&,float Z, float W);
 
   ///*
   //* @brief
@@ -115,6 +115,107 @@ public:
   normalize()const;
 
   /********************************************/
+  /*  OPERATORS  */
+  /********************************************/
+
+
+  /*
+  * @brief
+  *  Makes an addition to the values of the vector with a given value.
+  * @param cons Vector4
+  * @return Vector4&
+  */
+  FORCELINE Vector4&
+  operator+=(const Vector4& vector) noexcept;
+
+
+  /*
+  * @brief
+  *  Substracts the value in the vector for a given value.
+  * @param Const Vector4
+  * @return Vector4&
+  */
+  FORCELINE Vector4&
+  operator-=(const Vector4& vector) noexcept;
+
+  /*
+  * @brief
+  *  Multiplies the vector for a given value.
+  * @param float
+  * @return Vector4&
+  */
+  FORCELINE Vector4&
+  operator*=(float scalar) noexcept;
+
+  /*
+  * @brief
+  * @param float
+  * @return Vector4&
+  */
+  FORCELINE Vector4&
+  operator/=(float scalar) noexcept;
+
+  /*
+  * @brief
+  *  Makes the addition between a value and the values in the vector.
+  * @param Vector4
+  * @return Vector4&
+  *  Returns the
+  */
+  FORCELINE Vector4
+  operator+(Vector4& value) const noexcept;
+
+  /*
+  * @brief
+  *  Makes the substraction between a value and the values in the vector.
+  * @param Vector4
+  * @return Vector4&
+  *  Returns a pointer to a substracted vector.
+  */
+  FORCELINE Vector4
+  operator-(Vector4& value) const noexcept;
+
+  /*
+  * @brief
+  *  Multiplies the values of this for the scalar.
+  * @param float Scalar.
+  * @return Vector4&
+  *  Returns pointer to this as a multiplied vector.
+  */
+  FORCELINE Vector4
+  operator*(float scalar)const noexcept;
+
+  /*
+  * @brief
+  *  Divides the values in a vector vector
+  * @param float
+  *  Scalar to divide the vector to.
+  * @return Vector4
+  */
+  FORCELINE Vector4
+  operator/(float scalar) const noexcept;
+
+  /*
+  * @brief
+  *  Checks if all the values in the vectors are the same.
+  * @param Vector4
+  * @return bool
+  *  Returns true if both values are the same.
+  */
+  FORCELINE bool
+  operator==(const Vector4& value) const noexcept;
+
+  /*
+  * @brief
+  *  Checks if any of the values inside a vector are different to this.
+  * @param Vector4&
+  * @return true
+  *  Returns true if any of the values are different.
+  */
+  FORCELINE bool
+  operator!=(const Vector4& vector) const noexcept;
+
+  /********************************************/
   /*  MEMBERS  */
   /********************************************/
   float x;
@@ -122,4 +223,72 @@ public:
   float z;
   float w;
 };
+
+
+FORCELINE Vector4&
+Vector4::operator+=(const Vector4& vector) noexcept {
+  x += vector.x;
+  y += vector.y;
+  z += vector.z;
+  w += vector.w;
+  return *this;
+}
+
+FORCELINE Vector4&
+Vector4::operator-=(const Vector4& vector) noexcept {
+  x -= vector.x;
+  y -= vector.y;
+  z -= vector.z;
+  w -= vector.w;
+  return *this;
+}
+
+FORCELINE Vector4&
+Vector4::operator*=(float scalar) noexcept {
+  x *= scalar;
+  y *= scalar;
+  z *= scalar;
+  w *= scalar;
+  return *this;
+}
+
+FORCELINE Vector4&
+Vector4::operator/=(float scalar) noexcept {
+  x /= scalar;
+  y /= scalar;
+  z /= scalar;
+  w /= scalar;
+  return *this;
+}
+
+FORCELINE Vector4
+Vector4::operator*(float scalar) const noexcept {
+  return Vector4(x * scalar, y * scalar, z * scalar, w * scalar);
+}
+
+FORCELINE Vector4
+Vector4::operator+(Vector4& vector) const noexcept {
+  return Vector4(x + vector.x, y + vector.y, z + vector.z, w + vector.w);
+}
+
+FORCELINE Vector4
+Vector4::operator-(Vector4& vector) const noexcept {
+  return Vector4(x - vector.x, y - vector.y, z - vector.z, w - vector.w);
+}
+
+FORCELINE Vector4
+Vector4:: operator/(float scalar) const noexcept {
+  return Vector4(x / scalar, y / scalar, z / scalar, w / scalar);
+}
+
+FORCELINE bool
+Vector4::operator==(const Vector4& vector) const noexcept {
+  return x == vector.x && y == vector.y && z == vector.z && w == vector.w;
+}
+
+
+FORCELINE bool
+Vector4::operator!=(const Vector4& vector) const noexcept {
+  return x != vector.x || y != vector.y;
+}
 }
