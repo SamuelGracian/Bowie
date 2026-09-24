@@ -52,7 +52,7 @@ TEST_CASE("Vector3 operations", " [vector 3]") {
   SECTION("Normalize") {
     const Vector3 position { 3.0f, 4.0f, 6.0f };
     const Vector3 normalized = position.normalize();
-    REQUIRE_THAT(position.magnitude(), Catch::Matchers::WithinRel(7.8102f, Math::KINDA_SMALL_NUMBER));
+    REQUIRE_THAT(normalized.magnitude(), Catch::Matchers::WithinRel(1.0f, Math::KINDA_SMALL_NUMBER));
 
   }
   SECTION("Vector3 size") {

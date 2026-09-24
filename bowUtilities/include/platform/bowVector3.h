@@ -1,6 +1,7 @@
 #pragma once
 
 #include"bowUtilitiesRequisites.h"
+#include "bowVector2.h"
 
 namespace bowEngineSDK{
 class BOW_UTILITIES_EXPORT Vector3{
@@ -28,9 +29,15 @@ public:
 
   /*
   * @brief
-  *  Cosntructor from Vector3.
+  *  Cosntructor from Vector2.
   */
-  //Vector3(const Vector3 vector, float Z);
+  Vector3(const Vector2& vector, float Z);
+
+  /*
+  * @brief
+  *  Copy constructor.
+  */
+  Vector3(const Vector3& vector);
 
   /*
   * @brief
@@ -115,8 +122,8 @@ public:
 * @param cons Vector3
 * @return Vector3&
 */
-  Vector3&
-    operator+=(const Vector3& vector) noexcept;
+  FORCELINE Vector3&
+  operator+=(const Vector3& vector) noexcept;
 
 
   /*
@@ -125,8 +132,8 @@ public:
   * @param Const Vector3
   * @return Vector3&
   */
-  Vector3&
-    operator-=(const Vector3& vector) noexcept;
+  FORCELINE Vector3&
+  operator-=(const Vector3& vector) noexcept;
 
   /*
   * @brief
@@ -134,16 +141,16 @@ public:
   * @param float
   * @return Vector3&
   */
-  Vector3&
-    operator*=(float scalar) noexcept;
+  FORCELINE Vector3&
+  operator*=(float scalar) noexcept;
 
   /*
   * @brief
   * @param float
   * @return Vector3&
   */
-  Vector3&
-    operator/=(float scalar) noexcept;
+  FORCELINE Vector3&
+  operator/=(float scalar) noexcept;
 
   /*
   * @brief
@@ -152,8 +159,8 @@ public:
   * @return Vector3&
   *  Returns the
   */
-  Vector3
-    operator+(Vector3& value) const noexcept;
+  FORCELINE Vector3
+  operator+(Vector3& value) const noexcept;
 
   /*
   * @brief
@@ -162,7 +169,7 @@ public:
   * @return Vector3&
   *  Returns a pointer to a substracted vector.
   */
-  Vector3
+  FORCELINE Vector3
   operator-(Vector3& value) const noexcept;
 
   /*
@@ -172,8 +179,8 @@ public:
   * @return Vector3&
   *  Returns pointer to this as a multiplied vector.
   */
-  Vector3
-    operator*(float scalar) const noexcept;
+  FORCELINE Vector3
+  operator*(float scalar) const noexcept;
 
   /*
   * @brief
@@ -182,8 +189,8 @@ public:
   *  Scalar to divide the vector to.
   * @return Vector3
   */
-  Vector3
-    operator/(float scalar) const noexcept;
+  FORCELINE Vector3
+  operator/(float scalar) const noexcept;
 
   /*
   * @brief
@@ -192,8 +199,8 @@ public:
   * @return bool
   *  Returns true if both values are the same.
   */
-  bool
-    operator==(const Vector3& value) const noexcept;
+  FORCELINE bool
+  operator==(const Vector3& value) const noexcept;
 
   /*
   * @brief
@@ -202,8 +209,8 @@ public:
   * @return true
   *  Returns true if any of the values are different.
   */
-  bool
-    operator!=(const Vector3& vector) const noexcept;
+  FORCELINE bool
+  operator!=(const Vector3& vector) const noexcept;
 
 
   float x;
@@ -237,12 +244,13 @@ Vector3::operator*=(float scalar) noexcept {
 
 FORCELINE Vector3& //return ref, no const
 Vector3::operator/=(float scalar) noexcept {
-  if (scalar != 0.0f) {
+  if (scalar == 0.0f) {
+    return *this;
+  }
     x /= scalar;
     y /= scalar;
     z /= scalar;
     return *this;
-  }
 }
 
 FORCELINE Vector3

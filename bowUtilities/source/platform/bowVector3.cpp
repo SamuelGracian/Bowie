@@ -6,19 +6,25 @@ namespace bowEngineSDK
 {
 Vector3::Vector3(float X, float Y, float Z)
   :x(X),
-  y(Y),
-  z(Z) {}
+   y(Y),
+   z(Z) {}
 
 Vector3::Vector3(const float values[3])
   :x(values[0]),
-  y(values[1]),
-  z(values[2]) {}
+   y(values[1]),
+   z(values[2]) {}
 
-//Vector3::Vector3(const Vector2 vector, float Z)
-//  : x (vector.x),
-//    y (vector.y),
-//    z(Z)
-//{}
+Vector3::Vector3(const Vector2& vector, float Z)
+  :x(vector.x),
+   y(vector.y),
+   z(Z)
+{}
+
+Vector3::Vector3(const Vector3& vector)
+  :x(vector.x),
+   y(vector.y),
+   z(vector.z)
+{}
 
 Vector3
 Vector3::cross(const Vector3& vector) const {
