@@ -22,18 +22,6 @@ public:
   *  Constructor from given values.
   */
   Vector4(float X, float Y, float Z, float W);
-
-  /*
-  * @brief
-  *  Constructor fom a vector 2.
-  //*/
-  //Vector4(Vector4&,float Z, float W);
-
-  ///*
-  //* @brief
-  //*  Constructor from a vector 3.
-  //*/
-  //Vector4(Vector3&, float W);
   
   /*
   * @brief
