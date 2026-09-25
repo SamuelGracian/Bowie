@@ -49,8 +49,8 @@ Vector2Int::sqrMagitude() const {
 
 int32
 Vector2Int::sqrDistance(const Vector2Int& vector) const {
-  const int deltaX = x - vector.x;
-  const int deltaY = y - vector.y;
+  const int32 deltaX = x - vector.x;
+  const int32 deltaY = y - vector.y;
   return (deltaX * deltaX) + (deltaY * deltaY);
 }
 
