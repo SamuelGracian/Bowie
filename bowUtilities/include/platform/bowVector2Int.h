@@ -20,14 +20,14 @@ class BOW_UTILITIES_EXPORT Vector2Int
 
   /* @brief
   *  Constructor from given values
-  * @param int int
+  * @param int32, int32
   */
-  Vector2Int(int32 x, int32 y);
+  Vector2Int(int32 X, int32 Y);
 
   /*
   * @brief
   *  Constructor from an array.
-  * @param int [2]
+  * @param int32 [2]
   */
   explicit Vector2Int(const int32 values[2]);
 
@@ -65,7 +65,7 @@ class BOW_UTILITIES_EXPORT Vector2Int
   * @brief
   *  Calculates the magnitude (lenght of the vector).
   * @param NONE
-  * @return int
+  * @return int32
   *  The lenght of the vector.
   */
   //float
@@ -116,8 +116,8 @@ class BOW_UTILITIES_EXPORT Vector2Int
 
   /********************************************/
   
-  int x;
-  int y;
+  int32 x;
+  int32 y;
 
   /********************************************/
   /*  OPERATORS  */
@@ -148,7 +148,7 @@ class BOW_UTILITIES_EXPORT Vector2Int
   * @return Vector2&
   */
   FORCELINE Vector2Int&
-  operator*=(int scalar) noexcept;
+  operator*=(int32 scalar) noexcept;
 
   /*
   * @brief
@@ -156,7 +156,7 @@ class BOW_UTILITIES_EXPORT Vector2Int
   * @return Vector2&
   */
   FORCELINE Vector2Int&
-  operator/=(int scalar) noexcept;
+  operator/=(int32 scalar) noexcept;
 
   /*
   * @brief
@@ -186,7 +186,7 @@ class BOW_UTILITIES_EXPORT Vector2Int
   *  Returns pointer to this as a multiplied vector.
   */
   FORCELINE Vector2Int
-  operator*(int scalar) const noexcept;
+  operator*(int32 scalar) const noexcept;
 
   /*
   * @brief
@@ -196,7 +196,7 @@ class BOW_UTILITIES_EXPORT Vector2Int
   * @return Vector2Int
   */
   FORCELINE Vector2Int
-  operator/(int scalar) const noexcept;
+  operator/(int32 scalar) const noexcept;
 
   /*
   * @brief
@@ -236,21 +236,21 @@ Vector2Int::operator-=(const Vector2Int& vector) noexcept {
 }
 
 FORCELINE Vector2Int&
-Vector2Int::operator*=(int scalar) noexcept {
+Vector2Int::operator*=(int32 scalar) noexcept {
   x *= scalar;
   y *= scalar;
   return *this;
 }
 
 FORCELINE Vector2Int&
-Vector2Int::operator/=(int scalar) noexcept {
+Vector2Int::operator/=(int32 scalar) noexcept {
   x /= scalar;
   y /= scalar;
   return *this;
 }
 
 FORCELINE Vector2Int
-Vector2Int::operator* (int scalar) const noexcept {
+Vector2Int::operator* (int32 scalar) const noexcept {
   return Vector2Int(x * scalar, y * scalar);
 }
 
@@ -265,7 +265,7 @@ Vector2Int::operator-(const Vector2Int& vector) const noexcept {
 }
 
 FORCELINE Vector2Int
-Vector2Int:: operator/(int scalar) const noexcept {
+Vector2Int:: operator/(int32 scalar) const noexcept {
   return Vector2Int(x / scalar, y / scalar);
 }
 
