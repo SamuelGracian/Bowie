@@ -112,7 +112,7 @@ public:
   sqrDistance(const Vector4& vector) const;
 
   Vector4
-  normalize()const;
+  normalize() const;
 
   /********************************************/
   /*  OPERATORS  */
@@ -163,7 +163,7 @@ public:
   *  Returns the
   */
   FORCELINE Vector4
-  operator+(Vector4& value) const noexcept;
+  operator+(const Vector4& value) const noexcept;
 
   /*
   * @brief
@@ -173,7 +173,7 @@ public:
   *  Returns a pointer to a substracted vector.
   */
   FORCELINE Vector4
-  operator-(Vector4& value) const noexcept;
+  operator-(const Vector4& value) const noexcept;
 
   /*
   * @brief
@@ -183,7 +183,7 @@ public:
   *  Returns pointer to this as a multiplied vector.
   */
   FORCELINE Vector4
-  operator*(float scalar)const noexcept;
+  operator*(float scalar) const noexcept;
 
   /*
   * @brief
@@ -267,12 +267,12 @@ Vector4::operator*(float scalar) const noexcept {
 }
 
 FORCELINE Vector4
-Vector4::operator+(Vector4& vector) const noexcept {
+Vector4::operator+(const Vector4& vector) const noexcept {
   return Vector4(x + vector.x, y + vector.y, z + vector.z, w + vector.w);
 }
 
 FORCELINE Vector4
-Vector4::operator-(Vector4& vector) const noexcept {
+Vector4::operator-(const Vector4& vector) const noexcept {
   return Vector4(x - vector.x, y - vector.y, z - vector.z, w - vector.w);
 }
 

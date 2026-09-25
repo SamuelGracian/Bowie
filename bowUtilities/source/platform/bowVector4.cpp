@@ -35,7 +35,7 @@ Vector4::cross(const Vector4& vector) const {
 
 float
 Vector4::sqrMagnitude() const {
-  return Math::pow(x, 2) + Math::pow(y, 2)+ Math::pow(z, 2) + Math::pow(w, 2);
+  return Math::pow(x, 2) + Math::pow(y, 2) + Math::pow(z, 2) + Math::pow(w, 2);
 }
 
 float
