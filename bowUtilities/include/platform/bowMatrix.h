@@ -1,81 +1,93 @@
-#pragma once
-#include<array>
+/*
+* @date 24/09/26
+*   Base class for matrix4x4
+*
+* Coordinate system begin X = front, Z = Up, Y = Right.
+*/
 
-#include"bowUtilitiesRequisites.h"
+#pragma once
+
+#include <array>
+
+#include "bowUtilitiesRequisites.h"
 
 namespace bowEngineSDK
 {
 class BOW_UTILITIES_EXPORT bowMatrix
 {
- public:
+public:
   /********************************************/
-  /*  CONSTRUCTORS, DESTRUCTORS  */
+  /*  CONSTRUCTORS, DESTRUCTORS              */
   /********************************************/
 
   /*
   * @brief
-  *  Default constructor.
+  * Constructs a zero-initialized 4x4 matrix.
   */
-  bowMatrix() = default;
+  bowMatrix() noexcept;
 
   /*
   * @brief
-  * Constructor from given values.
+  * Constructs a matrix from individual values.
   */
-  bowMatrix(float A1, float A2, float A3, float A4,
-            float A5, float A6, float A7, float A8,
-            float A9, float A10, float A11, float A12,
-            float A13, float A14, float A15, float A16);
+  bowMatrix(float M00, float M01, float M02, float M03,
+            float M04, float M05, float M06, float M07,
+            float M08, float M09, float M10, float M11,
+            float M12, float M13, float M14, float M15);
 
   /*
   * @brief
-  *  Constructor from an array.
+  * Constructs a matrix from an array.
   */
-  explicit bowMatrix(const std::array<float, 16> values);
+  explicit bowMatrix(const std::array<float, 16>& values);
 
   /*
   * @brief
-  *  Default destructor.
+  * Default destructor.
   */
   ~bowMatrix() = default;
 
   /********************************************/
-  /*  METHODS  */
+  /*  METHODS                                */
   /********************************************/
 
   /*
-  * @brief
-  * @param NONE
-  * @return bowMatrix
   */
-  bowMatrix
+  void
+  setIdentity();
+
+  /*
+  * @brief
+  *  Rreturns the transposed matrix.
+  */
+  [[nodiscard]] bowMatrix
   transposed() const;
 
   /*
   * @brief
-  * @param NONE
-  * @return bowMatrix
+  * 
   */
-  bowMatrix
-  identity() const;
-  
+  [[nodiscard]] bowMatrix& 
+  getTransposed() const noexcept;
+
   /*
   * @brief
-  * @param NONE
-  * @return
+  * Creates an identity matrix.
   */
-  bowMatrix
-  translation(float X, float Y, float Z) const;
-
-  /********************************************/
-  /*  OPERATORS  */
-  /********************************************/
+  [[nodiscard]] static bowMatrix 
+  identity() noexcept;
 
 
+  [[nodiscard]] float
+  getDeterminant() const;
 
-  /********************************************/
-  /*  MEMBERS  */
-  /********************************************/
+  /*
+  * @brief
+  * Provides read-only access to the matrix values.
+  */
+  [[nodiscard]] const std::array<float, 16>& 
+  values() const noexcept;
+
   std::array<float, 16> matrixV;
 };
 }
