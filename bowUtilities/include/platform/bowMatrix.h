@@ -13,18 +13,20 @@
 
 namespace bowEngineSDK
 {
+class Vector3;
+class Vector4;
 class BOW_UTILITIES_EXPORT bowMatrix
 {
 public:
   /********************************************/
-  /*  CONSTRUCTORS, DESTRUCTORS              */
+  /*  CONSTRUCTORS, DESTRUCTORS  */
   /********************************************/
 
   /*
   * @brief
   * Constructs a zero-initialized 4x4 matrix.
   */
-  bowMatrix() noexcept;
+  bowMatrix() = default;
 
   /*
   * @brief
@@ -48,7 +50,7 @@ public:
   ~bowMatrix() = default;
 
   /********************************************/
-  /*  METHODS                                */
+  /*  METHODS  */
   /********************************************/
 
   /*
@@ -77,9 +79,29 @@ public:
   [[nodiscard]] static bowMatrix 
   identity() noexcept;
 
-
+  /*
+  * @brief
+  * @param NONE
+  * @return
+  */
   [[nodiscard]] float
   getDeterminant() const;
+
+  /*
+  * @brief
+  * @param VECTOR3&
+  * @return VECTOR4
+  */
+  [[nodiscard]] Vector4
+  transformPosition(const Vector3& vector) const;
+
+  /*
+  * @brief
+  * @param VECTOR3&
+  * @return VECTOR4
+  */
+  [[nodiscard]] Vector4
+    transformVector(const Vector3& vector) const;
 
   /*
   * @brief
@@ -88,6 +110,33 @@ public:
   [[nodiscard]] const std::array<float, 16>& 
   values() const noexcept;
 
+  /********************************************/
+  /*  MEMBERS  */
+  /********************************************/
   std::array<float, 16> matrixV;
+
+  /********************************************/
+  /*  OPERATORS  */
+  /********************************************/
+  [[nodiscard]] FORCELINE bowMatrix
+  operator* (const bowMatrix& other) const;
+
+  [[nodiscard]] FORCELINE void
+  operator*= (const bowMatrix& other);
+
+  [[nodiscard]] FORCELINE  void
+  operator/= (const bowMatrix& other);
+
+  [[nodicard]] FORCELINE void
+  operator+= (const bowMatrix& other);
+
+  [[nodiscard]] FORCELINE void
+  operator-= (const bowMatrix& other);
+
+  [[nodiscard]] FORCELINE bool
+  operator!= (const bowMatrix& other);
+
+  [[nodiscard]] FORCELINE bool
+  operator== (const bowMatrix& other);
 };
 }
