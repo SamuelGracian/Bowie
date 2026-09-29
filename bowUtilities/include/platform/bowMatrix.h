@@ -25,12 +25,16 @@ public:
   /*
   * @brief
   * Constructs a zero-initialized 4x4 matrix.
+  * Row mayor matrix.
+  * First index is the row, and the second is the column.
   */
   bowMatrix() = default;
 
   /*
   * @brief
   * Constructs a matrix from individual values.
+  * Row mayor matrix.
+  * First index is the row, and the second is the column.
   */
   bowMatrix(float M00, float M01, float M02, float M03,
             float M04, float M05, float M06, float M07,
@@ -40,6 +44,8 @@ public:
   /*
   * @brief
   * Constructs a matrix from an array.
+  * Row Mayor matrix.
+  * First index is the row, and the second is the column.
   */
   explicit bowMatrix(const std::array<float, 16>& values);
 
@@ -113,25 +119,37 @@ public:
   /********************************************/
   /*  MEMBERS  */
   /********************************************/
+
+  /*
+  * Matrix values
+  */
   std::array<float, 16> matrixV;
 
   /********************************************/
   /*  OPERATORS  */
   /********************************************/
 
-  [[nodiscard]] FORCELINE void
+  /*
+  * @brief
+  *  Multiplies two matrix between each other.
+  *    If the columns on A are not the same as the rows on b, it cant be multiplied.
+  * @param BOWMATRIX&
+  * @return BOWMATRIX&
+  *  Returns a new matrix.
+  */
+  [[nodiscard]] FORCELINE bowMatrix&
   operator*= (const bowMatrix& other);
 
   [[nodiscard]] FORCELINE bowMatrix&
   operator*= (float value);
 
-  [[nodiscard]] FORCELINE  void
+  [[nodiscard]] FORCELINE bowMatrix&
   operator/= (const bowMatrix& other);
 
-  [[nodicard]] FORCELINE void
+  [[nodiscard]] FORCELINE bowMatrix&
   operator+= (const bowMatrix& other);
 
-  [[nodiscard]] FORCELINE void
+  [[nodiscard]] FORCELINE bowMatrix&
   operator-= (const bowMatrix& other);
 
   [[nodiscard]] FORCELINE bool
@@ -143,8 +161,8 @@ public:
   [[nodiscard]] FORCELINE bowMatrix
   operator- (const bowMatrix& other) const;
 
-  [[nodisacard]] FORCELINE bowMatrix
-  operator+ (const bowMatrix& otehr) const;
+  [[nodiscard]] FORCELINE bowMatrix
+  operator+ (const bowMatrix& other) const;
 
   [[nodiscard]] FORCELINE bowMatrix
   operator* (const bowMatrix& other) const;
@@ -158,4 +176,33 @@ public:
   [[nodiscard]] FORCELINE bowMatrix
   operator/ (float value) const;
 };
+
+FORCELINE bowMatrix&
+bowMatrix::operator*= (const bowMatrix& other){
+  bowMatrix result;
+
+  for (int row = 0; row < 4; ++row){
+    for (int column = 0; column < 4; ++column){
+      float value = 0.0f;
+
+      for (int k = 0; k < 4; ++k){
+        value += matrixV[row * 4 + k]
+          * other.matrixV[k * 4 + column];
+      }
+      result.matrixV[row * 4 + column] = value;
+    }
+  }
+  return result;
+}
+FORCELINE bowMatrix&
+bowMatrix::operator*= (float value){
+  bowMatrix result;
+  for (size_t i = 0; i < matrixV.size(); ++i){
+    result.matrixV[i] = matrixV[i] * value;
+   }
+  return result;
+}
+
+FORCELINE 
+
 }
