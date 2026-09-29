@@ -69,7 +69,7 @@ public:
   * @brief
   * 
   */
-  [[nodiscard]] bowMatrix& 
+  [[nodiscard]] bowMatrix
   getTransposed() const noexcept;
 
   /*

@@ -38,12 +38,9 @@ bowMatrix::transposed() const{
   return result;
 }
 
-bowMatrix&
+bowMatrix
 bowMatrix::getTransposed() const noexcept{
-
-  static thread_local bowMatrix tmp;
-  tmp = transposed();
-  return tmp;
+  return transposed();
 }
 
 float
