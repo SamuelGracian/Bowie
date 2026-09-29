@@ -97,6 +97,8 @@
 #if BOW_COMPILER == BOW_COMPILER_MSVC
 # if BOW_COMP_VER >= 1200
 #   define FORCELINE __forceinline
+#else 
+#   define FORCELINE __inline
 #   ifndef RESTRICT 
 # define RESTRICT __restrict
 #   endif

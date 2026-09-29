@@ -8,7 +8,7 @@ bowMatrix::bowMatrix(float M00, float M01, float M02, float M03,
                      float M04, float M05, float M06, float M07,
                      float M08, float M09, float M10, float M11,
                      float M12, float M13, float M14, float M15)
-  : matrixV {
+  : m_data {
   M00, M01, M02, M03,
   M04, M05, M06, M07,
   M08, M09, M10, M11,
@@ -16,15 +16,15 @@ bowMatrix::bowMatrix(float M00, float M01, float M02, float M03,
   }{}
 
 bowMatrix::bowMatrix(const std::array<float, 16>& values)
-  : matrixV(values){}
+  : m_data(values){}
 
 void
 bowMatrix::setIdentity(){
-  for (auto& v : matrixV){ v = 0.0f; }
-  matrixV[0] = 1.0f;
-  matrixV[5] = 1.0f;
-  matrixV[10] = 1.0f;
-  matrixV[15] = 1.0f;
+  for (auto& v : m_data){ v = 0.0f; }
+  m_data[0] = 1.0f;
+  m_data[5] = 1.0f;
+  m_data[10] = 1.0f;
+  m_data[15] = 1.0f;
 }
 
 bowMatrix
@@ -32,7 +32,7 @@ bowMatrix::transposed() const{
   bowMatrix result;
   for (int r = 0; r < 4; ++r){
     for (int c = 0; c < 4; ++c){
-      result.matrixV[r * 4 + c] = matrixV[c * 4 + r];
+      result.m_data[r * 4 + c] = m_data[c * 4 + r];
     }
   }
   return result;
@@ -45,10 +45,10 @@ bowMatrix::getTransposed() const noexcept{
 
 float
 bowMatrix::getDeterminant() const{
-  const float a00 = matrixV[0], a01 = matrixV[1], a02 = matrixV[2], a03 = matrixV[3];
-  const float a10 = matrixV[4], a11 = matrixV[5], a12 = matrixV[6], a13 = matrixV[7];
-  const float a20 = matrixV[8], a21 = matrixV[9], a22 = matrixV[10], a23 = matrixV[11];
-  const float a30 = matrixV[12], a31 = matrixV[13], a32 = matrixV[14], a33 = matrixV[15];
+  const float a00 = m_data[0], a01 = m_data[1], a02 = m_data[2], a03 = m_data[3];
+  const float a10 = m_data[4], a11 = m_data[5], a12 = m_data[6], a13 = m_data[7];
+  const float a20 = m_data[8], a21 = m_data[9], a22 = m_data[10], a23 = m_data[11];
+  const float a30 = m_data[12], a31 = m_data[13], a32 = m_data[14], a33 = m_data[15];
 
   auto det3 = [](float b00, float b01, float b02,
                  float b10, float b11, float b12,
@@ -72,10 +72,10 @@ bowMatrix::transformPosition(const Vector3& vector) const{
   const float y = vector.y;
   const float z = vector.z;
   return Vector4(
-    matrixV[0] * x + matrixV[1] * y + matrixV[2] * z + matrixV[3],
-    matrixV[4] * x + matrixV[5] * y + matrixV[6] * z + matrixV[7],
-    matrixV[8] * x + matrixV[9] * y + matrixV[10] * z + matrixV[11],
-    matrixV[12] * x + matrixV[13] * y + matrixV[14] * z + matrixV[15]
+    m_data[0] * x + m_data[1] * y + m_data[2] * z + m_data[3],
+    m_data[4] * x + m_data[5] * y + m_data[6] * z + m_data[7],
+    m_data[8] * x + m_data[9] * y + m_data[10] * z + m_data[11],
+    m_data[12] * x + m_data[13] * y + m_data[14] * z + m_data[15]
   );
 }
 
@@ -85,15 +85,281 @@ bowMatrix::transformVector(const Vector3& vector) const{
   const float y = vector.y;
   const float z = vector.z;
   return Vector4(
-    matrixV[0] * x + matrixV[1] * y + matrixV[2] * z,
-    matrixV[4] * x + matrixV[5] * y + matrixV[6] * z,
-    matrixV[8] * x + matrixV[9] * y + matrixV[10] * z,
-    matrixV[12] * x + matrixV[13] * y + matrixV[14] * z
+    m_data[0] * x + m_data[1] * y + m_data[2] * z,
+    m_data[4] * x + m_data[5] * y + m_data[6] * z,
+    m_data[8] * x + m_data[9] * y + m_data[10] * z,
+    m_data[12] * x + m_data[13] * y + m_data[14] * z
   );
 }
 
+bowMatrix
+bowMatrix::getInverse() const{
+  const float* m = m_data.data();
+  float inv[16];
+
+  inv[0] = m[5] * m[10] * m[15] -
+    m[5] * m[11] * m[14] -
+    m[9] * m[6] * m[15] +
+    m[9] * m[7] * m[14] +
+    m[13] * m[6] * m[11] -
+    m[13] * m[7] * m[10];
+
+  inv[1] = -m[1] * m[10] * m[15] +
+    m[1] * m[11] * m[14] +
+    m[9] * m[2] * m[15] -
+    m[9] * m[3] * m[14] -
+    m[13] * m[2] * m[11] +
+    m[13] * m[3] * m[10];
+
+  inv[2] = m[1] * m[6] * m[15] -
+    m[1] * m[7] * m[14] -
+    m[5] * m[2] * m[15] +
+    m[5] * m[3] * m[14] +
+    m[13] * m[2] * m[7] -
+    m[13] * m[3] * m[6];
+
+  inv[3] = -m[1] * m[6] * m[11] +
+    m[1] * m[7] * m[10] +
+    m[5] * m[2] * m[11] -
+    m[5] * m[3] * m[10] -
+    m[9] * m[2] * m[7] +
+    m[9] * m[3] * m[6];
+
+  inv[4] = -m[4] * m[10] * m[15] +
+    m[4] * m[11] * m[14] +
+    m[8] * m[6] * m[15] -
+    m[8] * m[7] * m[14] -
+    m[12] * m[6] * m[11] +
+    m[12] * m[7] * m[10];
+
+  inv[5] = m[0] * m[10] * m[15] -
+    m[0] * m[11] * m[14] -
+    m[8] * m[2] * m[15] +
+    m[8] * m[3] * m[14] +
+    m[12] * m[2] * m[11] -
+    m[12] * m[3] * m[10];
+
+  inv[6] = -m[0] * m[6] * m[15] +
+    m[0] * m[7] * m[14] +
+    m[4] * m[2] * m[15] -
+    m[4] * m[3] * m[14] -
+    m[12] * m[2] * m[7] +
+    m[12] * m[3] * m[6];
+
+  inv[7] = m[0] * m[6] * m[11] -
+    m[0] * m[7] * m[10] -
+    m[4] * m[2] * m[11] +
+    m[4] * m[3] * m[10] +
+    m[8] * m[2] * m[7] -
+    m[8] * m[3] * m[6];
+
+  inv[8] = m[4] * m[9] * m[15] -
+    m[4] * m[11] * m[13] -
+    m[8] * m[5] * m[15] +
+    m[8] * m[7] * m[13] +
+    m[12] * m[5] * m[11] -
+    m[12] * m[7] * m[9];
+
+  inv[9] = -m[0] * m[9] * m[15] +
+    m[0] * m[11] * m[13] +
+    m[8] * m[1] * m[15] -
+    m[8] * m[3] * m[13] -
+    m[12] * m[1] * m[11] +
+    m[12] * m[3] * m[9];
+
+  inv[10] = m[0] * m[5] * m[15] -
+    m[0] * m[7] * m[13] -
+    m[4] * m[1] * m[15] +
+    m[4] * m[3] * m[13] +
+    m[12] * m[1] * m[7] -
+    m[12] * m[3] * m[5];
+
+  inv[11] = -m[0] * m[5] * m[11] +
+    m[0] * m[7] * m[9] +
+    m[4] * m[1] * m[11] -
+    m[4] * m[3] * m[9] -
+    m[8] * m[1] * m[7] +
+    m[8] * m[3] * m[5];
+
+  inv[12] = -m[4] * m[9] * m[14] +
+    m[4] * m[10] * m[13] +
+    m[8] * m[5] * m[14] -
+    m[8] * m[6] * m[13] -
+    m[12] * m[5] * m[10] +
+    m[12] * m[6] * m[9];
+
+  inv[13] = m[0] * m[9] * m[14] -
+    m[0] * m[10] * m[13] -
+    m[8] * m[1] * m[14] +
+    m[8] * m[2] * m[13] +
+    m[12] * m[1] * m[10] -
+    m[12] * m[2] * m[9];
+
+  inv[14] = -m[0] * m[5] * m[14] +
+    m[0] * m[6] * m[13] +
+    m[4] * m[1] * m[14] -
+    m[4] * m[2] * m[13] -
+    m[12] * m[1] * m[6] +
+    m[12] * m[2] * m[5];
+
+  inv[15] = m[0] * m[5] * m[10] -
+    m[0] * m[6] * m[9] -
+    m[4] * m[1] * m[10] +
+    m[4] * m[2] * m[9] +
+    m[8] * m[1] * m[6] -
+    m[8] * m[2] * m[5];
+
+  float det = m[0] * inv[0] + m[1] * inv[4] + m[2] * inv[8] + m[3] * inv[12];
+
+  if (det == 0.0f){
+    // Non-invertible: return zero-initialized matrix
+    return bowMatrix();
+  }
+
+  float invDet = 1.0f / det;
+  std::array<float, 16> out;
+  for (int i = 0; i < 16; ++i){
+    out[i] = inv[i] * invDet;
+  }
+
+  return bowMatrix(out);
+}
+
 const std::array<float, 16>&
-bowMatrix::values()const{
-  return matrixV;
+bowMatrix::values() const noexcept{
+  return m_data;
 }
+
+FORCELINE bowMatrix&
+bowMatrix::operator*= (const bowMatrix& other){
+  bowMatrix result;
+
+  for (int row = 0; row < 4; ++row){
+    for (int column = 0; column < 4; ++column){
+      float value = 0.0f;
+
+      for (int k = 0; k < 4; ++k){
+        value += m_data[row * 4 + k]
+          * other.m_data[k * 4 + column];
+      }
+      result.m_data[row * 4 + column] = value;
+    }
+  }
+  // assign computed result back to this
+  m_data = result.m_data;
+  return *this;
 }
+FORCELINE bowMatrix&
+bowMatrix::operator*= (float value){
+  for (size_t i = 0; i < m_data.size(); ++i){
+    m_data[i] = m_data[i] * value;
+  }
+  return *this;
+}
+
+FORCELINE bowMatrix
+bowMatrix::operator*(const bowMatrix& other) const{
+  bowMatrix result;
+  for (int row = 0; row < 4; ++row){
+    for (int column = 0; column < 4; ++column){
+      float value = 0.0f;
+
+      for (int k = 0; k < 4; ++k){
+        value += m_data[row * 4 + k]
+          * other.m_data[k * 4 + column];
+      }
+
+      result.m_data[row * 4 + column] = value;
+    }
+  }
+
+  return result;
+}
+
+FORCELINE bowMatrix&
+bowMatrix::operator/= (const bowMatrix& other){
+  *this = (*this) * other.getInverse();
+  return *this;
+}
+
+
+FORCELINE bowMatrix&
+bowMatrix::operator+=(const bowMatrix& other){
+  for (size_t i = 0; i < other.m_data.size(); ++i){
+    m_data[i] += other.m_data[i];
+  }
+  return *this;
+}
+
+FORCELINE bowMatrix&
+bowMatrix::operator-= (const bowMatrix& other){
+  for (size_t i = 0; i < other.m_data.size(); ++i){
+    m_data[i] -= other.m_data[i];
+  }
+  return *this;
+}
+
+FORCELINE bool
+bowMatrix::operator!=(const bowMatrix& other){
+  for (size_t i = 0; i < other.m_data.size(); ++i){
+    if (m_data[i] != other.m_data[i]){
+      return false;
+    }
+  }
+  return true;
+}
+
+FORCELINE bool
+bowMatrix::operator==(const bowMatrix& other){
+  for (size_t i = 0; i < other.m_data.size(); ++i){
+    if (m_data[i] == other.m_data[i]){
+      return true;
+    }
+  }
+  return false;
+}
+
+FORCELINE bowMatrix
+bowMatrix::operator-(const bowMatrix& other) const{
+  bowMatrix result;
+  for (size_t i = 0; i < other.m_data.size(); ++i){
+    result.m_data[i] = m_data[i] - other.m_data[i];
+  }
+  return result;
+}
+
+FORCELINE bowMatrix
+bowMatrix::operator+(const bowMatrix& other) const{
+  bowMatrix result;
+  for (size_t i = 0; i < other.m_data.size(); ++i){
+    result.m_data[i] = m_data[i] + other.m_data[i];
+  }
+  return result;
+}
+
+FORCELINE bowMatrix
+bowMatrix::operator* (float value) const{
+  bowMatrix result;
+  for (size_t i = 0; i < m_data.size(); ++i){
+    result.m_data[i] = m_data[i] * value;
+  }
+  return result;
+}
+
+FORCELINE bowMatrix
+bowMatrix::operator/(const bowMatrix& other) const{
+  bowMatrix result;
+  result = (*this) * other.getInverse();
+  return result;
+}
+
+FORCELINE bowMatrix
+bowMatrix::operator/(float scalar) const{
+  bowMatrix result;
+  for (size_t i = 0; i < m_data.size(); ++i){
+    result.m_data[i] = m_data[i] / scalar;
+  }
+  return result;
+}
+
+} // namespace bowEngineSDK

@@ -12,8 +12,11 @@
 
 namespace bowEngineSDK
 {
+  /********************************************/
+  /*  TRANSLATION MATRIX  */
+  /********************************************/
 
-class BOW_UTILITIES_EXPORT TranslationMatrix : public bowMatrix
+class BOW_UTILITIES_EXPORT translationMatrix : public bowMatrix
 {
 public:
 
@@ -22,8 +25,10 @@ public:
   *  Constructor for translation matrix given a vector.
   * @param VECTOR3
   */
-  TranslationMatrix(const vector3& translation);
+  translationMatrix(const Vector3& translation)
+    : bowMatrix(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+                translation.x, translation.y, translation.z, 1.0f)
+  {}
 
 };
-
 }
