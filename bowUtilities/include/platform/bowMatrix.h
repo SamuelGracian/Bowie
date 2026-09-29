@@ -101,7 +101,7 @@ public:
   * @return VECTOR4
   */
   [[nodiscard]] Vector4
-    transformVector(const Vector3& vector) const;
+  transformVector(const Vector3& vector) const;
 
   /*
   * @brief
@@ -118,11 +118,12 @@ public:
   /********************************************/
   /*  OPERATORS  */
   /********************************************/
-  [[nodiscard]] FORCELINE bowMatrix
-  operator* (const bowMatrix& other) const;
 
   [[nodiscard]] FORCELINE void
   operator*= (const bowMatrix& other);
+
+  [[nodiscard]] FORCELINE bowMatrix&
+  operator*= (float value);
 
   [[nodiscard]] FORCELINE  void
   operator/= (const bowMatrix& other);
@@ -138,5 +139,23 @@ public:
 
   [[nodiscard]] FORCELINE bool
   operator== (const bowMatrix& other);
+
+  [[nodiscard]] FORCELINE bowMatrix
+  operator- (const bowMatrix& other) const;
+
+  [[nodisacard]] FORCELINE bowMatrix
+  operator+ (const bowMatrix& otehr) const;
+
+  [[nodiscard]] FORCELINE bowMatrix
+  operator* (const bowMatrix& other) const;
+
+  [[nodiscard]] FORCELINE bowMatrix
+  operator* (float value) const;
+
+  [[nodiscard]] FORCELINE bowMatrix
+  operator/ (const bowMatrix& other) const;
+
+  [[nodiscard]] FORCELINE bowMatrix
+  operator/ (float value) const;
 };
 }
