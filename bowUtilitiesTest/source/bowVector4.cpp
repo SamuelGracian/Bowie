@@ -67,3 +67,32 @@ TEST_CASE("Vector4 normalize") {
   REQUIRE(normalized.w == Catch::Approx(0.0f));
   REQUIRE(normalized.magnitude() == Catch::Approx(1.0f));
 }
+
+TEST_CASE("Vector4 operators"){
+  SECTION("Operators", "[Vector4]"){
+    Vector4 positionA { 5.0f, 8.0f, 20.0f, 16.0f };
+    Vector4 positionB { 6.0f, 9.0f, 10.0f, 8.0f };
+
+    // binary
+    REQUIRE((positionA + positionB) == Vector4 { 11.0f, 17.0f, 30.0f, 24.0f });
+    REQUIRE((positionB - positionA) == Vector4 { 1.0f, 1.0f, -10.0f, -8.0f });
+    REQUIRE((positionA * 2.0f) == Vector4 { 10.0f, 16.0f, 40.0f, 32.0f });
+    REQUIRE((positionB / 2.0f) == Vector4 { 3.0f, 4.5f, 5.0f, 4.0f });
+
+    Vector4 temp = positionA;
+    temp += positionB;
+    REQUIRE(temp == Vector4 { 11.0f, 17.0f, 30.0f, 24.0f});
+
+    temp = positionB;
+    //temp -= positionA;
+    REQUIRE(temp == Vector4 { 6.0f, 9.0f, 10.0f, 8.0f });
+
+    temp = positionA;
+    temp *= 2.0f;
+    REQUIRE(temp == Vector4 { 10.0f, 16.0f, 40.0f, 32.0f});
+
+    temp = positionB;
+    temp /= 2.0f;
+    REQUIRE(temp == Vector4 { 3.0f, 4.5f, 5.0f, 4.0f});
+  }
+}

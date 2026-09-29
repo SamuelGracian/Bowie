@@ -61,4 +61,31 @@ TEST_CASE("Vector2 operations", "[Vector2]") {
   SECTION("Vector2 size", "[Vector2]") {
     REQUIRE(sizeof(Vector2) == sizeof(float) * 2);
   }
+
+  SECTION("Operators", "[Vector2]"){
+    Vector2 positionA { 5.0f, 8.0f };
+    Vector2 positionB { 6.0f, 9.0f };
+
+    // binary
+    REQUIRE((positionA + positionB) == Vector2 { 11.0f, 17.0f });
+    REQUIRE((positionB - positionA) == Vector2 { 1.0f, 1.0f });
+    REQUIRE((positionA * 2.0f) == Vector2 { 10.0f, 16.0f });
+    REQUIRE((positionB / 2.0f) == Vector2 { 3.0f, 4.5f });
+
+    Vector2 temp = positionA;
+    temp += positionB;
+    REQUIRE(temp == Vector2 { 11.0f, 17.0f });
+
+    temp = positionB;
+    temp -= positionA;
+    REQUIRE(temp == Vector2 { 1.0f, 1.0f });
+
+    temp = positionA;
+    temp *= 2.0f;
+    REQUIRE(temp == Vector2 { 10.0f, 16.0f });
+
+    temp = positionB;
+    temp /= 2.0f;
+    REQUIRE(temp == Vector2 { 3.0f, 4.5f });
+  }
 }
