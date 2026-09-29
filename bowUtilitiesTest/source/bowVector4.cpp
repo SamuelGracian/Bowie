@@ -84,7 +84,7 @@ TEST_CASE("Vector4 operators"){
     REQUIRE(temp == Vector4 { 11.0f, 17.0f, 30.0f, 24.0f});
 
     temp = positionB;
-    //temp -= positionA;
+    temp -= positionA;
     REQUIRE(temp == Vector4 { 6.0f, 9.0f, 10.0f, 8.0f });
 
     temp = positionA;
