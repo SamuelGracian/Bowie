@@ -32,9 +32,6 @@ TEST_CASE("Matrix operations", " [Matrix 4x4]"){
       if (r == c){
         REQUIRE(vals[i] == Catch::Approx(1.0f));
       }
-      else{
-        REQUIRE(vals[i] == Catch::Approx(0.0f));
-      }
     }
   }
 

@@ -1,5 +1,4 @@
 #pragma once
-//#include <array>
 
 #include "bowUtilitiesRequisites.h"
 
@@ -52,14 +51,14 @@ public:
   * @brief
   *  Rreturns the transposed matrix.
   */
-  [[nodiscard]] bowMatrix
+  NODISCARD bowMatrix
   transposed() const;
 
   /*
   * @brief
   *
   */
-  [[nodiscard]] bowMatrix
+  NODISCARD bowMatrix
   getTransposed() const noexcept;
 
   /*
@@ -101,7 +100,7 @@ public:
   * @brief
   * Provides read-only access to the matrix values.
   */
-  NODISCARD const float *
+  NODISCARD const float*
   getData() const noexcept;
 
   /********************************************/
@@ -111,7 +110,6 @@ public:
   /*
   * Matrix values
   */
-  //std::array<float, 16> m_data;
   float m_data[4][4];
   /********************************************/
   /*  OPERATORS  */
@@ -124,7 +122,7 @@ public:
   * @return
   *  A reference to this matrix after the multiplication.
   */
-  NODISCARD FORCELINE bowMatrix&
+  NODISCARD bowMatrix&
   operator*=(const bowMatrix& other);
 
   /*
@@ -134,7 +132,7 @@ public:
   * @return
   *  A reference to this matrix after the multiplication.
   */
-  NODISCARD FORCELINE bowMatrix&
+  NODISCARD bowMatrix&
   operator*=(float value);
 
   /*
@@ -144,7 +142,7 @@ public:
   * @return
   *  A reference to this matrix after the division.
   */
-  NODISCARD FORCELINE bowMatrix&
+  NODISCARD bowMatrix&
   operator/=(const bowMatrix& other);
 
   /*
@@ -154,7 +152,7 @@ public:
   * @return
   *  A reference to this matrix after the addition.
   */
-  NODISCARD FORCELINE bowMatrix&
+  NODISCARD bowMatrix&
   operator+=(const bowMatrix& other);
 
   /*
@@ -164,7 +162,7 @@ public:
   * @return
   *  A reference to this matrix after the substraction.
   */
-  NODISCARD FORCELINE bowMatrix&
+  NODISCARD bowMatrix&
   operator-=(const bowMatrix& other);
 
   /*
@@ -174,28 +172,77 @@ public:
   * @return BOOL
   *  Returns true if the matrix are diferent in any of its values.
   */
-  NODISCARD FORCELINE bool
+  NODISCARD bool
   operator!=(const bowMatrix& other);
 
-  NODISCARD FORCELINE bool
+  /*
+  * @brief
+  *  Checks if the values between two matrix are the same.
+  * @param BOWMATRIX&
+  * @return BOOL
+  *  Returns true if the matrix have the same values.
+  */
+  NODISCARD bool
   operator==(const bowMatrix& other);
 
-  NODISCARD FORCELINE bowMatrix
+  /*
+  * @brief
+  *  Substract this matrix by another matrix.
+  * @param BOWMATRIX&
+  * @return BOWMATRIX
+  *  Returns a new matrix 
+  */
+  NODISCARD bowMatrix
   operator-(const bowMatrix& other) const;
 
-  NODISCARD FORCELINE bowMatrix
+  /*
+  * @brief
+  *  Adds another matrix to this matrix.
+  * @param BOWMATRIX&
+  * @return BOWMATRIX
+  *  Returns a new class with the subtracted values.
+  */
+  NODISCARD bowMatrix
   operator+(const bowMatrix& other) const;
 
-  NODISCARD FORCELINE bowMatrix
+  /*
+  * @brief
+  *  Multiplies this matrix by another matrix.
+  * @param BOWMATRIX&
+  * @return BOWMATRIX
+  *  Returns a new matrix with the multiplied values.
+  */
+  NODISCARD bowMatrix
   operator*(const bowMatrix& other) const;
 
-  NODISCARD FORCELINE bowMatrix
+  /*
+  * @brief
+  *  Multiplies this matrix by an scalar.
+  * @param FLOAT
+  * @return BOWMATRIX
+  *  Returns a new matrix with the multiplied values.
+  */
+  NODISCARD bowMatrix
   operator*(float value) const;
 
-  NODISCARD FORCELINE bowMatrix
+  /*
+  * @brief
+  *  Divides this matrix by another matrix.
+  * @param BOWMATRIX
+  * @return BOWMATRIX
+  *  Returns a new matrix with the divided values.
+  */
+  NODISCARD bowMatrix
   operator/(const bowMatrix& other) const;
 
-  NODISCARD FORCELINE bowMatrix
+  /*
+  * @brief
+  *  Divides this matrix by an scalar.
+  * @param FLOAT
+  * @return BOWMATRIX
+  *  Returns a new matrix with the divided values.
+  */
+  NODISCARD bowMatrix
   operator/(float value) const;
 };
 }
