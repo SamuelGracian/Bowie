@@ -58,4 +58,31 @@ TEST_CASE("Vector3 operations", " [vector 3]") {
   SECTION("Vector3 size") {
     REQUIRE(sizeof(Vector3) == sizeof(float) * 3);
   }
+
+  SECTION("Operators", "[Vector3]"){
+    Vector3 positionA { 5.0f, 8.0f, 10.0f };
+    Vector3 positionB { 6.0f, 9.0f, 5.0f };
+
+    // binary
+    REQUIRE((positionA + positionB) == Vector3 { 11.0f, 17.0f, 15.0f });
+    REQUIRE((positionB - positionA) == Vector3 { 1.0f, 1.0f, -5.0f });
+    REQUIRE((positionA * 2.0f) == Vector3 { 10.0f, 16.0f, 20.0f });
+    REQUIRE((positionB / 2.0f) == Vector3 { 3.0f, 4.5f, 2.5f });
+
+    Vector3 temp = positionA;
+    temp += positionB;
+    REQUIRE(temp == Vector3 { 11.0f, 17.0f, 15.0f });
+
+    temp = positionB;
+    temp -= positionA;
+    REQUIRE(temp == Vector3 { 1.0f, 1.0f, -5.0f });
+
+    temp = positionA;
+    temp *= 2.0f;
+    REQUIRE(temp == Vector3 { 10.0f, 16.0f, 20.0f });
+
+    temp = positionB;
+    temp /= 2.0f;
+    REQUIRE(temp == Vector3 { 3.0f, 4.5f, 2.5f });
+  }
 }
