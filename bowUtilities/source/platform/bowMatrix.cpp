@@ -5,50 +5,48 @@
 namespace bowEngineSDK
 {
 bowMatrix::bowMatrix(float M00, float M01, float M02, float M03,
-                     float M04, float M05, float M06, float M07,
-                     float M08, float M09, float M10, float M11,
-                     float M12, float M13, float M14, float M15)
+                     float M10, float M11, float M12, float M13,
+                     float M20, float M21, float M22, float M23,
+                     float M30, float M31, float M32, float M33)
   : m_data {
   M00, M01, M02, M03,
-  M04, M05, M06, M07,
-  M08, M09, M10, M11,
-  M12, M13, M14, M15
-  }{}
-
-bowMatrix::bowMatrix(const std::array<float, 16>& values)
-  : m_data(values){}
+  M10, M11, M12, M13,
+  M20, M21, M22, M23,
+  M30, M31, M32, M33
+  }
+{}
 
 void
-bowMatrix::setIdentity(){
-  for (auto& v : m_data){ v = 0.0f; }
-  m_data[0] = 1.0f;
-  m_data[5] = 1.0f;
-  m_data[10] = 1.0f;
-  m_data[15] = 1.0f;
+bowMatrix::setIdentity() {
+
+  m_data[0][0] = 1.0f;
+  m_data[1][1] = 1.0f;
+  m_data[2][2] = 1.0f;
+  m_data[3][3] = 1.0f;
 }
 
 bowMatrix
-bowMatrix::transposed() const{
+bowMatrix::transposed() const {
   bowMatrix result;
-  for (int r = 0; r < 4; ++r){
-    for (int c = 0; c < 4; ++c){
-      result.m_data[r * 4 + c] = m_data[c * 4 + r];
+  for (int32 i = 0; i < 4; ++i){
+    for (int32 j = 0; j < 4; ++j){
+      result.m_data[i][j] = m_data[j][i];
     }
   }
   return result;
 }
 
 bowMatrix
-bowMatrix::getTransposed() const noexcept{
+bowMatrix::getTransposed() const noexcept {
   return transposed();
 }
 
 float
-bowMatrix::getDeterminant() const{
-  const float a00 = m_data[0], a01 = m_data[1], a02 = m_data[2], a03 = m_data[3];
-  const float a10 = m_data[4], a11 = m_data[5], a12 = m_data[6], a13 = m_data[7];
-  const float a20 = m_data[8], a21 = m_data[9], a22 = m_data[10], a23 = m_data[11];
-  const float a30 = m_data[12], a31 = m_data[13], a32 = m_data[14], a33 = m_data[15];
+bowMatrix::getDeterminant() const {
+  const float a00 = m_data[0][0], a01 = m_data[0][1], a02 = m_data[0][2], a03 = m_data[0][3];
+  const float a10 = m_data[1][0], a11 = m_data[1][1], a12 = m_data[1][2], a13 = m_data[1][3];
+  const float a20 = m_data[2][0], a21 = m_data[2][1], a22 = m_data[2][2], a23 = m_data[2][3];
+  const float a30 = m_data[3][0], a31 = m_data[3][1], a32 = m_data[3][2], a33 = m_data[3][3];
 
   auto det3 = [](float b00, float b01, float b02,
                  float b10, float b11, float b12,
@@ -67,34 +65,34 @@ bowMatrix::getDeterminant() const{
 }
 
 Vector4
-bowMatrix::transformPosition(const Vector3& vector) const{
+bowMatrix::transformPosition(const Vector3& vector) const {
   const float x = vector.x;
   const float y = vector.y;
   const float z = vector.z;
   return Vector4(
-    m_data[0] * x + m_data[1] * y + m_data[2] * z + m_data[3],
-    m_data[4] * x + m_data[5] * y + m_data[6] * z + m_data[7],
-    m_data[8] * x + m_data[9] * y + m_data[10] * z + m_data[11],
-    m_data[12] * x + m_data[13] * y + m_data[14] * z + m_data[15]
+    m_data[0][0] * x + m_data[0][1] * y + m_data[0][2] * z + m_data[0][3],
+    m_data[1][0] * x + m_data[1][1] * y + m_data[1][2] * z + m_data[1][3],
+    m_data[2][0] * x + m_data[2][1] * y + m_data[2][2] * z + m_data[2][3],
+    m_data[3][0] * x + m_data[3][1] * y + m_data[3][2] * z + m_data[3][3]
   );
 }
 
 Vector4
-bowMatrix::transformVector(const Vector3& vector) const{
+bowMatrix::transformVector(const Vector3& vector) const {
   const float x = vector.x;
   const float y = vector.y;
   const float z = vector.z;
   return Vector4(
-    m_data[0] * x + m_data[1] * y + m_data[2] * z,
-    m_data[4] * x + m_data[5] * y + m_data[6] * z,
-    m_data[8] * x + m_data[9] * y + m_data[10] * z,
-    m_data[12] * x + m_data[13] * y + m_data[14] * z
+    m_data[0][0] * x + m_data[0][1] * y + m_data[0][2] * z,
+    m_data[1][0] * x + m_data[1][1] * y + m_data[1][2] * z,
+    m_data[2][0] * x + m_data[2][1] * y + m_data[2][2] * z,
+    m_data[3][0] * x + m_data[3][1] * y + m_data[3][2] * z
   );
 }
 
 bowMatrix
-bowMatrix::getInverse() const{
-  const float* m = m_data.data();
+bowMatrix::getInverse() const {
+  const float* m = &m_data[0][0];
   float inv[16];
 
   inv[0] = m[5] * m[10] * m[15] -
@@ -211,65 +209,62 @@ bowMatrix::getInverse() const{
 
   float det = m[0] * inv[0] + m[1] * inv[4] + m[2] * inv[8] + m[3] * inv[12];
 
-  if (det == 0.0f){
+  if (0.0F == det){
     // Non-invertible: return zero-initialized matrix
     return bowMatrix();
   }
 
   float invDet = 1.0f / det;
-  std::array<float, 16> out;
-  for (int i = 0; i < 16; ++i){
-    out[i] = inv[i] * invDet;
+  bowMatrix result;
+  for (int32 i = 0; i < 16; ++i){
+    (&result.m_data[0][0])[i] = inv[i] * invDet;
   }
 
-  return bowMatrix(out);
+  return result;
 }
 
-const std::array<float, 16>&
-bowMatrix::values() const noexcept{
-  return m_data;
+const float *
+bowMatrix::getData() const noexcept {
+  return &m_data[0][0];
 }
 
 FORCELINE bowMatrix&
-bowMatrix::operator*= (const bowMatrix& other){
+bowMatrix::operator*= (const bowMatrix& other) {
   bowMatrix result;
 
-  for (int row = 0; row < 4; ++row){
-    for (int column = 0; column < 4; ++column){
-      float value = 0.0f;
+  for (size_t row = 0; row < 4; ++row){
+    for (size_t column = 0; column < 4; ++column){
+      result.m_data[row][column] = 0.0f;
 
-      for (int k = 0; k < 4; ++k){
-        value += m_data[row * 4 + k]
-          * other.m_data[k * 4 + column];
+      for (size_t k = 0; k < 4; ++k){
+        result.m_data[row][column] += m_data[row][k] * other.m_data[k][column];
       }
-      result.m_data[row * 4 + column] = value;
     }
   }
-  // assign computed result back to this
-  m_data = result.m_data;
-  return *this;
+
+ return *this = result;
 }
+
 FORCELINE bowMatrix&
-bowMatrix::operator*= (float value){
-  for (size_t i = 0; i < m_data.size(); ++i){
-    m_data[i] = m_data[i] * value;
+bowMatrix::operator*= (float value) {
+  float* data = &m_data[0][0];
+
+  for (int32 i = 0; i < 16; i++){
+    data[i] *= value;
   }
   return *this;
 }
 
 FORCELINE bowMatrix
-bowMatrix::operator*(const bowMatrix& other) const{
+bowMatrix::operator*(const bowMatrix& other) const {
   bowMatrix result;
-  for (int row = 0; row < 4; ++row){
-    for (int column = 0; column < 4; ++column){
-      float value = 0.0f;
+  for (int32 row = 0; row < 4; row++){
+    for (int32 column = 0; column < 4; ++column){
+      result.m_data[row][column] = 0.0f;
 
-      for (int k = 0; k < 4; ++k){
-        value += m_data[row * 4 + k]
-          * other.m_data[k * 4 + column];
+      for (int32 k = 0; k < 4; ++k){
+        result.m_data[row][column] += m_data[row][column] * other.m_data[row][column];
       }
-
-      result.m_data[row * 4 + column] = value;
     }
   }
 
@@ -277,88 +272,108 @@ bowMatrix::operator*(const bowMatrix& other) const{
 }
 
 FORCELINE bowMatrix&
-bowMatrix::operator/= (const bowMatrix& other){
+bowMatrix::operator/= (const bowMatrix& other) {
   *this = (*this) * other.getInverse();
   return *this;
 }
 
-
 FORCELINE bowMatrix&
 bowMatrix::operator+=(const bowMatrix& other){
-  for (size_t i = 0; i < other.m_data.size(); ++i){
-    m_data[i] += other.m_data[i];
+  for (int32 row = 0; row < 4; ++row){
+    for (int32 column = 0; column < 4; ++column){
+      m_data[row][column] += other.m_data[row][column];
+    }
   }
+
   return *this;
 }
 
 FORCELINE bowMatrix&
-bowMatrix::operator-= (const bowMatrix& other){
-  for (size_t i = 0; i < other.m_data.size(); ++i){
-    m_data[i] -= other.m_data[i];
+bowMatrix::operator-= (const bowMatrix& other) {
+  for (int32 row = 0; row < 4; ++row){
+    for (int32 column = 0; column < 4; ++column){
+      m_data[row][column] -= other.m_data[row][column];
+    }
   }
+
   return *this;
 }
 
 FORCELINE bool
-bowMatrix::operator!=(const bowMatrix& other){
-  for (size_t i = 0; i < other.m_data.size(); ++i){
-    if (m_data[i] != other.m_data[i]){
-      return false;
-    }
-  }
-  return true;
-}
-
-FORCELINE bool
-bowMatrix::operator==(const bowMatrix& other){
-  for (size_t i = 0; i < other.m_data.size(); ++i){
-    if (m_data[i] == other.m_data[i]){
-      return true;
+bowMatrix::operator!=(const bowMatrix& other) {
+  for (int32 row = 0; row < 4; ++row){
+    for (int32 column = 0; column < 4; ++column){
+      if (m_data[row][column] != other.m_data[row][column]){
+        return true;
+      }
     }
   }
   return false;
 }
 
-FORCELINE bowMatrix
-bowMatrix::operator-(const bowMatrix& other) const{
-  bowMatrix result;
-  for (size_t i = 0; i < other.m_data.size(); ++i){
-    result.m_data[i] = m_data[i] - other.m_data[i];
+FORCELINE bool
+bowMatrix::operator==(const bowMatrix& other) {
+  for (int32 row = 0; row < 4; ++row){
+    for (int32 column = 0; column < 4; ++column){
+      if (m_data[row][column] != other.m_data[row][column]){
+        return false;
+      }
+    }
   }
+
+  return true;
+}
+
+FORCELINE bowMatrix
+bowMatrix::operator-(const bowMatrix& other) const {
+  bowMatrix result;
+  for (int32 row = 0; row < 4; ++row){
+    for (int32 column = 0; column < 4; ++column){
+      result.m_data[row][column] = m_data[row][column] - other.m_data[row][column];
+    }
+  }
+
   return result;
 }
 
 FORCELINE bowMatrix
-bowMatrix::operator+(const bowMatrix& other) const{
+bowMatrix::operator+(const bowMatrix& other) const {
   bowMatrix result;
-  for (size_t i = 0; i < other.m_data.size(); ++i){
-    result.m_data[i] = m_data[i] + other.m_data[i];
+  for (int32 row = 0; row < 4; ++row){
+    for (int32 column = 0; column < 4; ++column){
+      result.m_data[row][column] = m_data[row][column] + other.m_data[row][column];
+    }
   }
+
   return result;
 }
 
 FORCELINE bowMatrix
-bowMatrix::operator* (float value) const{
-  bowMatrix result;
-  for (size_t i = 0; i < m_data.size(); ++i){
-    result.m_data[i] = m_data[i] * value;
+bowMatrix::operator* (float value) const {
+  bowMatrix result = *this;
+  float* data = &result.m_data[0][0];
+  for (int32 i = 0; i < 16; ++i){
+    data[i] *= value;
   }
+
   return result;
 }
 
 FORCELINE bowMatrix
-bowMatrix::operator/(const bowMatrix& other) const{
+bowMatrix::operator/(const bowMatrix& other) const {
   bowMatrix result;
   result = (*this) * other.getInverse();
   return result;
 }
 
 FORCELINE bowMatrix
-bowMatrix::operator/(float scalar) const{
-  bowMatrix result;
-  for (size_t i = 0; i < m_data.size(); ++i){
-    result.m_data[i] = m_data[i] / scalar;
+bowMatrix::operator/(float scalar) const {
+  bowMatrix result = *this;
+  float* data = &result.m_data[0][0];
+  for (int32 i = 0; i < 16; ++i){
+    data[i] /= scalar;
   }
+
   return result;
 }
 

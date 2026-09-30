@@ -1,6 +1,5 @@
 #pragma once
-
-#include <array>
+//#include <array>
 
 #include "bowUtilitiesRequisites.h"
 
@@ -33,14 +32,6 @@ public:
             float M04, float M05, float M06, float M07,
             float M08, float M09, float M10, float M11,
             float M12, float M13, float M14, float M15);
-
-  /*
-  * @brief
-  * Constructs a matrix from an array.
-  * Row Mayor matrix.
-  * First index is the row, and the second is the column.
-  */
-  explicit bowMatrix(const std::array<float, 16>& values);
 
   /*
   * @brief
@@ -83,7 +74,7 @@ public:
   * @param NONE
   * @return
   */
-  [[nodiscard]] float
+  NODISCARD float
   getDeterminant() const;
 
   /*
@@ -91,7 +82,7 @@ public:
   * @param VECTOR3&
   * @return VECTOR4
   */
-  [[nodiscard]] Vector4
+  NODISCARD Vector4
   transformPosition(const Vector3& vector) const;
 
   /*
@@ -99,19 +90,19 @@ public:
   * @param VECTOR3&
   * @return VECTOR4
   */
-  [[nodiscard]] Vector4
+  NODISCARD Vector4
   transformVector(const Vector3& vector) const;
 
 
-  [[nodiscard]] bowMatrix
+  NODISCARD bowMatrix
   getInverse() const;
 
   /*
   * @brief
   * Provides read-only access to the matrix values.
   */
-  [[nodiscard]] const std::array<float, 16>&
-  values() const noexcept;
+  NODISCARD const float *
+  getData() const noexcept;
 
   /********************************************/
   /*  MEMBERS  */
@@ -120,49 +111,91 @@ public:
   /*
   * Matrix values
   */
-  std::array<float, 16> m_data;
-
+  //std::array<float, 16> m_data;
+  float m_data[4][4];
   /********************************************/
   /*  OPERATORS  */
   /********************************************/
-  [[nodiscard]] FORCELINE bowMatrix&
-  operator*= (const bowMatrix& other);
 
-  [[nodiscard]] FORCELINE bowMatrix&
-  operator*= (float value);
+  /*
+  * @brief
+  *  Multplies this matrix by another matrix.
+  * @param BOWMATRIX&
+  * @return
+  *  A reference to this matrix after the multiplication.
+  */
+  NODISCARD FORCELINE bowMatrix&
+  operator*=(const bowMatrix& other);
 
-  [[nodiscard]] FORCELINE bowMatrix&
-  operator/= (const bowMatrix& other);
+  /*
+  * @brief
+  *  Multiplies this matrix by a given value.
+  * @param FLOAT
+  * @return
+  *  A reference to this matrix after the multiplication.
+  */
+  NODISCARD FORCELINE bowMatrix&
+  operator*=(float value);
 
+  /*
+  * @brief
+  *  Divides this matrix by another matrix.
+  * @param BOWMATRIX&
+  * @return
+  *  A reference to this matrix after the division.
+  */
+  NODISCARD FORCELINE bowMatrix&
+  operator/=(const bowMatrix& other);
 
-  [[nodiscard]] FORCELINE bowMatrix&
-  operator+= (const bowMatrix& other);
+  /*
+  * @brief
+  *  Adds another matrix to this matrix
+  * @param BOWMATRIX&
+  * @return
+  *  A reference to this matrix after the addition.
+  */
+  NODISCARD FORCELINE bowMatrix&
+  operator+=(const bowMatrix& other);
 
-  [[nodiscard]] FORCELINE bowMatrix&
-  operator-= (const bowMatrix& other);
+  /*
+  * @brief
+  *  Substracts another matrix to this matrix.
+  * @param BOWMATRIX&
+  * @return
+  *  A reference to this matrix after the substraction.
+  */
+  NODISCARD FORCELINE bowMatrix&
+  operator-=(const bowMatrix& other);
 
-  [[nodiscard]] FORCELINE bool
-  operator!= (const bowMatrix& other);
+  /*
+  * @brief
+  *  Checks if the values between two matrix are diferent from each other.
+  * @param BOWMATRIX&
+  * @return BOOL
+  *  Returns true if the matrix are diferent in any of its values.
+  */
+  NODISCARD FORCELINE bool
+  operator!=(const bowMatrix& other);
 
-  [[nodiscard]] FORCELINE bool
-  operator== (const bowMatrix& other);
+  NODISCARD FORCELINE bool
+  operator==(const bowMatrix& other);
 
-  [[nodiscard]] FORCELINE bowMatrix
-  operator- (const bowMatrix& other) const;
+  NODISCARD FORCELINE bowMatrix
+  operator-(const bowMatrix& other) const;
 
-  [[nodiscard]] FORCELINE bowMatrix
-  operator+ (const bowMatrix& other) const;
+  NODISCARD FORCELINE bowMatrix
+  operator+(const bowMatrix& other) const;
 
-  [[nodiscard]] FORCELINE bowMatrix
-  operator* (const bowMatrix& other) const;
+  NODISCARD FORCELINE bowMatrix
+  operator*(const bowMatrix& other) const;
 
-  [[nodiscard]] FORCELINE bowMatrix
-  operator* (float value) const;
+  NODISCARD FORCELINE bowMatrix
+  operator*(float value) const;
 
-  [[nodiscard]] FORCELINE bowMatrix
-  operator/ (const bowMatrix& other) const;
+  NODISCARD FORCELINE bowMatrix
+  operator/(const bowMatrix& other) const;
 
-  [[nodiscard]] FORCELINE bowMatrix
-  operator/ (float value) const;
+  NODISCARD FORCELINE bowMatrix
+  operator/(float value) const;
 };
 }

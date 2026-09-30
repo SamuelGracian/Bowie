@@ -119,6 +119,25 @@
 
 /************************************************************************/
 /**
+ * See if we can use nodiscards
+ */
+ /************************************************************************/
+
+#if defined(_MSVC_LANG)
+#  define BOW_CPP17_OR_LATER (_MSVC_LANG >= 201703L)
+#else
+#  define BOW_CPP17_OR_LATER (__cplusplus >= 201703L)
+#endif
+#if defined(BOW_COMPILER) && (BOW_COMPILER == BOW_COMPILER_MSVC)
+#  if defined(BOW_COMP_VER) && (BOW_COMP_VER >= 1920)
+#    define NODISCARD [[nodiscard]]
+#  else
+#    define NODISCARD
+#  endif
+#endif
+
+/************************************************************************/
+/**
  * Find the current platform
  */
 /************************************************************************/

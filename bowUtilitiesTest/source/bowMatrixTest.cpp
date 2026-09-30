@@ -2,8 +2,6 @@
 #include <catch2/catch_approx.hpp>
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 
-#include <iostream>
-
 #include "bowMatrix.h"
 #include "bowVector3.h"
 #include "bowVector4.h"
@@ -12,23 +10,22 @@ using namespace bowEngineSDK;
 
 TEST_CASE("Matrix operations", " [Matrix 4x4]"){
   SECTION("Constructors"){
-    const std::array<float, 16> myArray {1, 2, 3, 4,
-      5, 6, 7, 8,
-      9, 10, 11, 12,
-      13, 14, 15, 16
-  };
-      const bowMatrix myMatrix(myArray);
+
+      const bowMatrix myMatrix(1,2,3,4,
+                               5,6,7,8,
+                               9,10,11,12,
+                               13,14,15,16);
 
       for (int i = 0; i < 16; ++i){
-        REQUIRE(myMatrix.m_data[i] == Catch::Approx(i+1));
+        REQUIRE((&myMatrix.m_data[0][0])[i] == Catch::Approx(i + 1));
       }
   }
-
   SECTION("setIdentity produces identity matrix"){
     bowMatrix m;
     m.setIdentity();
 
-    const auto& vals = m.values();
+    const auto& vals = m.getData();
+
     for (int i = 0; i < 16; ++i){
       const int r = i / 4;
       const int c = i % 4;
@@ -42,14 +39,15 @@ TEST_CASE("Matrix operations", " [Matrix 4x4]"){
   }
 
   SECTION("Transpose"){
-    const std::array<float, 16> a { 1, 2, 3, 4,
-                                 5, 6, 7, 8,
-                                 9, 10, 11, 12,
-                                 13, 14, 15, 16 };
-    bowMatrix m(a);
+
+    bowMatrix m(1, 2, 3, 4,
+                5, 6, 7, 8,
+                9, 10, 11, 12,
+                13, 14, 15, 16);
+
     bowMatrix t = m.transposed();
-    const auto& mv = m.values();
-    const auto& tv = t.values();
+    const auto& mv = m.getData();
+    const auto& tv = t.getData();
 
     for (int r = 0; r < 4; ++r){
       for (int c = 0; c < 4; ++c){
@@ -60,11 +58,10 @@ TEST_CASE("Matrix operations", " [Matrix 4x4]"){
 
   SECTION("Determinant for a singular matrix is zero"){
     // Rows are linearly dependent so det == 0
-    const std::array<float, 16> singular { 1, 2, 3, 4,
-                                         2, 4, 6, 8,
-                                         3, 6, 9, 12,
-                                         4, 8, 12, 16 };
-    bowMatrix m(singular);
+    bowMatrix m(1, 2, 3, 4,
+                5, 6, 7, 8,
+                9, 10, 11, 12,
+                13, 14, 15, 16);
     REQUIRE(m.getDeterminant() == Catch::Approx(0.0f));
   }
 
@@ -74,8 +71,9 @@ TEST_CASE("Matrix operations", " [Matrix 4x4]"){
                 0.0f, 3.0f, 0.0f, 0.0f,
                 0.0f, 0.0f, 4.0f, 0.0f,
                 0.0f, 0.0f, 0.0f, 5.0f);
+
     bowMatrix inv = d.getInverse();
-    const auto& v = inv.values();
+    const auto& v = inv.getData();
 
     REQUIRE(v[0] == Catch::Approx(1.0f / 2.0f));
     REQUIRE(v[5] == Catch::Approx(1.0f / 3.0f));
@@ -91,7 +89,7 @@ TEST_CASE("Matrix operations", " [Matrix 4x4]"){
 
   SECTION("transformPosition vs transformVector (translation)"){
     const float tx = 10.0f, ty = -5.0f, tz = 2.5f;
-    // row-major: place translations in M03, M07, M11, M15 (last column)
+
     bowMatrix t(1.0f, 0.0f, 0.0f, tx,
                 0.0f, 1.0f, 0.0f, ty,
                 0.0f, 0.0f, 1.0f, tz,
@@ -115,14 +113,15 @@ TEST_CASE("Matrix operations", " [Matrix 4x4]"){
   }
 
   SECTION("Scalar multiplication operator*="){
-    const std::array<float, 16> arr { 1, 0, 0, 0,
-                                   0, 1, 0, 0,
-                                   0, 0, 1, 0,
-                                   0, 0, 0, 1 };
-    bowMatrix m(arr);
+
+    bowMatrix m(1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1);
+
     auto& saved = (m *= 2.5f);
     (void)saved;
-    const auto& v = m.values();
+    const auto& v = m.getData();
     REQUIRE(v[0] == Catch::Approx(2.5f));
     REQUIRE(v[5] == Catch::Approx(2.5f));
     REQUIRE(v[10] == Catch::Approx(2.5f));
