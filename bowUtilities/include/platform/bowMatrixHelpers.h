@@ -10,24 +10,27 @@
 #include "bowMatrix.h"
 #include "bowVector3.h"
 
-namespace bowEngineSDK
-{
+namespace bowEngineSDK{
   /********************************************/
   /*  TRANSLATION MATRIX  */
   /********************************************/
 
-class BOW_UTILITIES_EXPORT translationMatrix : public bowMatrix
+class TranslationMatrix : public Matrix4
 {
 public:
 
   /*
   * @brief
   *  Constructor for translation matrix given a vector.
+  *  
+  *   This constructor puts the translation in the last row.
   * @param VECTOR3
   */
-  translationMatrix(const Vector3& translation)
-    : bowMatrix(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-                translation.x, translation.y, translation.z, 1.0f)
+  explicit TranslationMatrix(const Vector3& translation)
+    : Matrix4(1.0f, 0.0f, 0.0f,0.0f,
+              0.0f, 1.0f,0.0f, 0.0f,
+              0.0f,0.0f, 1.0f, 0.0f,
+            translation.x, translation.y, translation.z, 1.0f)
   {}
 
 };

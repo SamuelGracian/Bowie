@@ -11,17 +11,17 @@ using namespace bowEngineSDK;
 TEST_CASE("Matrix operations", " [Matrix 4x4]"){
   SECTION("Constructors"){
 
-      const bowMatrix myMatrix(1,2,3,4,
+      const Matrix4 myMatrix(1,2,3,4,
                                5,6,7,8,
                                9,10,11,12,
                                13,14,15,16);
 
       for (int i = 0; i < 16; ++i){
-        REQUIRE((&myMatrix.m_data[0][0])[i] == Catch::Approx(i + 1));
+        REQUIRE((&myMatrix.data[0][0])[i] == Catch::Approx(i + 1));
       }
   }
   SECTION("setIdentity produces identity matrix"){
-    bowMatrix m;
+    Matrix4 m;
     m.setIdentity();
 
     const auto& vals = m.getData();
@@ -37,12 +37,12 @@ TEST_CASE("Matrix operations", " [Matrix 4x4]"){
 
   SECTION("Transpose"){
 
-    bowMatrix m(1, 2, 3, 4,
+    Matrix4 m(1, 2, 3, 4,
                 5, 6, 7, 8,
                 9, 10, 11, 12,
                 13, 14, 15, 16);
 
-    bowMatrix t = m.transposed();
+    Matrix4 t = m.transposed();
     const auto& mv = m.getData();
     const auto& tv = t.getData();
 
@@ -55,7 +55,7 @@ TEST_CASE("Matrix operations", " [Matrix 4x4]"){
 
   SECTION("Determinant for a singular matrix is zero"){
     // Rows are linearly dependent so det == 0
-    bowMatrix m(1, 2, 3, 4,
+    Matrix4 m(1, 2, 3, 4,
                 5, 6, 7, 8,
                 9, 10, 11, 12,
                 13, 14, 15, 16);
@@ -64,12 +64,12 @@ TEST_CASE("Matrix operations", " [Matrix 4x4]"){
 
   SECTION("Inverse of simple diagonal matrix"){
     // Diagonal matrix with non-zero diag
-    bowMatrix d(2.0f, 0.0f, 0.0f, 0.0f,
+    Matrix4 d(2.0f, 0.0f, 0.0f, 0.0f,
                 0.0f, 3.0f, 0.0f, 0.0f,
                 0.0f, 0.0f, 4.0f, 0.0f,
                 0.0f, 0.0f, 0.0f, 5.0f);
 
-    bowMatrix inv = d.getInverse();
+    Matrix4 inv = d.getInverse();
     const auto& v = inv.getData();
 
     REQUIRE(v[0] == Catch::Approx(1.0f / 2.0f));
@@ -87,10 +87,10 @@ TEST_CASE("Matrix operations", " [Matrix 4x4]"){
   SECTION("transformPosition vs transformVector (translation)"){
     const float tx = 10.0f, ty = -5.0f, tz = 2.5f;
 
-    bowMatrix t(1.0f, 0.0f, 0.0f, tx,
-                0.0f, 1.0f, 0.0f, ty,
-                0.0f, 0.0f, 1.0f, tz,
-                0.0f, 0.0f, 0.0f, 1.0f);
+    Matrix4 t(1.0f, 0.0f, 0.0f, 0.0f,
+             0.0f, 1.0f, 0.0f, 0.0f,
+             0.0f, 0.0f, 1.0f, 0.0f,
+             tx, ty, tz, 1.0f);
 
     Vector3 p { 1.0f, 2.0f, 3.0f };
     Vector4 pos = t.transformPosition(p);
@@ -111,7 +111,7 @@ TEST_CASE("Matrix operations", " [Matrix 4x4]"){
 
   SECTION("Scalar multiplication operator*="){
 
-    bowMatrix m(1, 0, 0, 0,
+    Matrix4 m(1, 0, 0, 0,
                 0, 1, 0, 0,
                 0, 0, 1, 0,
                 0, 0, 0, 1);
