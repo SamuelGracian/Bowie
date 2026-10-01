@@ -24,7 +24,7 @@ TEST_CASE("Matrix operations", " [Matrix 4x4]"){
     Matrix4 m;
     m.setIdentity();
 
-    const auto& vals = m.getData();
+    const float* vals = &m.data[0][0];
 
     for (int i = 0; i < 16; ++i){
       const int r = i / 4;
@@ -43,8 +43,8 @@ TEST_CASE("Matrix operations", " [Matrix 4x4]"){
                 13, 14, 15, 16);
 
     Matrix4 t = m.transposed();
-    const auto& mv = m.getData();
-    const auto& tv = t.getData();
+    const float* mv = &m.data[0][0];
+    const float* tv = &t.data[0][0];
 
     for (int r = 0; r < 4; ++r){
       for (int c = 0; c < 4; ++c){
@@ -65,12 +65,12 @@ TEST_CASE("Matrix operations", " [Matrix 4x4]"){
   SECTION("Inverse of simple diagonal matrix"){
     // Diagonal matrix with non-zero diag
     Matrix4 d(2.0f, 0.0f, 0.0f, 0.0f,
-                0.0f, 3.0f, 0.0f, 0.0f,
-                0.0f, 0.0f, 4.0f, 0.0f,
-                0.0f, 0.0f, 0.0f, 5.0f);
+              0.0f, 3.0f, 0.0f, 0.0f,
+              0.0f, 0.0f, 4.0f, 0.0f,
+              0.0f, 0.0f, 0.0f, 5.0f);
 
     Matrix4 inv = d.getInverse();
-    const auto& v = inv.getData();
+    const float* v = &inv.data[0][0];
 
     REQUIRE(v[0] == Catch::Approx(1.0f / 2.0f));
     REQUIRE(v[5] == Catch::Approx(1.0f / 3.0f));
@@ -112,13 +112,13 @@ TEST_CASE("Matrix operations", " [Matrix 4x4]"){
   SECTION("Scalar multiplication operator*="){
 
     Matrix4 m(1, 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, 1, 0,
-                0, 0, 0, 1);
+              0, 1, 0, 0,
+              0, 0, 1, 0,
+              0, 0, 0, 1);
 
     auto& saved = (m *= 2.5f);
     (void)saved;
-    const auto& v = m.getData();
+    const float* v = &m.data[0][0];
     REQUIRE(v[0] == Catch::Approx(2.5f));
     REQUIRE(v[5] == Catch::Approx(2.5f));
     REQUIRE(v[10] == Catch::Approx(2.5f));

@@ -14,17 +14,18 @@
 namespace bowEngineSDK
 {
 
-const Matrix4 Identity(1.0f, 0.0f, 0.0f, 0.0f,
-                       0.0f, 1.0f, 0.0f, 0.0f,
-                       0.0f, 0.0f, 1.0f, 0.0f,
-                       0.0f, 0.0f, 0.0f, 1.0f);
+const Matrix4 
+Matrix4::IDENTITY(1.0f, 0.0f, 0.0f, 0.0f,
+                  0.0f, 1.0f, 0.0f, 0.0f,
+                  0.0f, 0.0f, 1.0f, 0.0f,
+                  0.0f, 0.0f, 0.0f, 1.0f);
 
-Matrix4::Matrix4()
-  :data{0.0f,0.0f,0.0f,0.0f,
-        0.0f,0.0f,0.0f,0.0f,
-        0.0f,0.0f,0.0f,0.0f,
-        0.0f,0.0f,0.0f,0.0f}
-{}
+const Matrix4
+Matrix4::ZERO(0.0f, 0.0f, 0.0f, 0.0f,
+              0.0f, 0.0f, 0.0f, 0.0f,
+              0.0f, 0.0f, 0.0f, 0.0f,
+              0.0f, 0.0f, 0.0f, 0.0f);
+
 
 Matrix4::Matrix4(float M00, float M01, float M02, float M03,
                  float M10, float M11, float M12, float M13,
@@ -47,7 +48,7 @@ Matrix4::Matrix4(const Matrix4& copy){
 
 void
 Matrix4::setIdentity(){
-  *this = Identity;
+  *this = IDENTITY;
 }
 
 Matrix4
@@ -63,17 +64,25 @@ Matrix4::transposed() const{
 
 float
 Matrix4::getDeterminant() const{
-  const float a00 = data[0][0], a01 = data[0][1],
-              a02 = data[0][2], a03 = data[0][3];
+  const float a00 = data[0][0];
+  const float a01 = data[0][1];
+  const float a02 = data[0][2];
+  const float a03 = data[0][3];
 
-  const float a10 = data[1][0], a11 = data[1][1],
-              a12 = data[1][2], a13 = data[1][3];
+  const float a10 = data[1][0];
+  const float a11 = data[1][1];
+  const float a12 = data[1][2];
+  const float a13 = data[1][3];
 
-  const float a20 = data[2][0], a21 = data[2][1],
-              a22 = data[2][2], a23 = data[2][3];
+  const float a20 = data[2][0];
+  const float a21 = data[2][1];
+  const float a22 = data[2][2];
+  const float a23 = data[2][3];
 
-  const float a30 = data[3][0], a31 = data[3][1],
-              a32 = data[3][2], a33 = data[3][3];
+  const float a30 = data[3][0];
+  const float a31 = data[3][1];
+  const float a32 = data[3][2];
+  const float a33 = data[3][3];
 
   auto det3 = [](float b00, float b01, float b02,
                  float b10, float b11, float b12,
@@ -83,10 +92,10 @@ Matrix4::getDeterminant() const{
                      + b02 * (b10 * b21 - b11 * b20);
     };
 
-  float m0 = det3(a11, a12, a13, a21, a22, a23, a31, a32, a33);
-  float m1 = det3(a10, a12, a13, a20, a22, a23, a30, a32, a33);
-  float m2 = det3(a10, a11, a13, a20, a21, a23, a30, a31, a33);
-  float m3 = det3(a10, a11, a12, a20, a21, a22, a30, a31, a32);
+  const float m0 = det3(a11, a12, a13, a21, a22, a23, a31, a32, a33);
+  const float m1 = det3(a10, a12, a13, a20, a22, a23, a30, a32, a33);
+  const float m2 = det3(a10, a11, a13, a20, a21, a23, a30, a31, a33);
+  const float m3 = det3(a10, a11, a12, a20, a21, a22, a30, a31, a32);
 
   return a00 * m0 - a01 * m1 + a02 * m2 - a03 * m3;
 }
@@ -235,49 +244,63 @@ Matrix4::getInverse() const{
     m[8] * m[1] * m[6] -
     m[8] * m[2] * m[5];
 
-  float det = m[0] * inv[0] + m[1] * inv[4] + m[2] * inv[8] + m[3] * inv[12];
+  const float det = m[0] * inv[0] + m[1] * inv[4] + m[2] * inv[8] + m[3] * inv[12];
 
   if (0.0f == det){
     // Non-invertible: return zero-initialized matrix
     return Matrix4();
   }
 
-  float invDet = 1.0f / det;
+  const float invDet = 1.0f / det;
   Matrix4 result;
-  for (int32 i = 0; i < 16; ++i){
-    (&result.data[0][0])[i] = inv[i] * invDet;
+  int32 idx = 0;
+  for (int32 row = 0; row < 4; ++row){
+    for (int32 column = 0; column < 4; ++column){
+      result.data[row][column] = inv[idx++] * invDet;
+    }
   }
 
   return result;
-}
-
-const float*
-Matrix4::getData() const noexcept{
-  return &data[0][0];
 }
 
 /*     OPERATORS     */
 
 Matrix4&
 Matrix4::operator*=(const Matrix4& other){
-  Matrix4 result;
+  float result[4][4] {};
+
   for (int32 row = 0; row < 4; ++row){
     for (int32 column = 0; column < 4; ++column){
-      result.data[row][column] = 0.0f;
       for (int32 k = 0; k < 4; ++k){
-        result.data[row][column] += data[row][k] * other.data[k][column];
+        result[row][column] += data[row][k] * other.data[k][column];
       }
     }
   }
-  return *this = result;
+
+  for (int32 row = 0; row < 4; ++row){
+    for (int32 column = 0; column < 4; ++column){
+      data[row][column] = result[row][column];
+    }
+  }
+
+  return *this;
 }
 
 Matrix4&
 Matrix4::operator*=(float value){
-  float* newdata = &data[0][0];
-  for (int32 i = 0; i < 16; ++i){
-    newdata[i] *= value;
+  for (int32 row = 0; row < 4; ++row){
+    for (int32 column = 0; column < 4; ++column){
+      data[row][column] *= value;
+    }
   }
+
+  return *this;
+}
+
+Matrix4&
+Matrix4::operator/=(const Matrix4& other){
+  *this = (*this) * other.getInverse();
+
   return *this;
 }
 
@@ -304,7 +327,7 @@ Matrix4::operator-=(const Matrix4& other){
 }
 
 bool
-Matrix4::operator!=(const Matrix4& other) const {
+Matrix4::operator!=(const Matrix4& other) const{
   for (int32 row = 0; row < 4; ++row){
     for (int32 column = 0; column < 4; ++column){
       if (data[row][column] != other.data[row][column]){
@@ -312,11 +335,12 @@ Matrix4::operator!=(const Matrix4& other) const {
       }
     }
   }
+
   return false;
 }
 
 bool
-Matrix4::operator==(const Matrix4& other) const {
+Matrix4::operator==(const Matrix4& other) const{
   for (int32 row = 0; row < 4; ++row){
     for (int32 column = 0; column < 4; ++column){
       if (data[row][column] != other.data[row][column]){
@@ -356,12 +380,6 @@ Matrix4::operator*(const Matrix4& other) const{
   return result;
 }
 
-Matrix4&
-Matrix4::operator/=(const Matrix4& other){
-  *this = (*this) * other.getInverse();
-  return *this;
-}
-
 Matrix4
 Matrix4::operator-(const Matrix4& other) const{
   Matrix4 result;
@@ -391,6 +409,7 @@ Matrix4
 Matrix4::operator/(const Matrix4& other) const{
   Matrix4 result;
   result = (*this) * other.getInverse();
+
   return result;
 }
 

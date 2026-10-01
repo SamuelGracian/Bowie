@@ -28,7 +28,7 @@ public:
   * Constructs a zero-initialized 4x4 matrix.
   * Row mayor matrix.
   */
-  Matrix4();
+  Matrix4() = default;
 
   /*
   * @brief
@@ -116,15 +116,6 @@ public:
   */
   NODISCARD Matrix4
   getInverse() const;
-
-  /*
-  * @brief
-  * Provides read-only access to the matrix values.
-  * @param NONE
-  * @return NONE
-  */
-  NODISCARD const float*
-  getData() const noexcept;
 
   /********************************************/
   /*  OPERATORS  */
@@ -268,5 +259,7 @@ public:
   * Matrix values
   */
   float data[4][4];
+  static const Matrix4 IDENTITY;
+  static const Matrix4 ZERO;
 };
 }
