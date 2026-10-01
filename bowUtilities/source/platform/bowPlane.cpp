@@ -14,4 +14,7 @@ namespace bowEngineSDK
     : Vector3(X, Y, Z), w(W)
   {}
 
+  Plane::Plane(const Vector3& point, const Vector3& normal)
+    : Vector3(normal), w(point.dot(normal));
+
 }

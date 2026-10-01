@@ -50,6 +50,14 @@ public:
 
   /*
   * @brief
+  *  Constructor from a point inside the plane, and the normal of the plane.
+  * @param VECTOR3&, VECTOR3&.
+  *  point = any point inside the plane, normal = normal of the plane.
+  */
+  Plane(const Vector3& point, const Vector3& normal);
+
+  /*
+  * @brief
   *  Default destructor.
   */
   ~Plane() = default;
