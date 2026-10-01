@@ -20,26 +20,26 @@ public:
   /*  CONSTRUCTORS, DESTRUCTORS  */
   /********************************************/
 
-  /*
+  /**
   * @brief
   *  Default constructor.
   */
   Plane() = default;
 
-  /*
+  /**
   * @brief
   *  Constuctor from a vector 4.
   */
   explicit Plane(const Vector4& vector);
 
-  /*
+  /**
   * @brief
   *  Constructor from a vector3.
   * @param VECTOR3&, FLOAT
   */
   Plane(const Vector3& vector, float W);
 
-  /*
+  /**
   * @brief
   *  Constructor from given values.
   * @param FLOAT, FLOAT, FLOAT, FLOAT
@@ -48,7 +48,7 @@ public:
   */
   Plane(float X, float Y, float Z, float W);
 
-  /*
+  /**
   * @brief
   *  Constructor from a point inside the plane, and the normal of the plane.
   * @param VECTOR3&, VECTOR3&.
@@ -56,7 +56,7 @@ public:
   */
   Plane(const Vector3& point, const Vector3& normal);
 
-  /*
+  /**
   * @brief
   *  Default destructor.
   */
