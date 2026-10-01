@@ -251,6 +251,16 @@ public:
   Matrix4
   operator/(float value) const;
 
+  /*
+  * @brief
+  *  Copies the data from another matrix to this matrix.
+  * @param MATRIX& 
+  * @return
+  *  A reference to this matrix, with the copied data from the param.
+  */
+  Matrix4&
+  operator=(const Matrix4& origin);
+
   /********************************************/
   /*  MEMBERS  */
   /********************************************/

@@ -39,11 +39,7 @@ Matrix4::Matrix4(float M00, float M01, float M02, float M03,
   }{}
 
 Matrix4::Matrix4(const Matrix4& copy){
-  for (int32 i = 0; i < 4; ++i){
-    for (int32 j = 0; j < 4; ++j){
-      data[i][j] = copy.data[i][j];
-    }
-  }
+  *this = copy;
 }
 
 void
@@ -424,4 +420,16 @@ Matrix4::operator/(float scalar) const{
 
   return result;
 }
+
+Matrix4&
+Matrix4::operator=(const Matrix4& origin){
+  for (int32 row = 0; row < 4; ++row){
+    for (int32 column = 0; column < 4; ++column){
+      data[row][column] = origin.data[row][column];
+    }
+  }
+
+  return *this;
+}
+
 } // namespace bowEngineSDK
