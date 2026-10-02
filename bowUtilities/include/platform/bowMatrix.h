@@ -34,6 +34,8 @@ public:
   * @brief
   *  Constructs a matrix from individual values.
   *  Row mayor matrix.
+  * @param FLOAT 
+  *  16 float values.
   */
   Matrix4(float M00, float M01, float M02, float M03,
           float M10, float M11, float M12, float M13,
