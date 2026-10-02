@@ -97,6 +97,8 @@
 #if BOW_COMPILER == BOW_COMPILER_MSVC
 # if BOW_COMP_VER >= 1200
 #   define FORCELINE __forceinline
+#else 
+#   define FORCELINE __inline
 #   ifndef RESTRICT 
 # define RESTRICT __restrict
 #   endif
@@ -113,6 +115,32 @@
 #ifndef RESTRICT
 #   define  RESTRICT
 #endif
+#endif
+
+/************************************************************************/
+/**
+ * See if we can use nodiscards
+ */
+ /************************************************************************/
+
+#if BOW_COMPILER == BOW_COMPILER_MSVC
+#  if BOW_COMP_VER >= 1920
+#    define NODISCARD [[nodiscard]]
+#  else
+#    define NODISCARD
+#  endif
+#  if _MSVC_LANG >= 201703L
+#    define BOW_CPP17_OR_LATER
+#  endif
+#endif
+
+#if BOW_COMPILER == BOW_COMPILER_CLANG || BOW_COMPILER == BOW_COMPILER_GNUC
+#  if __cplusplus >= 201703L
+#    define BOW_CPP17_OR_LATER
+#    define NODISCARD [[nodiscard]]
+#  else
+#    define NODISCRAD
+#  endif
 #endif
 
 /************************************************************************/

@@ -29,7 +29,7 @@ public:
   //*/
   //Vector4(Vector4&,float Z, float W);
 
-  ///*
+  //*
   //* @brief
   //*  Constructor from a vector 3.
   //*/
