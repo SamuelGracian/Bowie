@@ -3,7 +3,7 @@
 namespace bowEngineSDK
 {
   Plane::Plane(const Vector4& vector)
-    : Vector3(vector), w(vector.w)
+    : Vector3(vector.x, vector.y, vector.z), w(vector.w)
   {}
 
   Plane::Plane(const Vector3& vector, float W)
