@@ -79,15 +79,6 @@ public:
   void
   moveTo(const Vector3& position);
 
-  /*
-  * @brief
-  */
-  void
-  updatePoints();
-
-  Array<float, 24>
-  getCorners() const;
-
   /********************************************/
   /*  MEMBERS  */
   /********************************************/
@@ -95,6 +86,5 @@ public:
   Vector3 minPoint;
   Vector3 maxPoint;
 
-  Array<float, 24> points;
 };
 }

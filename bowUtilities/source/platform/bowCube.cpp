@@ -36,29 +36,28 @@ AAB::AAB(const Vector3& min, const Vector3& max)
     maxPoint += offset;
   }
 
-  void
-  AAB::updatePoints() {
-  const Vector3 corners[8] = {
-    Vector3(minPoint.x, minPoint.y, minPoint.z),
-    Vector3(maxPoint.x, minPoint.y, minPoint.z),
-    Vector3(minPoint.x, maxPoint.y, minPoint.z),
-    Vector3(maxPoint.x, maxPoint.y, minPoint.z),
-    Vector3(minPoint.x, minPoint.y, maxPoint.z),
-    Vector3(maxPoint.x, minPoint.y, maxPoint.z),
-    Vector3(minPoint.x, maxPoint.y, maxPoint.z),
-    Vector3(maxPoint.x, maxPoint.y, maxPoint.z)
-  };
-
-  for (int i = 0; i < 8; ++i) {
-    points[i * 3 + 0] = corners[i].x;
-    points[i * 3 + 1] = corners[i].y;
-    points[i * 3 + 2] = corners[i].z;
-  }
-  }
-
   Array<float,24>
   AAB::getCorners() const {
-    return points;
+    Array <float, 24> Corners;
+
+  const Vector3 corners[8] = {
+  Vector3(minPoint.x, minPoint.y, minPoint.z),
+  Vector3(maxPoint.x, minPoint.y, minPoint.z),
+  Vector3(minPoint.x, maxPoint.y, minPoint.z),
+  Vector3(maxPoint.x, maxPoint.y, minPoint.z),
+  Vector3(minPoint.x, minPoint.y, maxPoint.z),
+  Vector3(maxPoint.x, minPoint.y, maxPoint.z),
+  Vector3(minPoint.x, maxPoint.y, maxPoint.z),
+  Vector3(maxPoint.x, maxPoint.y, maxPoint.z)
+    };
+
+    for (int i = 0; i < 8; ++i) {
+      Corners[i * 3 + 0] = corners[i].x;
+      Corners[i * 3 + 1] = corners[i].y;
+      Corners[i * 3 + 2] = corners[i].z;
+    }
+
+    return Corners;
   }
 
 }
