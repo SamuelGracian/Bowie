@@ -8,7 +8,7 @@
  /************************************************************************/
 #pragma once
 
-
+#include "bowUtilitiesRequisites.h"
 #include "bowVector3.h"
 
 namespace bowEngineSDK
