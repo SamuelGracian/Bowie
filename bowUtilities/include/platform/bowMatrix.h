@@ -262,14 +262,14 @@ public:
   operator=(const Matrix4& origin) = default;
 
   /********************************************/
-  /*  MEMBERS  */
+  /*  STATIC MEMBERS  */
   /********************************************/
-
-  /*
-  * Matrix values
-  */
-  float data[4][4];
   static const Matrix4 IDENTITY;
   static const Matrix4 ZERO;
+
+  /********************************************/
+  /*  MEMBERS  */
+  /********************************************/
+  float data[4][4];
 };
 }
