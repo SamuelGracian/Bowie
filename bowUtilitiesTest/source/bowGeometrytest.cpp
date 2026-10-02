@@ -16,8 +16,8 @@ TEST_CASE("Geometry tests", "Intersections") {
     Plane secondPlane(point, normal);
 
     //Point in front of the plane
-    REQUIRE(firstPlane.distanceTo(point) == Catch::Approx(161.0f));
+    REQUIRE(firstPlane.distanceToPoint(point) == Catch::Approx(161.0f));
     //Point on the plane
-    REQUIRE(secondPlane.distance(point) == Catch::Approx(0.0f));
+    REQUIRE(secondPlane.distanceToPoint(point) == Catch::Approx(0.0f));
   }
 }

@@ -76,7 +76,7 @@ public:
   *  ==0: The point collides with the plane.
   */
   float
-  distanceTo(const Vector3& point) const;
+  distanceToPoint(const Vector3& point) const;
 
   /********************************************/
   /*  MEMBERS  */
