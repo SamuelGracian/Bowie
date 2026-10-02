@@ -25,15 +25,15 @@ public:
 
   /*
   * @brief
-  * Constructs a zero-initialized 4x4 matrix.
-  * Row mayor matrix.
+  *  Defult constructor.
+  *  Row mayor matrix.
   */
   Matrix4() = default;
 
   /*
   * @brief
-  * Constructs a matrix from individual values.
-  * Row mayor matrix.
+  *  Constructs a matrix from individual values.
+  *  Row mayor matrix.
   */
   Matrix4(float M00, float M01, float M02, float M03,
           float M10, float M11, float M12, float M13,
@@ -44,11 +44,11 @@ public:
   * @brief
   *  Copy constructor.
   */
-  Matrix4(const Matrix4& copy);
+  Matrix4(const Matrix4& copy) = default;
 
   /*
   * @brief
-  * Default destructor.
+  *  Default destructor.
   */
   ~Matrix4() = default;
 
@@ -259,7 +259,7 @@ public:
   *  A reference to this matrix, with the copied data from the param.
   */
   Matrix4&
-  operator=(const Matrix4& origin);
+  operator=(const Matrix4& origin) = default;
 
   /********************************************/
   /*  MEMBERS  */

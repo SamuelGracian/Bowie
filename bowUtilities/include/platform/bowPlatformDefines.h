@@ -123,26 +123,13 @@
  */
  /************************************************************************/
 
-//#if defined(_MSVC_LANG)
-//#  define BOW_CPP17_OR_LATER (_MSVC_LANG >= 201703L)
-//#else
-//#  define BOW_CPP17_OR_LATER (__cplusplus >= 201703L)
-//#endif
-//#if defined(BOW_COMPILER) && (BOW_COMPILER == BOW_COMPILER_MSVC)
-//#  if defined(BOW_COMP_VER) && (BOW_COMP_VER >= 1920)
-//#    define NODISCARD [[nodiscard]]
-//#  else
-//#    define NODISCARD
-//#  endif
-//#endif
-
 #if BOW_COMPILER == BOW_COMPILER_MSVC
-#  if BOW_COMP_VER > 1920
+#  if BOW_COMP_VER >= 1920
 #    define NODISCARD [[nodiscard]]
 #  else
 #    define NODISCARD
 #  endif
-#  if _MSVC_LANG > 201703L
+#  if _MSVC_LANG >= 201703L
 #    define BOW_CPP17_OR_LATER
 #  endif
 #endif
