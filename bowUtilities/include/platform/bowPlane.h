@@ -44,7 +44,7 @@ public:
   *  Constructor from given values.
   * @param FLOAT, FLOAT, FLOAT, FLOAT
   *  x, y, z, w
-  *  where w == 1 is for a vector, w == 0 is for a vector/ direction.
+  *  where w == 1 3D point, w == 0 is for a vector/ direction.
   */
   Plane(float X, float Y, float Z, float W);
 
@@ -65,7 +65,18 @@ public:
   /********************************************/
   /*  METHODS  */
   /********************************************/
-
+  
+  /*
+  * @brief
+  *  Calculates the distance between this plane and a given point.
+  * @param VECTOR3&
+  *  point to calculate the dstance to.
+  * @return FLOAT
+  *  If >0: the point is in front of the plane. < 0: the point is begind the plane
+  *  ==0: The point collides with the plane.
+  */
+  float
+  distanceTo(const Vector3& point) const;
 
   /********************************************/
   /*  MEMBERS  */

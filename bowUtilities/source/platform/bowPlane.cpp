@@ -3,7 +3,7 @@
 namespace bowEngineSDK
 {
   Plane::Plane(const Vector4& vector)
-    : Vector3(vector), w(vector.w)
+    : Vector3(vector.x, vector.y, vector.z), w(vector.w)
   {}
 
   Plane::Plane(const Vector3& vector, float W)
@@ -17,5 +17,11 @@ namespace bowEngineSDK
   Plane::Plane(const Vector3& point, const Vector3& normal)
     : Vector3(normal), w(-point.dot(normal))
   {}
+
+  float
+  Plane::distanceTo(const Vector3& point) const {
+
+    return dot(point) + w;
+  }
 
 }
