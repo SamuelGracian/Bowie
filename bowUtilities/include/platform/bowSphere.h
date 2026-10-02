@@ -8,6 +8,9 @@
  /************************************************************************/
 #pragma once
 
+
+#include "bowVector3.h"
+
 namespace bowEngineSDK
 {
 class Vector3;
@@ -24,7 +27,7 @@ public:
   * @param NONE
   */
   Sphere() = default;
-  
+
   /*
   * @brief
   *  Cosntructor with given values.
@@ -45,13 +48,14 @@ public:
   *  Default destructor.
   */
   ~Sphere() = default;
-  
+
   /********************************************/
   /*  MEMBERS  */
   /********************************************/
-  
+
   Vector3 center;
   float radius;
 
 };
+
 }
