@@ -19,7 +19,7 @@ namespace bowEngineSDK
   {}
 
   float
-  Plane::distanceToPoint(const Vector3& point) const {
+  Plane::distanceToPoint(const Vector3& point)const {
 
     return dot(point) + w;
   }
