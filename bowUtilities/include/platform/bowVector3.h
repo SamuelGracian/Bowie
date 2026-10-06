@@ -1,10 +1,20 @@
+/************************************************************************/
+/**
+ * @file bowVector3.h
+ * @author Samuel G
+ * @date 24/09/2026
+ * @brief Represents a Vector3.
+ */
+ /************************************************************************/
 #pragma once
 
 #include"bowUtilitiesRequisites.h"
 #include "bowVector2.h"
 
-namespace bowEngineSDK{
-class BOW_UTILITIES_EXPORT Vector3{
+namespace bowEngineSDK
+{
+class BOW_UTILITIES_EXPORT Vector3
+{
 public:
 
   /*
@@ -55,7 +65,7 @@ public:
   */
   float
   dot(const Vector3& vector) const;
-  
+
   /*
   * @brief
   * Calculates the cross product from 2 given vectors.
@@ -75,7 +85,7 @@ public:
   */
   float
   magnitude() const;
-  
+
   /*
   * @brief
   * @param NONE
@@ -247,10 +257,10 @@ Vector3::operator/=(float scalar) noexcept {
   if (scalar == 0.0f) {
     return *this;
   }
-    x /= scalar;
-    y /= scalar;
-    z /= scalar;
-    return *this;
+  x /= scalar;
+  y /= scalar;
+  z /= scalar;
+  return *this;
 }
 
 FORCELINE Vector3
@@ -270,7 +280,7 @@ Vector3::operator-(Vector3& vector)const noexcept {
 
 FORCELINE Vector3
 Vector3:: operator/(float scalar) const noexcept {
-  return Vector3 (x / scalar, y / scalar, z / scalar);
+  return Vector3(x / scalar, y / scalar, z / scalar);
 }
 
 FORCELINE bool

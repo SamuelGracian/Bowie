@@ -1,3 +1,11 @@
+/************************************************************************/
+/**
+ * @file bowVector4.h
+ * @author Samuel G
+ * @date 24/09/2026
+ * @brief Represents a Vector4.
+ */
+ /************************************************************************/
 #pragma once
 
 #include "bowUtilitiesRequisites.h"
@@ -10,7 +18,7 @@ public:
   /********************************************/
   /*  constructors  */
   /********************************************/
-  
+
   /*
   * @Brief
   * Default connstructor.
@@ -34,7 +42,7 @@ public:
   //*  Constructor from a vector 3.
   //*/
   //Vector4(Vector3&, float W);
-  
+
   /*
   * @brief
   *  Constructor from an arrray.
@@ -62,10 +70,10 @@ public:
   dot(const Vector4& vector) const;
 
   /*
-  * @brief 
+  * @brief
   *  Calculates the cross product beteen two vectors.
   * @param CONST VECTOR4
-  * @return VECTOR4 
+  * @return VECTOR4
   *  A Vector4 containing the 3D cross product with w set to zero.
   */
   Vector4
@@ -75,7 +83,7 @@ public:
   * @brief
   *  Calculates the magnitude of the vector.
   * @param NONE
-  * @return 
+  * @return
   *  The amgnitude of the vector.
   */
   float
@@ -163,7 +171,7 @@ public:
   *  Returns the
   */
   FORCELINE Vector4
-  operator+(const Vector4& value) const noexcept;
+    operator+(const Vector4& value) const noexcept;
 
   /*
   * @brief

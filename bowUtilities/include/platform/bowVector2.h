@@ -1,3 +1,11 @@
+/************************************************************************/
+/**
+ * @file bowVector2.h
+ * @author Samuel G
+ * @date 25/09/2026
+ * @brief Represents a Vector2.
+ */
+ /************************************************************************/
 #pragma once
 
 #include"bowUtilitiesRequisites.h"
@@ -29,7 +37,7 @@ public:
   /*
   * @brief
   *  Copy constructor
-  * @param CONST VECTOR2 
+  * @param CONST VECTOR2
   *  Reference to another vector 2 class.
   */
   Vector2(const Vector2& vector);
@@ -123,7 +131,7 @@ public:
   /*
   * @brief
   *  Makes an addition to the values of the vector with a given value.
-  * @param cons vector2 
+  * @param cons vector2
   * @return Vector2&
   */
   FORCELINE Vector2&
@@ -147,7 +155,7 @@ public:
   */
   FORCELINE Vector2&
   operator*=(float scalar) noexcept;
-  
+
   /*
   * @brief
   * @param float
@@ -155,13 +163,13 @@ public:
   */
   FORCELINE Vector2&
   operator/=(float scalar) noexcept;
-  
+
   /*
   * @brief
   *  Makes the addition between a value and the values in the vector.
   * @param Vector2
   * @return Vector2&
-  *  Returns the 
+  *  Returns the
   */
   FORCELINE Vector2
   operator+(Vector2& value) const noexcept;
@@ -269,8 +277,8 @@ Vector2::operator-(Vector2& vector) const noexcept {
 }
 
 FORCELINE Vector2
-Vector2:: operator/(float scalar) const noexcept{
- return Vector2(x / scalar, y / scalar);
+Vector2:: operator/(float scalar) const noexcept {
+  return Vector2(x / scalar, y / scalar);
 }
 
 FORCELINE bool
@@ -282,5 +290,5 @@ Vector2::operator==(const Vector2& vector) const noexcept {
 FORCELINE bool
 Vector2::operator!=(const Vector2& vector) const noexcept {
   return x != vector.x || y != vector.y;
-  }
+}
 }

@@ -1,3 +1,11 @@
+/************************************************************************/
+/**
+ * @file bowPlatformMath.h
+ * @author Samuel G
+ * @date 24/09/2026
+ * @brief Mathematical library, that saves basic operations.
+ */
+ /************************************************************************/
 #pragma once
 
 #include "bowUtilitiesRequisites.h"
@@ -11,7 +19,7 @@ public:
   * @brief Default contructor for platformMath
   */
   PlatformMath() = default;
-  
+
   /*
   * @brief Default destructor for platformMath
   */
@@ -30,7 +38,7 @@ public:
    @param Angle, The angle is in radians.
    @return The sin of an angle.
   */
-  static float 
+  static float
   sin(float angleInRadians);
 
   /**
@@ -38,24 +46,24 @@ public:
     *@param angle. The angle is in radians.
     *@return The tangent fo an angle.
   */
-  static float 
+  static float
   tan(float angleInRadians);
 
-   /**
-    * @brief Computes the square root of a given number
-    * @param value, value to compute
-    * @return float, The result of the square root of the value
-   */
+  /**
+   * @brief Computes the square root of a given number
+   * @param value, value to compute
+   * @return float, The result of the square root of the value
+  */
   static float
   sqrt(float value);
 
-   /**
-    * @brief inverse square root of a value
-    * @param value, value to compute
-    * @return float, The inverse square root of a vlue.
-   */
-  static float 
-  invSqrt (float value);
+  /**
+   * @brief inverse square root of a value
+   * @param value, value to compute
+   * @return float, The inverse square root of a vlue.
+  */
+  static float
+  invSqrt(float value);
 
   /**
    * @brief computes pow of a given value
