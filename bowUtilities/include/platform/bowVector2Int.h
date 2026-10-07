@@ -68,8 +68,8 @@ class BOW_UTILITIES_EXPORT Vector2Int
   * @return int32
   *  The lenght of the vector.
   */
-  //float
-  //magnitude() const;
+  int32
+  magnitude() const;
 
   /*
   * @brief
@@ -79,7 +79,7 @@ class BOW_UTILITIES_EXPORT Vector2Int
   *  The lenght of the vector.
   */
   int32
-  sqrMagitude() const;
+  sqrMagnitude() const;
 
   /*
   * @brief
@@ -88,8 +88,8 @@ class BOW_UTILITIES_EXPORT Vector2Int
   * @return int
   *  Returns the distance between two vectors.
   */
-  //int
-  //distance(const Vector2Int& vector) const;
+  int32
+  distance(const Vector2Int& vector) const;
 
   /*
   * @brief

@@ -20,10 +20,17 @@ TEST_CASE("Math::Trigonometry", "[Math]") {
     REQUIRE_THAT(Math::sin(-20), Catch::Matchers::WithinRel(-.9129f, Math::KINDA_SMALL_NUMBER));
   }
   SECTION("square root") {
-    REQUIRE(Math::sqrt(9) == 3);
-    REQUIRE_THAT(Math::sqrt(20), Catch::Matchers::WithinRel(4.4721f, Math::KINDA_SMALL_NUMBER));
-    REQUIRE_THAT(Math::sqrt(50), Catch::Matchers::WithinRel(7.0710f, Math::KINDA_SMALL_NUMBER));
+    REQUIRE(Math::sqrt(9.0f) == 3);
+    REQUIRE_THAT(Math::sqrt(20.0f), Catch::Matchers::WithinRel(4.4721f, Math::KINDA_SMALL_NUMBER));
+    REQUIRE_THAT(Math::sqrt(50.0f), Catch::Matchers::WithinRel(7.0710f, Math::KINDA_SMALL_NUMBER));
   }
+  SECTION("Int square root") {
+    REQUIRE(Math::sqrt(15) == 3);
+    REQUIRE(Math::sqrt(18) == 4);
+    REQUIRE(Math::sqrt(21) == 4);
+    REQUIRE(Math::sqrt(28) == 5);
+  }
+  
   SECTION("Inverse square root") {
     REQUIRE_THAT(Math::invSqrt(20.0f), Catch::Matchers::WithinRel(0.2236f, Math::KINDA_SMALL_NUMBER));
     REQUIRE_THAT(Math::invSqrt(150.0f), Catch::Matchers::WithinAbs(0.0816f, Math::KINDA_SMALL_NUMBER));//

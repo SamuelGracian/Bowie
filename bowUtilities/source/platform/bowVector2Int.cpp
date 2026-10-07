@@ -1,5 +1,7 @@
 #include "bowVector2Int.h"
 
+#include "bowPlatformMath.h"
+
 namespace bowEngineSDK
 {
 Vector2Int::Vector2Int(int32 X, int32 Y)
@@ -22,30 +24,21 @@ Vector2Int::cross(const Vector2Int& vector) const {
   return (x * vector.y) - (y * vector.x);
 }
 
-//float
-//Vector2Int::magnitude() const {
-//  //return Math::sqrt(sqrMagitude());
-//}
-/*
-* TO DO:
-*  override function sqr with int
-*/
+int32
+Vector2Int::magnitude() const {
+  int32 sqrMag = sqrMagnitude();
+  return PlatformMath::sqrt(sqrMag);
+}
 
 int32
-Vector2Int::sqrMagitude() const {
+Vector2Int::sqrMagnitude() const {
   return (( x * x ) * ( y * y ));
 }
 
-//int
-//Vector2Int::distance(const Vector2Int& vector) const {
-//  return std::sqrt(sqrDistance(vector));
-//}
-/*
-* TO DO:
-*  override function sqr with int
-* ERORR MSG:
-*  possible data loss.
-*/
+int
+Vector2Int::distance(const Vector2Int& vector) const {
+  return PlatformMath::sqrt(sqrDistance(vector));
+}
 
 int32
 Vector2Int::sqrDistance(const Vector2Int& vector) const {

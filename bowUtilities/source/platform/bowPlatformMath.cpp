@@ -36,6 +36,15 @@ PlatformMath::sqrt (float value){
   return std::sqrt(value);
 }
 
+int32
+PlatformMath::sqrt(int32 value) {
+  int32 res = 1;
+  while (res * res <= value) {
+    res++;
+  }
+  return res - 1;
+}
+
 float
 PlatformMath::invSqrt(float value){
   return 1.0f / std::sqrt(value);
