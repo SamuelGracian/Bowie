@@ -18,4 +18,10 @@ namespace bowEngineSDK
     : Vector3(normal), w(-point.dot(normal))
   {}
 
+  float
+  Plane::distanceToPoint(const Vector3& point)const {
+
+    return dot(point) + w;
+  }
+
 }
