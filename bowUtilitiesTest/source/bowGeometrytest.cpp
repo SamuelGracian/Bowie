@@ -22,11 +22,11 @@ TEST_CASE("Geometry tests", "Intersections") {
     Plane secondPlane(point, normal);
 
     // point on secondPlane
-    REQUIRE(FigureHelper::Intersects(secondPlane, point));
+    REQUIRE(FigureHelper::planeVsPoint(secondPlane, point));
 
     // firstPlane and secondPlane share normal direction.
     // non parallels
-    REQUIRE(FigureHelper::Intersects(firstPlane, secondPlane));
+    REQUIRE(FigureHelper::planeVsPlane(firstPlane, secondPlane));
 
 
     const Vector3 normal2(0.0f, 1.0f, 0.0f);
@@ -37,14 +37,14 @@ TEST_CASE("Geometry tests", "Intersections") {
     Plane planeB(pointB, normal2);
 
     // Parallel planes
-    REQUIRE_FALSE(FigureHelper::Intersects(planeA, planeB));
+    REQUIRE_FALSE(FigureHelper::planeVsPlane(planeA, planeB));
   }
 
   SECTION("Plane-plane: non-parallel planes intersect") {
     // two planes with different normals
     Plane p1(Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f, 0.0f, 0.0f));
     Plane p2(Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f));
-    REQUIRE(FigureHelper::Intersects(p1, p2));
+    REQUIRE(FigureHelper::planeVsPlane(p1, p2));
   }
 
   SECTION("Sphere-sphere intersection") {
@@ -52,12 +52,12 @@ TEST_CASE("Geometry tests", "Intersections") {
     Sphere b(Vector3(1.5f, 0.0f, 0.0f), 1.0f);
     Sphere c(Vector3(3.0f, 0.0f, 0.0f), 0.5f);
 
-    REQUIRE(FigureHelper::Intersects(a, b));
-    REQUIRE_FALSE(FigureHelper::Intersects(a, c));
+    REQUIRE(FigureHelper::sphereVsSphere(a, b));
+    REQUIRE_FALSE(FigureHelper::sphereVsSphere(a, c));
 
     // t2 spheres touching
     Sphere t(Vector3(2.0f, 0.0f, 0.0f), 1.0f);
-    REQUIRE(FigureHelper::Intersects(a, t));
+    REQUIRE(FigureHelper::sphereVsSphere(a, t));
   }
 
   SECTION("Sphere-point intersection") {
@@ -66,9 +66,9 @@ TEST_CASE("Geometry tests", "Intersections") {
     const Vector3 onSurface(1.0f, 0.0f, 0.0f);
     const Vector3 outside(2.0f, 0.0f, 0.0f);
 
-    REQUIRE(FigureHelper::Intersects(s, inside));
-    REQUIRE(FigureHelper::Intersects(s, onSurface));
-    REQUIRE_FALSE(FigureHelper::Intersects(s, outside));
+    REQUIRE(FigureHelper::sphereVsPoint(s, inside));
+    REQUIRE(FigureHelper::sphereVsPoint(s, onSurface));
+    REQUIRE_FALSE(FigureHelper::sphereVsPoint(s, outside));
   }
 
   SECTION("Sphere-plane intersection") {
@@ -77,8 +77,8 @@ TEST_CASE("Geometry tests", "Intersections") {
     Sphere s1(Vector3(0.0f, 0.5f, 0.0f), 1.0f);
     Sphere s2(Vector3(0.0f, 2.0f, 0.0f), 0.4f);
 
-    REQUIRE(FigureHelper::Intersects(s1, plane));
-    REQUIRE_FALSE(FigureHelper::Intersects(s2, plane));
+    REQUIRE(FigureHelper::sphereVsPlane(s1, plane));
+    REQUIRE_FALSE(FigureHelper::sphereVsPlane(s2, plane));
   }
 
   SECTION("Sphere - AAB intersection") {
@@ -88,9 +88,9 @@ TEST_CASE("Geometry tests", "Intersections") {
     Sphere touching(Vector3(2.0f, 0.0f, 0.0f), 1.0f); 
     Sphere outside(Vector3(3.0f, 0.0f, 0.0f), 0.4f);
 
-    REQUIRE(FigureHelper::Intersects(inner, box));
-    REQUIRE(FigureHelper::Intersects(touching, box));
-    REQUIRE_FALSE(FigureHelper::Intersects(outside, box));
+    REQUIRE(FigureHelper::sphereVsAAB(inner, box));
+    REQUIRE(FigureHelper::sphereVsAAB(touching, box));
+    REQUIRE_FALSE(FigureHelper::sphereVsAAB(outside, box));
   }
 
   SECTION("AAB - plane intersection") {
@@ -98,8 +98,8 @@ TEST_CASE("Geometry tests", "Intersections") {
     AAB straddle(Vector3(-1.0f, -0.5f, -1.0f), Vector3(1.0f, 0.5f, 1.0f));
     AAB above(Vector3(-1.0f, 0.1f, -1.0f), Vector3(1.0f, 1.0f, 1.0f));
 
-    REQUIRE(FigureHelper::Intersects(straddle, plane));
-    REQUIRE_FALSE(FigureHelper::Intersects(above, plane));
+    REQUIRE(FigureHelper::AABVsPlane(straddle, plane));
+    REQUIRE_FALSE(FigureHelper::AABVsPlane(above, plane));
   }
 
   SECTION("AAB - AAB intersection") {
@@ -107,8 +107,8 @@ TEST_CASE("Geometry tests", "Intersections") {
     AAB b(Vector3(1.0f, 1.0f, 1.0f), Vector3(3.0f, 3.0f, 3.0f));
     AAB c(Vector3(3.5f, 3.5f, 3.5f), Vector3(4.0f, 4.0f, 4.0f));
 
-    REQUIRE(FigureHelper::Intersects(a, b));
-    REQUIRE_FALSE(FigureHelper::Intersects(a, c));
+    REQUIRE(FigureHelper::AABVxsAAB(a, b));
+    REQUIRE_FALSE(FigureHelper::AABVxsAAB(a, c));
   }
 
   SECTION("AAB - point intersection") {
@@ -117,9 +117,9 @@ TEST_CASE("Geometry tests", "Intersections") {
     const Vector3 onEdge(1.0f, 0.0f, 0.0f);
     const Vector3 outside(2.0f, 0.0f, 0.0f);
 
-    REQUIRE(FigureHelper::Intersects(box, inside));
-    REQUIRE(FigureHelper::Intersects(box, onEdge));
-    REQUIRE_FALSE(FigureHelper::Intersects(box, outside));
+    REQUIRE(FigureHelper::AAbVspoint(box, inside));
+    REQUIRE(FigureHelper::AAbVspoint(box, onEdge));
+    REQUIRE_FALSE(FigureHelper::AAbVspoint(box, outside));
   }
 
 }
