@@ -33,98 +33,102 @@ public:
   *  first otherwise an error will be thrown.
   */
   static T&
-    instance() {
+  instance() {
     if (!isStartedUp()) {
       std::cerr << "Trying to acces a non started module." << std::endl;
     }
+
     if (isDestroyed()) {
       std::cerr << "Trying to acces a destroyed module" << std::endl;
     }
-  }
-  return *_instance();
-};
 
-/*
-* @brief
-*  Returns a pointer to the module instance.
-*/
-static T*
-instancePtr() {
-  if (!isStartedUp()) {
-    std::cerr << "Trying to acces a module that hasnt been started yet." << std::endl;
-  }
-  if (isDestroyed()) {
-    std::cerr << "Trying to acces a destroyed module" << std::endl;
-  }
-  return _instance();
-}
-
-/*
-* @brief
-*  Constructs and starts the module using the specific parameters.
-*/
-template<class... Args>
-static void
-startUp(Args&& ...args) {
-  if (isStartedUp()) {
-    std::cerr << "Trying to start an already started module" << std::endl;
-  }
-  _instance() = new T(std::forward<Args>(args)...);
-  isStartedUp() = true;
-
-  static_cast<Module*>(_instance())->onStartUp();
-}
-
-template<class SubType, class... Args>
-static void
-startUp(Args&& ...args) {
-  static_assert(std::is_base_of<T, SubType>::value,
-                "Provided type isnt derivered from type the module is initialized with");
-
-  if (isStartedUp()) {
-    std::cerr << "Trying to acces an already started module" << std::endl;
+    return *_instance();
   }
 
-  _instance() = new SubType(std::forward<Args>(args)...);
-  isStartedUp() = true;
+  /*
+  * @brief
+  *  Returns a pointer to the module instance.
+  */
+  static T*
+  instancePtr() {
+    if (!isStartedUp()) {
+      std::cerr << "Trying to acces a module that hasnt been started yet." << std::endl;
+    }
 
-  static_cast<Module*> (_instance())->onStartUp();
-}
+    if (isDestroyed()) {
+      std::cerr << "Trying to acces a destroyed module" << std::endl;
+    }
 
-/*
-* @brief
-*  Shuts down this module and releases any resources it was using.
-* @param NONE
-* @return NONE
-*/
-static void
-shutDown() {
-  if (isDestroyed()) {
-    std::cerr << "trying to shut down an already shut down module" << std::endl;
+    return _instance();
   }
 
-  if (!isStartedUp * ()) {
-    std::cerr << "Trying to shut down a module that was never staretd" << std::endl;
+  /*
+  * @brief
+  *  Constructs and starts the module using the specific parameters.
+  */
+  template<class... Args>
+  static void
+  startUp(Args&& ...args) {
+    if (isStartedUp()) {
+      std::cerr << "Trying to start an already started module" << std::endl;
+    }
+
+    _instance() = new T(std::forward<Args>(args)...);
+    isStartedUp() = true;
+
+    static_cast<Module*>(_instance())->onStartUp();
   }
 
-  static_cast<Module*>(_instance())->onShutDown();
+  template<class SubType, class... Args>
+  static void
+  startUp(Args&& ...args) {
+    static_assert(std::is_base_of<T, SubType>::value,
+                  "Provided type isnt derivered from type the module is initialized with");
+  
+    if (isStartedUp()) {
+      std::cerr << "Trying to acces an already started module" << std::endl;
+    }
+  
+    _instance() = new SubType(std::forward<Args>(args)...);
+    isStartedUp() = true;
+  
+    static_cast<Module*> (_instance())->onStartUp();
+  }
 
-  delete (_isntance());
-  isDestroyed() = true;
-}
+  /*
+  * @brief
+  *  Shuts down this module and releases any resources it was using.
+  * @param NONE
+  * @return NONE
+  */
+  static void
+  shutDown() {
+    if (isDestroyed()) {
+      std::cerr << "trying to shut down an already shut down module" << std::endl;
+    }
+  
+    if (!isStartedUp()) {
+      std::cerr << "Trying to shut down a module that was never started" << std::endl;
+    }
+  
+    static_cast<Module*>(_instance())->onShutDown();
+  
+    delete(_instance());
+    isDestroyed() = true;
+  }
 
-/*
-* @brief
-*  Query if the module has been started
-* @param NONE
-* @return NONE
-*/
-static bool
-isStarted() {
-  return isStartedUp() && !isDestroyed();
-}
+  /*
+  * @brief
+  *  Query if the module has been started
+  * @param NONE
+  * @return NONE
+  */
+  static bool
+  isStarted() {
+    return isStartedUp() && !isDestroyed();
+  }
 
-protected:
+  protected:
 
   /*
   * @brief
@@ -146,7 +150,7 @@ protected:
   operator= (Module&&) = delete;
 
   Module&
-  operator(const Module& ) = delete;
+  operator=(const Module& ) = delete;
 
   virtual void
   onStartUp(){}
@@ -162,7 +166,7 @@ protected:
   * @return T*&
   */
   static T*&
-  _isntance() {
+  _instance() {
     static T* inst = nullptr;
     return inst;
   }
@@ -192,4 +196,5 @@ protected:
     static bool inst = false;
     return inst;
   }
+};
 }
