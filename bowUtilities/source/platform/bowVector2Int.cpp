@@ -4,13 +4,11 @@ namespace bowEngineSDK
 {
 Vector2Int::Vector2Int(int32 X, int32 Y)
   : x(X),
-    y(Y)
-{}
+  y(Y) {}
 
 Vector2Int::Vector2Int(const int32 vector[2])
   :x(vector[0]),
-   y(vector[1])
-{}
+  y(vector[1]) {}
 
 int32
 Vector2Int::dot(const Vector2Int& vector) const {
@@ -33,7 +31,7 @@ Vector2Int::cross(const Vector2Int& vector) const {
 
 int32
 Vector2Int::sqrMagitude() const {
-  return (( x * x ) * ( y * y ));
+  return ((x * x) * (y * y));
 }
 
 //int

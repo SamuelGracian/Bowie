@@ -112,10 +112,10 @@ Matrix4::transformVector(const Vector3& vector) const {
   const float y = vector.y;
   const float z = vector.z;
   return Vector4(
-     x * data[0][0] + y * data[1][0] + z * data[2][0],
-     x * data[0][1] + y * data[1][1] + z * data[2][1],
-     x * data[0][2] + y * data[1][2] + z * data[2][2],
-     x * data[0][3] + y * data[1][3] + z * data[2][3]
+    x * data[0][0] + y * data[1][0] + z * data[2][0],
+    x * data[0][1] + y * data[1][1] + z * data[2][1],
+    x * data[0][2] + y * data[1][2] + z * data[2][2],
+    x * data[0][3] + y * data[1][3] + z * data[2][3]
   );
 }
 
