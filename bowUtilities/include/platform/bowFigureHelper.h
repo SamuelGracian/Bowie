@@ -92,7 +92,7 @@ public:
   * @return BOOL
   */
   static bool
-  AABVsPlane(const AAB& box, const Plane& plane);
+  aabVsPlane(const AAB& box, const Plane& plane);
 
   /*
   * @brief
@@ -102,7 +102,7 @@ public:
   * @return BOOL
   */
   static bool
-  AABVxsAAB(const AAB& box1, const AAB& box2);
+  aabVsAAB(const AAB& box1, const AAB& box2);
 
   /*
   * @brief
@@ -112,7 +112,7 @@ public:
   * @return BOOL
   */
   static bool
-  AAbVspoint(const AAB& box, const Vector3& point);
+  aabVsPoint(const AAB& box, const Vector3& point);
 
 };
 

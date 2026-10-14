@@ -98,8 +98,8 @@ TEST_CASE("Geometry tests", "Intersections") {
     AAB straddle(Vector3(-1.0f, -0.5f, -1.0f), Vector3(1.0f, 0.5f, 1.0f));
     AAB above(Vector3(-1.0f, 0.1f, -1.0f), Vector3(1.0f, 1.0f, 1.0f));
 
-    REQUIRE(FigureHelper::AABVsPlane(straddle, plane));
-    REQUIRE_FALSE(FigureHelper::AABVsPlane(above, plane));
+    REQUIRE(FigureHelper::aabVsPlane(straddle, plane));
+    REQUIRE_FALSE(FigureHelper::aabVsPlane(above, plane));
   }
 
   SECTION("AAB - AAB intersection") {
@@ -107,8 +107,8 @@ TEST_CASE("Geometry tests", "Intersections") {
     AAB b(Vector3(1.0f, 1.0f, 1.0f), Vector3(3.0f, 3.0f, 3.0f));
     AAB c(Vector3(3.5f, 3.5f, 3.5f), Vector3(4.0f, 4.0f, 4.0f));
 
-    REQUIRE(FigureHelper::AABVxsAAB(a, b));
-    REQUIRE_FALSE(FigureHelper::AABVxsAAB(a, c));
+    REQUIRE(FigureHelper::aabVsAAB(a, b));
+    REQUIRE_FALSE(FigureHelper::aabVsAAB(a, c));
   }
 
   SECTION("AAB - point intersection") {
@@ -117,9 +117,9 @@ TEST_CASE("Geometry tests", "Intersections") {
     const Vector3 onEdge(1.0f, 0.0f, 0.0f);
     const Vector3 outside(2.0f, 0.0f, 0.0f);
 
-    REQUIRE(FigureHelper::AAbVspoint(box, inside));
-    REQUIRE(FigureHelper::AAbVspoint(box, onEdge));
-    REQUIRE_FALSE(FigureHelper::AAbVspoint(box, outside));
+    REQUIRE(FigureHelper::aabVsPoint(box, inside));
+    REQUIRE(FigureHelper::aabVsPoint(box, onEdge));
+    REQUIRE_FALSE(FigureHelper::aabVsPoint(box, outside));
   }
 
 }

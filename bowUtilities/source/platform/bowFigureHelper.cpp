@@ -10,11 +10,11 @@ namespace bowEngineSDK
 {
 bool
 FigureHelper::sphereVsSphere(const Sphere& sphere1, const Sphere& sphere2) {
-  float dx = sphere1.center.x - sphere2.center.x;
-  float dy = sphere1.center.y - sphere2.center.y;
-  float dz = sphere1.center.z - sphere2.center.z;
-  float dist2 = dx * dx + dy * dy + dz * dz;
-  float r = sphere1.radius + sphere2.radius;
+  const float dx = sphere1.center.x - sphere2.center.x;
+  const float dy = sphere1.center.y - sphere2.center.y;
+  const float dz = sphere1.center.z - sphere2.center.z;
+  const float dist2 = dx * dx + dy * dy + dz * dz;
+  const float r = sphere1.radius + sphere2.radius;
   return dist2 <= r * r;
 }
 
@@ -61,7 +61,7 @@ FigureHelper::planeVsPoint(const Plane& plane, const Vector3& point) {
 }
 
 bool
-FigureHelper::AABVsPlane(const AAB& box, const Plane& plane) {
+FigureHelper::aabVsPlane(const AAB& box, const Plane& plane) {
   const Vector3 center(
     (box.minPoint.x + box.maxPoint.x) * 0.5f,
     (box.minPoint.y + box.maxPoint.y) * 0.5f,
@@ -84,7 +84,7 @@ FigureHelper::AABVsPlane(const AAB& box, const Plane& plane) {
   return Math::abs(distance) <= radius;
 }
 
-bool FigureHelper::AABVxsAAB(const AAB& box1, const AAB& box2) {
+bool FigureHelper::aabVsAAB(const AAB& box1, const AAB& box2) {
   return
     box1.minPoint.x <= box2.maxPoint.x &&
     box1.maxPoint.x >= box2.minPoint.x &&
@@ -96,7 +96,7 @@ bool FigureHelper::AABVxsAAB(const AAB& box1, const AAB& box2) {
     box1.maxPoint.z >= box2.minPoint.z;
 }
 
-bool FigureHelper::AAbVspoint(const AAB& box, const Vector3& point) {
+bool FigureHelper::aabVsPoint(const AAB& box, const Vector3& point) {
   return point.x >= box.minPoint.x && point.x <= box.maxPoint.x &&
     point.y >= box.minPoint.y && point.y <= box.maxPoint.y &&
     point.z >= box.minPoint.z && point.z <= box.maxPoint.z;
