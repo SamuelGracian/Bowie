@@ -12,6 +12,7 @@ SET_ENGINE_DEFAULTS(bowUtilities)
 target_include_directories(bowUtilities PUBLIC
 include/math
 include/requisites
-include/platform)
+include/platform
+include/utils)
 
 target_compile_definitions(bowUtilities PRIVATE BOW_UTILITIES_EXPORTS=1)
