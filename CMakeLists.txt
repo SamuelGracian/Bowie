@@ -47,5 +47,5 @@ endfunction()
 
 add_subdirectory(bowUtilities)
 add_subdirectory(bowUtilitiesTest)
-add_subdirectory(BowieCore)
-add_subdirectory(BowieCoreTest)
+add_subdirectory(bowCore)
+add_subdirectory(bowCoreTest)
