@@ -6,15 +6,15 @@ namespace bowEngineSDK
 {
 Vector4::Vector4(float X, float Y, float Z, float W)
   :x(X),
-  y(Y),
-  z(Z),
-  w(W) {}
+   y(Y),
+   z(Z),
+   w(W) {}
 
 Vector4::Vector4(const float value[4])
   :x(value[0]),
-  y(value[1]),
-  z(value[2]),
-  w(value[3]) {}
+   y(value[1]),
+   z(value[2]),
+   w(value[3]) {}
 
 float
 Vector4::dot(const Vector4& vector) const {

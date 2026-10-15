@@ -32,10 +32,10 @@ Matrix4::Matrix4(float M00, float M01, float M02, float M03,
                  float M20, float M21, float M22, float M23,
                  float M30, float M31, float M32, float M33)
   : data {
-    {M00, M01, M02, M03},
-    {M10, M11, M12, M13 },
-    {M20, M21, M22, M23},
-    {M30, M31, M32, M33}
+  {M00, M01, M02, M03},
+  {M10, M11, M12, M13},
+  {M20, M21, M22, M23},
+  {M30, M31, M32, M33}
   } {}
 
 void

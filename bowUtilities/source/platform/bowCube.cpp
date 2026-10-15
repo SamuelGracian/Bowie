@@ -1,4 +1,4 @@
-#include "geometry/bowCube.h"
+#include "bowCube.h"
 
 
 namespace bowEngineSDK

@@ -171,7 +171,7 @@ public:
   *  Returns the
   */
   FORCELINE Vector4
-    operator+(const Vector4& value) const noexcept;
+  operator+(const Vector4& value) const noexcept;
 
   /*
   * @brief

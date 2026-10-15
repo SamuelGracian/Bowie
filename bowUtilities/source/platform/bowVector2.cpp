@@ -6,15 +6,15 @@ namespace bowEngineSDK
 {
 Vector2::Vector2(float X, float Y)
   : x(X),
-  y(Y) {}
+    y(Y) {}
 
 Vector2::Vector2(const float values[2])
   : x(values[0]),
-  y(values[1]) {}
+    y(values[1]) {}
 
 Vector2::Vector2(const Vector2& vector)
   : x(vector.x),
-  y(vector.y) {}
+    y(vector.y) {}
 
 float
 Vector2::dot(const Vector2& vector2)const {
