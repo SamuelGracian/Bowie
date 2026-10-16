@@ -14,4 +14,10 @@ Plane::Plane(float X, float Y, float Z, float W)
 Plane::Plane(const Vector3& point, const Vector3& normal)
   : Vector3(normal), w(-point.dot(normal)) {}
 
+  float
+  Plane::distanceToPoint(const Vector3& point)const {
+
+    return dot(point) + w;
+  }
+
 }

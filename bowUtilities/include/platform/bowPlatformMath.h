@@ -108,6 +108,14 @@ public:
   static float
   clamp(float valueA, float minValue, float maxValue);
 
+  /*
+  * @brief
+  * @param FLOAT
+  * @return FLOAT
+  */
+  static float
+  abs(float value);
+
   static const float PI;
 
   /*

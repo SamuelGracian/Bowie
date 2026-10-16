@@ -65,4 +65,9 @@ float
 PlatformMath::clamp(float valueA, float minValue, float maxValue) {
   return std::clamp(valueA, minValue, maxValue);
 }
+
+float
+PlatformMath::abs(float value) {
+  return std::abs(value);
+}
 }
