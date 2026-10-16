@@ -132,7 +132,7 @@ public:
 * @param cons Vector3
 * @return Vector3&
 */
-  FORCELINE Vector3&
+  FORCEINLINE Vector3&
   operator+=(const Vector3& vector) noexcept;
 
 
@@ -142,7 +142,7 @@ public:
   * @param Const Vector3
   * @return Vector3&
   */
-  FORCELINE Vector3&
+  FORCEINLINE Vector3&
   operator-=(const Vector3& vector) noexcept;
 
   /*
@@ -151,7 +151,7 @@ public:
   * @param float
   * @return Vector3&
   */
-  FORCELINE Vector3&
+  FORCEINLINE Vector3&
   operator*=(float scalar) noexcept;
 
   /*
@@ -159,7 +159,7 @@ public:
   * @param float
   * @return Vector3&
   */
-  FORCELINE Vector3&
+  FORCEINLINE Vector3&
   operator/=(float scalar) noexcept;
 
   /*
@@ -169,7 +169,7 @@ public:
   * @return Vector3&
   *  Returns the
   */
-  FORCELINE Vector3
+  FORCEINLINE Vector3
   operator+(Vector3& value) const noexcept;
 
   /*
@@ -179,7 +179,7 @@ public:
   * @return Vector3&
   *  Returns a pointer to a substracted vector.
   */
-  FORCELINE Vector3
+  FORCEINLINE Vector3
   operator-(Vector3& value) const noexcept;
 
   /*
@@ -189,7 +189,7 @@ public:
   * @return Vector3&
   *  Returns pointer to this as a multiplied vector.
   */
-  FORCELINE Vector3
+  FORCEINLINE Vector3
   operator*(float scalar) const noexcept;
 
   /*
@@ -199,7 +199,7 @@ public:
   *  Scalar to divide the vector to.
   * @return Vector3
   */
-  FORCELINE Vector3
+  FORCEINLINE Vector3
   operator/(float scalar) const noexcept;
 
   /*
@@ -209,7 +209,7 @@ public:
   * @return bool
   *  Returns true if both values are the same.
   */
-  FORCELINE bool
+  FORCEINLINE bool
   operator==(const Vector3& value) const noexcept;
 
   /*
@@ -219,7 +219,7 @@ public:
   * @return true
   *  Returns true if any of the values are different.
   */
-  FORCELINE bool
+  FORCEINLINE bool
   operator!=(const Vector3& vector) const noexcept;
 
 
@@ -228,7 +228,7 @@ public:
   float z;
 };
 
-FORCELINE Vector3&
+FORCEINLINE Vector3&
 Vector3::operator+=(const Vector3& vector) noexcept {
   x += vector.x;
   y += vector.y;
@@ -236,7 +236,7 @@ Vector3::operator+=(const Vector3& vector) noexcept {
   return *this;
 }
 
-FORCELINE Vector3&
+FORCEINLINE Vector3&
 Vector3::operator-=(const Vector3& vector) noexcept {
   x -= vector.x;
   y -= vector.y;
@@ -244,7 +244,7 @@ Vector3::operator-=(const Vector3& vector) noexcept {
   return *this;
 }
 
-FORCELINE Vector3&
+FORCEINLINE Vector3&
 Vector3::operator*=(float scalar) noexcept {
   x *= scalar;
   y *= scalar;
@@ -252,7 +252,7 @@ Vector3::operator*=(float scalar) noexcept {
   return *this;
 }
 
-FORCELINE Vector3& //return ref, no const
+FORCEINLINE Vector3& //return ref, no const
 Vector3::operator/=(float scalar) noexcept {
   if (scalar == 0.0f) {
     return *this;
@@ -265,33 +265,33 @@ Vector3::operator/=(float scalar) noexcept {
   return *this;
 }
 
-FORCELINE Vector3
+FORCEINLINE Vector3
 Vector3::operator* (float scalar) const noexcept {
   return Vector3(x * scalar, y * scalar, z * scalar);
 }
 
-FORCELINE Vector3
+FORCEINLINE Vector3
 Vector3::operator+(Vector3& vector) const noexcept {
   return Vector3(x + vector.x, y + vector.y, z + vector.z);
 }
 
-FORCELINE Vector3
+FORCEINLINE Vector3
 Vector3::operator-(Vector3& vector)const noexcept {
   return Vector3(x - vector.x, y - vector.y, z - vector.z);
 }
 
-FORCELINE Vector3
+FORCEINLINE Vector3
 Vector3:: operator/(float scalar) const noexcept {
   const float invScalar = 1 / scalar;
   return Vector3(x * invScalar, y * invScalar, z * invScalar);
 }
 
-FORCELINE bool
-Vector3::operator==(const Vector3& vector) const noexcept {
+FORCEINLINE bool
+Vector3::operator==(const Vector3& vector) const noexcept { //const func
   return x == vector.x && y == vector.y && z == vector.z;
 }
 
-FORCELINE bool
+FORCEINLINE bool
 Vector3::operator!=(const Vector3& vector) const noexcept {
   return x != vector.x || y != vector.y || z != vector.z;
 }
