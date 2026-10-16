@@ -4,11 +4,11 @@ namespace bowEngineSDK
 {
 Vector2Int::Vector2Int(int32 X, int32 Y)
   : x(X),
-  y(Y) {}
+    y(Y) {}
 
 Vector2Int::Vector2Int(const int32 vector[2])
-  :x(vector[0]),
-  y(vector[1]) {}
+  : x(vector[0]),
+    y(vector[1]) {}
 
 int32
 Vector2Int::dot(const Vector2Int& vector) const {

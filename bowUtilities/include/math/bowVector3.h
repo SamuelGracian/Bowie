@@ -257,9 +257,11 @@ Vector3::operator/=(float scalar) noexcept {
   if (scalar == 0.0f) {
     return *this;
   }
-  x /= scalar;
-  y /= scalar;
-  z /= scalar;
+  const float invScalar = 1 / scalar;
+
+  x *= invScalar;
+  y *= invScalar;
+  z *= invScalar;
   return *this;
 }
 
@@ -280,11 +282,12 @@ Vector3::operator-(Vector3& vector)const noexcept {
 
 FORCELINE Vector3
 Vector3:: operator/(float scalar) const noexcept {
-  return Vector3(x / scalar, y / scalar, z / scalar);
+  const float invScalar = 1 / scalar;
+  return Vector3(x * invScalar, y * invScalar, z * invScalar);
 }
 
 FORCELINE bool
-Vector3::operator==(const Vector3& vector) const noexcept { //const func
+Vector3::operator==(const Vector3& vector) const noexcept {
   return x == vector.x && y == vector.y && z == vector.z;
 }
 
