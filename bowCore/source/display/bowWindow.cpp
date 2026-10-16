@@ -28,29 +28,29 @@ DisplaySurface::~DisplaySurface() {
 }
 
 
-bool DisplaySurface::init(int32 _width, int32 _height, UNICHAR* windowName) {
-  width = width;
-  height = height;
+bool DisplaySurface::init(int32 _width, int32 _height, const String& windowName) {
+  m_width = _width;
+  m_height = _height;
 
 #if BOW_PLATFORM == BOW_PLATFORM_WIN32
-  const char CLASS_NAME[] = "DX11WindowClass";
+  
   WNDCLASSEX wc {};
   wc.cbSize = sizeof(wc);
   wc.style = CS_HREDRAW | CS_VREDRAW;
   wc.lpfnWndProc = WndProc;
   wc.hInstance = GetModuleHandle(nullptr);
   wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
-  wc.lpszClassName = CLASS_NAME;
+  wc.lpszClassName = windowName.c_str();
   RegisterClassEx(&wc);
 
   HWND hwnd = CreateWindowEx(
     0,
-    CLASS_NAME,
-    "Tecnicas Progra",
+    windowName.c_str(),
+    windowName.c_str(),
     WS_OVERLAPPEDWINDOW,
     CW_USEDEFAULT,
     CW_USEDEFAULT,
-    width, height,
+    m_width, m_height,
     nullptr, nullptr, GetModuleHandle(nullptr), nullptr);
 
   if (!hwnd) {
@@ -60,8 +60,8 @@ bool DisplaySurface::init(int32 _width, int32 _height, UNICHAR* windowName) {
 
   RECT rc;
   GetClientRect(hwnd, &rc);
-  clientWidth = rc.right - rc.left;
-  clientHeight = rc.bottom - rc.top;
+  m_clientWidth = rc.right - rc.left;
+  m_clientHeight = rc.bottom - rc.top;
 
   ShowWindow(hwnd, SW_SHOW);
   UpdateWindow(hwnd);

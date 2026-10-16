@@ -4,8 +4,8 @@ using namespace bowEngineSDK;
 
 int main() {
   bowEngineSDK::DisplaySurface window;
-  UNICHAR windowName[] = u"Window test";
-  window.init(800, 600, windowName);
+
+  window.init(800, 600, "Window test");
 
   while (true) {
     window.processMessages();

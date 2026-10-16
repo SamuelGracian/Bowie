@@ -31,48 +31,48 @@ public:
   * Constructor from given values
   */
   DisplaySurface(int32 _width, int32 _height)
-    : width(_width),
-      height(_height)
+    : m_width(_width),
+      m_height(_height)
   {}
 
   /*
   * @brief
   *  Default destructor.
   */
-  ~DisplaySurface() = default;
+  ~DisplaySurface() ;
 
   bool
-  init(int32 _width, int32 _height, UNICHAR* windowName);
+  init(int32 _width, int32 _height, const String& windowName);
 
   void
   processMessages();
 
   int32
-  GetHeight() const { return height; }
+  GetHeight() const { return m_height; }
 
   int32
-  GetWidth() const { return width; }
+  GetWidth() const { return m_width; }
 
   int32
-  GetClientWidth()  const { return clientWidth; }
+  GetClientWidth()  const { return m_clientWidth; }
 
   int32
-  GetClientHeight() const { return clientHeight; }
+  GetClientHeight() const { return m_clientHeight; }
 
   FORCEINLINE DisplaySurfaceHandler
   GetHandle() const { return handler; }
 
 
 private:
-  int32 width;
-  int32 height;
+  int32 m_width;
+  int32 m_height;
 
   /*
   * Client sizes
   * *To do* Changed them to be calculated, instead of saved
   */
-  int32 clientWidth;
-  int32 clientHeight;
+  int32 m_clientWidth;
+  int32 m_clientHeight;
   
   /*
   * Window handler
