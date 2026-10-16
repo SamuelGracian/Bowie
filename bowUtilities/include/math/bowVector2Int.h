@@ -1,3 +1,11 @@
+/************************************************************************/
+/**
+ * @file bowVector2Int.h
+ * @author Samuel G
+ * @date 26/09/2026
+ * @brief Represents a Vector2 of only int values.
+ */
+ /************************************************************************/
 #pragma once
 
 #include"bowUtilitiesRequisites.h"
@@ -6,7 +14,7 @@ namespace bowEngineSDK
 {
 class BOW_UTILITIES_EXPORT Vector2Int
 {
- public:
+public:
 
   /********************************************/
   /*  CONSTRUCTORS, DESTRUCTORS  */
@@ -115,7 +123,7 @@ class BOW_UTILITIES_EXPORT Vector2Int
   /*  MEMBERS  */
 
   /********************************************/
-  
+
   int32 x;
   int32 y;
 
@@ -144,7 +152,7 @@ class BOW_UTILITIES_EXPORT Vector2Int
   /*
   * @brief
   *  Multiplies the vector for a given value.
-  * @param INT 
+  * @param INT
   * @return Vector2&
   */
   FORCELINE Vector2Int&
@@ -277,7 +285,7 @@ Vector2Int::operator==(const Vector2Int& vector) const noexcept {
 
 FORCELINE bool
 Vector2Int::operator!=(const Vector2Int& vector) const noexcept {
-  return x != vector. x || y != vector.y;
+  return x != vector.x || y != vector.y;
 }
 
-} 
+}
