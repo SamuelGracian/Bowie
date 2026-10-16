@@ -1,3 +1,11 @@
+/************************************************************************/
+/**
+ * @file bowVector2.h
+ * @author Samuel G
+ * @date 25/09/2026
+ * @brief Represents a Vector2.
+ */
+ /************************************************************************/
 #pragma once
 
 #include"bowUtilitiesRequisites.h"
@@ -29,7 +37,7 @@ public:
   /*
   * @brief
   *  Copy constructor
-  * @param CONST VECTOR2 
+  * @param CONST VECTOR2
   *  Reference to another vector 2 class.
   */
   Vector2(const Vector2& vector);
@@ -123,10 +131,10 @@ public:
   /*
   * @brief
   *  Makes an addition to the values of the vector with a given value.
-  * @param cons vector2 
+  * @param cons vector2
   * @return Vector2&
   */
-  FORCELINE Vector2&
+  FORCEINLINE Vector2&
   operator+=(const Vector2& vector) noexcept;
 
 
@@ -136,7 +144,7 @@ public:
   * @param Const Vector2
   * @return Vector2&
   */
-  FORCELINE Vector2&
+  FORCEINLINE Vector2&
   operator-=(const Vector2& vector) noexcept;
 
   /*
@@ -145,25 +153,25 @@ public:
   * @param float
   * @return Vector2&
   */
-  FORCELINE Vector2&
+  FORCEINLINE Vector2&
   operator*=(float scalar) noexcept;
-  
+
   /*
   * @brief
   * @param float
   * @return Vector2&
   */
-  FORCELINE Vector2&
+  FORCEINLINE Vector2&
   operator/=(float scalar) noexcept;
-  
+
   /*
   * @brief
   *  Makes the addition between a value and the values in the vector.
   * @param Vector2
   * @return Vector2&
-  *  Returns the 
+  *  Returns the
   */
-  FORCELINE Vector2
+  FORCEINLINE Vector2
   operator+(Vector2& value) const noexcept;
 
   /*
@@ -173,7 +181,7 @@ public:
   * @return Vector2&
   *  Returns a pointer to a substracted vector.
   */
-  FORCELINE Vector2
+  FORCEINLINE Vector2
   operator-(Vector2& value) const noexcept;
 
   /*
@@ -183,7 +191,7 @@ public:
   * @return Vector2&
   *  Returns pointer to this as a multiplied vector.
   */
-  FORCELINE Vector2
+  FORCEINLINE Vector2
   operator*(float scalar)const noexcept;
 
   /*
@@ -193,7 +201,7 @@ public:
   *  Scalar to divide the vector to.
   * @return Vector2
   */
-  FORCELINE Vector2
+  FORCEINLINE Vector2
   operator/(float scalar) const noexcept;
 
   /*
@@ -203,7 +211,7 @@ public:
   * @return bool
   *  Returns true if both values are the same.
   */
-  FORCELINE bool
+  FORCEINLINE bool
   operator==(const Vector2& value) const noexcept;
 
   /*
@@ -213,7 +221,7 @@ public:
   * @return true
   *  Returns true if any of the values are different.
   */
-  FORCELINE bool
+  FORCEINLINE bool
   operator!=(const Vector2& vector) const noexcept;
 
   /********************************************/
@@ -225,62 +233,62 @@ public:
 
 };
 
-FORCELINE Vector2&
+FORCEINLINE Vector2&
 Vector2::operator+=(const Vector2& vector) noexcept {
   x += vector.x;
   y += vector.y;
   return *this;
 }
 
-FORCELINE Vector2&
+FORCEINLINE Vector2&
 Vector2::operator-=(const Vector2& vector) noexcept {
   x -= vector.x;
   y -= vector.y;
   return *this;
 }
 
-FORCELINE Vector2&
+FORCEINLINE Vector2&
 Vector2::operator*=(float scalar) noexcept {
   x *= scalar;
   y *= scalar;
   return *this;
 }
 
-FORCELINE Vector2&
+FORCEINLINE Vector2&
 Vector2::operator/=(float scalar) noexcept {
   x /= scalar;
   y /= scalar;
   return *this;
 }
 
-FORCELINE Vector2
+FORCEINLINE Vector2
 Vector2::operator*(float scalar) const noexcept {
   return Vector2(x * scalar, y * scalar);
 }
 
-FORCELINE Vector2
+FORCEINLINE Vector2
 Vector2::operator+(Vector2& vector) const noexcept {
   return Vector2(x + vector.x, y + vector.y);
 }
 
-FORCELINE Vector2
+FORCEINLINE Vector2
 Vector2::operator-(Vector2& vector) const noexcept {
   return Vector2(x - vector.x, y - vector.y);
 }
 
-FORCELINE Vector2
+FORCEINLINE Vector2
 Vector2:: operator/(float scalar) const noexcept{
  return Vector2(x / scalar, y / scalar);
 }
 
-FORCELINE bool
+FORCEINLINE bool
 Vector2::operator==(const Vector2& vector) const noexcept {
   return x == vector.x && y == vector.y;
 }
 
 
-FORCELINE bool
+FORCEINLINE bool
 Vector2::operator!=(const Vector2& vector) const noexcept {
   return x != vector.x || y != vector.y;
-  }
+}
 }

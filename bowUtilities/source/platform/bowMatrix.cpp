@@ -32,10 +32,10 @@ Matrix4::Matrix4(float M00, float M01, float M02, float M03,
                  float M20, float M21, float M22, float M23,
                  float M30, float M31, float M32, float M33)
   : data {
-  M00, M01, M02, M03,
-  M10, M11, M12, M13,
-  M20, M21, M22, M23,
-  M30, M31, M32, M33
+  {M00, M01, M02, M03},
+  {M10, M11, M12, M13},
+  {M20, M21, M22, M23},
+  {M30, M31, M32, M33}
   } {}
 
 void
@@ -112,10 +112,10 @@ Matrix4::transformVector(const Vector3& vector) const {
   const float y = vector.y;
   const float z = vector.z;
   return Vector4(
-     x * data[0][0] + y * data[1][0] + z * data[2][0],
-     x * data[0][1] + y * data[1][1] + z * data[2][1],
-     x * data[0][2] + y * data[1][2] + z * data[2][2],
-     x * data[0][3] + y * data[1][3] + z * data[2][3]
+    x * data[0][0] + y * data[1][0] + z * data[2][0],
+    x * data[0][1] + y * data[1][1] + z * data[2][1],
+    x * data[0][2] + y * data[1][2] + z * data[2][2],
+    x * data[0][3] + y * data[1][3] + z * data[2][3]
   );
 }
 
