@@ -13,6 +13,7 @@ target_include_directories(bowUtilities PUBLIC
 include/math
 include/requisites
 include/platform
+include/utils
 include/math/geometry)
 
 target_compile_definitions(bowUtilities PRIVATE BOW_UTILITIES_EXPORTS=1)
