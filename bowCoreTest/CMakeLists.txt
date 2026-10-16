@@ -13,7 +13,7 @@ target_link_libraries(bowCoreTest PUBLIC bowCore bowUtilities)
 
 target_include_directories(bowCoreTest PUBLIC 
 ${CMAKE_SOURCE_DIR}/bowUtilities/include
-${CMAKE_SOURCE_DIR}/bowUtilities/include/display
-${CMAKE_SOURCE_DIR}/bowUtilities/include/utils
+${CMAKE_SOURCE_DIR}/bowCore/include/display
+${CMAKE_SOURCE_DIR}/bowCore/include/utils
 
 )

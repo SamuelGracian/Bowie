@@ -47,20 +47,20 @@ public:
   void
   processMessages();
 
-  int32
-  GetHeight() const { return m_height; }
+  FORCEINLINE int32
+  getHeight() const { return m_height; }
 
-  int32
-  GetWidth() const { return m_width; }
+  FORCEINLINE int32
+  getWidth() const { return m_width; }
 
-  int32
-  GetClientWidth()  const { return m_clientWidth; }
+  FORCEINLINE int32
+  getClientWidth()  const { return m_clientWidth; }
 
-  int32
-  GetClientHeight() const { return m_clientHeight; }
+  FORCEINLINE int32
+  getClientHeight() const { return m_clientHeight; }
 
   FORCEINLINE DisplaySurfaceHandler
-  GetHandle() const { return handler; }
+  getHandle() const { return handler; }
 
 
 private:

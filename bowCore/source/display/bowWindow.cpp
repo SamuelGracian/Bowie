@@ -1,9 +1,9 @@
+#include "bowWindow.h"
 
-#include <iostream>
 
 #if BOW_PLATFORM == BOW_PLATFORM_WIN32
+#include <iostream>
 #include <Windows.h>
-#include "bowWindow.h"
 #endif
 
 namespace bowEngineSDK

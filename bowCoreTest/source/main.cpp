@@ -1,4 +1,4 @@
-#include "display/bowWindow.h"
+#include "bowWindow.h"
 
 using namespace bowEngineSDK;
 
