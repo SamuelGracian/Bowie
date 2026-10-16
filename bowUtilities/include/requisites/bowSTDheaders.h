@@ -4,6 +4,7 @@
 #include <array>
 #include <vector>
 #include <memory>
+#include <string>
 
 #include "bowPlatformtypes.h"
 
@@ -20,5 +21,7 @@ using SPtr = std::shared_ptr<T>;
 
 template<typename T>
 using WeakPtr = std::weak_ptr<T>;
+
+using String = std::string;
 
 }

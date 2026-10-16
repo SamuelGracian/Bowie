@@ -1,3 +1,11 @@
+/************************************************************************/
+/**
+ * @file bowVector2Int.h
+ * @author Samuel G
+ * @date 26/09/2026
+ * @brief Represents a Vector2 of only int values.
+ */
+ /************************************************************************/
 #pragma once
 
 #include"bowUtilitiesRequisites.h"
@@ -6,7 +14,7 @@ namespace bowEngineSDK
 {
 class BOW_UTILITIES_EXPORT Vector2Int
 {
- public:
+public:
 
   /********************************************/
   /*  CONSTRUCTORS, DESTRUCTORS  */
@@ -115,7 +123,7 @@ class BOW_UTILITIES_EXPORT Vector2Int
   /*  MEMBERS  */
 
   /********************************************/
-  
+
   int32 x;
   int32 y;
 
@@ -128,7 +136,7 @@ class BOW_UTILITIES_EXPORT Vector2Int
   * @param cons vector2
   * @return Vector2&
   */
-  FORCELINE Vector2Int&
+  FORCEINLINE Vector2Int&
   operator+=(const Vector2Int& vector) noexcept;
 
 
@@ -138,16 +146,16 @@ class BOW_UTILITIES_EXPORT Vector2Int
   * @param Const Vector2Int
   * @return Vector2Int&
   */
-  FORCELINE Vector2Int&
+  FORCEINLINE Vector2Int&
   operator-=(const Vector2Int& vector) noexcept;
 
   /*
   * @brief
   *  Multiplies the vector for a given value.
-  * @param INT 
+  * @param INT
   * @return Vector2&
   */
-  FORCELINE Vector2Int&
+  FORCEINLINE Vector2Int&
   operator*=(int32 scalar) noexcept;
 
   /*
@@ -155,7 +163,7 @@ class BOW_UTILITIES_EXPORT Vector2Int
   * @param INT
   * @return Vector2&
   */
-  FORCELINE Vector2Int&
+  FORCEINLINE Vector2Int&
   operator/=(int32 scalar) noexcept;
 
   /*
@@ -165,7 +173,7 @@ class BOW_UTILITIES_EXPORT Vector2Int
   * @return Vector2Int&
   *  Returns the
   */
-  FORCELINE Vector2Int
+  FORCEINLINE Vector2Int
   operator+(const Vector2Int& value) const noexcept;
 
   /*
@@ -175,7 +183,7 @@ class BOW_UTILITIES_EXPORT Vector2Int
   * @return Vector2Int&
   *  Returns a pointer to a substracted vector.
   */
-  FORCELINE Vector2Int
+  FORCEINLINE Vector2Int
   operator-(const Vector2Int& value) const noexcept;
 
   /*
@@ -185,7 +193,7 @@ class BOW_UTILITIES_EXPORT Vector2Int
   * @return Vector2Int&
   *  Returns pointer to this as a multiplied vector.
   */
-  FORCELINE Vector2Int
+  FORCEINLINE Vector2Int
   operator*(int32 scalar) const noexcept;
 
   /*
@@ -195,7 +203,7 @@ class BOW_UTILITIES_EXPORT Vector2Int
   *  Scalar to divide the vector to.
   * @return Vector2Int
   */
-  FORCELINE Vector2Int
+  FORCEINLINE Vector2Int
   operator/(int32 scalar) const noexcept;
 
   /*
@@ -205,7 +213,7 @@ class BOW_UTILITIES_EXPORT Vector2Int
   * @return bool
   *  Returns true if both values are the same.
   */
-  FORCELINE bool
+  FORCEINLINE bool
   operator==(const Vector2Int& value) const noexcept;
 
   /*
@@ -215,69 +223,69 @@ class BOW_UTILITIES_EXPORT Vector2Int
   * @return true
   *  Returns true if any of the values are different.
   */
-  FORCELINE bool
+  FORCEINLINE bool
   operator!=(const Vector2Int& vector) const noexcept;
 
 };
 
 // Method definitions remain inside the namespace
-FORCELINE Vector2Int&
+FORCEINLINE Vector2Int&
 Vector2Int::operator+=(const Vector2Int& vector) noexcept {
   x += vector.x;
   y += vector.y;
   return *this;
 }
 
-FORCELINE Vector2Int&
+FORCEINLINE Vector2Int&
 Vector2Int::operator-=(const Vector2Int& vector) noexcept {
   x -= vector.x;
   y -= vector.y;
   return *this;
 }
 
-FORCELINE Vector2Int&
+FORCEINLINE Vector2Int&
 Vector2Int::operator*=(int32 scalar) noexcept {
   x *= scalar;
   y *= scalar;
   return *this;
 }
 
-FORCELINE Vector2Int&
+FORCEINLINE Vector2Int&
 Vector2Int::operator/=(int32 scalar) noexcept {
   x /= scalar;
   y /= scalar;
   return *this;
 }
 
-FORCELINE Vector2Int
+FORCEINLINE Vector2Int
 Vector2Int::operator* (int32 scalar) const noexcept {
   return Vector2Int(x * scalar, y * scalar);
 }
 
-FORCELINE Vector2Int
+FORCEINLINE Vector2Int
 Vector2Int::operator+(const Vector2Int& vector) const noexcept {
   return Vector2Int(x + vector.x, y + vector.y);
 }
 
-FORCELINE Vector2Int
+FORCEINLINE Vector2Int
 Vector2Int::operator-(const Vector2Int& vector) const noexcept {
   return Vector2Int(x - vector.x, y - vector.y);
 }
 
-FORCELINE Vector2Int
+FORCEINLINE Vector2Int
 Vector2Int:: operator/(int32 scalar) const noexcept {
   return Vector2Int(x / scalar, y / scalar);
 }
 
-FORCELINE bool
+FORCEINLINE bool
 Vector2Int::operator==(const Vector2Int& vector) const noexcept {
   return x == vector.x && y == vector.y;
 }
 
 
-FORCELINE bool
+FORCEINLINE bool
 Vector2Int::operator!=(const Vector2Int& vector) const noexcept {
-  return x != vector. x || y != vector.y;
+  return x != vector.x || y != vector.y;
 }
 
-} 
+}

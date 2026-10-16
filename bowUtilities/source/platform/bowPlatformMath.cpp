@@ -22,17 +22,17 @@ PlatformMath::cos(float angleInRadians) {
 }
 
 float
-PlatformMath::sin(float angleInRadians){
+PlatformMath::sin(float angleInRadians) {
   return std::sin(angleInRadians);
 }
 
 float
-PlatformMath::tan(float angleInRadians){
+PlatformMath::tan(float angleInRadians) {
   return std::tan(angleInRadians);
 }
 
-float 
-PlatformMath::sqrt (float value){
+float
+PlatformMath::sqrt(float value) {
   return std::sqrt(value);
 }
 
@@ -46,16 +46,16 @@ PlatformMath::sqrt(int32 value) {
 }
 
 float
-PlatformMath::invSqrt(float value){
+PlatformMath::invSqrt(float value) {
   return 1.0f / std::sqrt(value);
 }
 
-float 
-PlatformMath::pow (float value, const float vPow){
+float
+PlatformMath::pow(float value, const float vPow) {
   return std::pow(value, vPow);
 }
 
-float 
+float
 PlatformMath::atan(float angleInRadians) {
   return std::atan(angleInRadians);
 }
@@ -70,8 +70,13 @@ PlatformMath::lerp(float valueA, float valueB, float valueT) {
   return std::lerp(valueA, valueB, valueT);
 }
 
-float 
+float
 PlatformMath::clamp(float valueA, float minValue, float maxValue) {
   return std::clamp(valueA, minValue, maxValue);
+}
+
+float
+PlatformMath::abs(float value) {
+  return std::abs(value);
 }
 }

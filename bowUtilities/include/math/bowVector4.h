@@ -1,3 +1,11 @@
+/************************************************************************/
+/**
+ * @file bowVector4.h
+ * @author Samuel G
+ * @date 24/09/2026
+ * @brief Represents a Vector4.
+ */
+ /************************************************************************/
 #pragma once
 
 #include "bowUtilitiesRequisites.h"
@@ -10,7 +18,7 @@ public:
   /********************************************/
   /*  constructors  */
   /********************************************/
-  
+
   /*
   * @Brief
   * Default connstructor.
@@ -34,7 +42,7 @@ public:
   //*  Constructor from a vector 3.
   //*/
   //Vector4(Vector3&, float W);
-  
+
   /*
   * @brief
   *  Constructor from an arrray.
@@ -62,10 +70,10 @@ public:
   dot(const Vector4& vector) const;
 
   /*
-  * @brief 
+  * @brief
   *  Calculates the cross product beteen two vectors.
   * @param CONST VECTOR4
-  * @return VECTOR4 
+  * @return VECTOR4
   *  A Vector4 containing the 3D cross product with w set to zero.
   */
   Vector4
@@ -75,7 +83,7 @@ public:
   * @brief
   *  Calculates the magnitude of the vector.
   * @param NONE
-  * @return 
+  * @return
   *  The amgnitude of the vector.
   */
   float
@@ -125,7 +133,7 @@ public:
   * @param cons Vector4
   * @return Vector4&
   */
-  FORCELINE Vector4&
+  FORCEINLINE Vector4&
   operator+=(const Vector4& vector) noexcept;
 
 
@@ -135,7 +143,7 @@ public:
   * @param Const Vector4
   * @return Vector4&
   */
-  FORCELINE Vector4&
+  FORCEINLINE Vector4&
   operator-=(const Vector4& vector) noexcept;
 
   /*
@@ -144,7 +152,7 @@ public:
   * @param float
   * @return Vector4&
   */
-  FORCELINE Vector4&
+  FORCEINLINE Vector4&
   operator*=(float scalar) noexcept;
 
   /*
@@ -152,7 +160,7 @@ public:
   * @param float
   * @return Vector4&
   */
-  FORCELINE Vector4&
+  FORCEINLINE Vector4&
   operator/=(float scalar) noexcept;
 
   /*
@@ -162,7 +170,7 @@ public:
   * @return Vector4&
   *  Returns the
   */
-  FORCELINE Vector4
+  FORCEINLINE Vector4
   operator+(const Vector4& value) const noexcept;
 
   /*
@@ -172,7 +180,7 @@ public:
   * @return Vector4&
   *  Returns a pointer to a substracted vector.
   */
-  FORCELINE Vector4
+  FORCEINLINE Vector4
   operator-(const Vector4& value) const noexcept;
 
   /*
@@ -182,7 +190,7 @@ public:
   * @return Vector4&
   *  Returns pointer to this as a multiplied vector.
   */
-  FORCELINE Vector4
+  FORCEINLINE Vector4
   operator*(float scalar) const noexcept;
 
   /*
@@ -192,7 +200,7 @@ public:
   *  Scalar to divide the vector to.
   * @return Vector4
   */
-  FORCELINE Vector4
+  FORCEINLINE Vector4
   operator/(float scalar) const noexcept;
 
   /*
@@ -202,7 +210,7 @@ public:
   * @return bool
   *  Returns true if both values are the same.
   */
-  FORCELINE bool
+  FORCEINLINE bool
   operator==(const Vector4& value) const noexcept;
 
   /*
@@ -212,7 +220,7 @@ public:
   * @return true
   *  Returns true if any of the values are different.
   */
-  FORCELINE bool
+  FORCEINLINE bool
   operator!=(const Vector4& vector) const noexcept;
 
   /********************************************/
@@ -225,7 +233,7 @@ public:
 };
 
 
-FORCELINE Vector4&
+FORCEINLINE Vector4&
 Vector4::operator+=(const Vector4& vector) noexcept {
   x += vector.x;
   y += vector.y;
@@ -234,7 +242,7 @@ Vector4::operator+=(const Vector4& vector) noexcept {
   return *this;
 }
 
-FORCELINE Vector4&
+FORCEINLINE Vector4&
 Vector4::operator-=(const Vector4& vector) noexcept {
   x -= vector.x;
   y -= vector.y;
@@ -243,7 +251,7 @@ Vector4::operator-=(const Vector4& vector) noexcept {
   return *this;
 }
 
-FORCELINE Vector4&
+FORCEINLINE Vector4&
 Vector4::operator*=(float scalar) noexcept {
   x *= scalar;
   y *= scalar;
@@ -252,7 +260,7 @@ Vector4::operator*=(float scalar) noexcept {
   return *this;
 }
 
-FORCELINE Vector4&
+FORCEINLINE Vector4&
 Vector4::operator/=(float scalar) noexcept {
   x /= scalar;
   y /= scalar;
@@ -261,33 +269,33 @@ Vector4::operator/=(float scalar) noexcept {
   return *this;
 }
 
-FORCELINE Vector4
+FORCEINLINE Vector4
 Vector4::operator*(float scalar) const noexcept {
   return Vector4(x * scalar, y * scalar, z * scalar, w * scalar);
 }
 
-FORCELINE Vector4
+FORCEINLINE Vector4
 Vector4::operator+(const Vector4& vector) const noexcept {
   return Vector4(x + vector.x, y + vector.y, z + vector.z, w + vector.w);
 }
 
-FORCELINE Vector4
+FORCEINLINE Vector4
 Vector4::operator-(const Vector4& vector) const noexcept {
   return Vector4(x - vector.x, y - vector.y, z - vector.z, w - vector.w);
 }
 
-FORCELINE Vector4
+FORCEINLINE Vector4
 Vector4:: operator/(float scalar) const noexcept {
   return Vector4(x / scalar, y / scalar, z / scalar, w / scalar);
 }
 
-FORCELINE bool
+FORCEINLINE bool
 Vector4::operator==(const Vector4& vector) const noexcept {
   return x == vector.x && y == vector.y && z == vector.z && w == vector.w;
 }
 
 
-FORCELINE bool
+FORCEINLINE bool
 Vector4::operator!=(const Vector4& vector) const noexcept {
   return x != vector.x || y != vector.y;
 }

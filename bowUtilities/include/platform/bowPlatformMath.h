@@ -1,3 +1,11 @@
+/************************************************************************/
+/**
+ * @file bowPlatformMath.h
+ * @author Samuel G
+ * @date 24/09/2026
+ * @brief Mathematical library, that saves basic operations.
+ */
+ /************************************************************************/
 #pragma once
 
 #include "bowUtilitiesRequisites.h"
@@ -11,7 +19,7 @@ public:
   * @brief Default contructor for platformMath
   */
   PlatformMath() = default;
-  
+
   /*
   * @brief Default destructor for platformMath
   */
@@ -30,7 +38,7 @@ public:
    @param Angle, The angle is in radians.
    @return The sin of an angle.
   */
-  static float 
+  static float
   sin(float angleInRadians);
 
   /**
@@ -38,7 +46,7 @@ public:
     *@param angle. The angle is in radians.
     *@return The tangent fo an angle.
   */
-  static float 
+  static float
   tan(float angleInRadians);
 
    /**
@@ -111,6 +119,14 @@ public:
   */
   static float
   clamp(float valueA, float minValue, float maxValue);
+
+  /*
+  * @brief
+  * @param FLOAT
+  * @return FLOAT
+  */
+  static float
+  abs(float value);
 
   static const float PI;
 
