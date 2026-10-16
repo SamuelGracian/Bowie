@@ -40,6 +40,7 @@ public:
   *  Constructor with given values, builds the vector from scratch
   *  using the params to build it.
   * @param FLOAT, FLOAT, FLOAT, FLOAT, FLOAT
+  *  The first float values are the center coordinates.
   */
   Sphere(float X, float Y, float Z, float _radius);
 

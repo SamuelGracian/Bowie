@@ -17,20 +17,18 @@ Vector3::Vector3(const float values[3])
 Vector3::Vector3(const Vector2& vector, float Z)
   :x(vector.x),
    y(vector.y),
-   z(Z)
-{}
+   z(Z) {}
 
 Vector3::Vector3(const Vector3& vector)
   :x(vector.x),
    y(vector.y),
-   z(vector.z)
-{}
+   z(vector.z) {}
 
 Vector3
 Vector3::cross(const Vector3& vector) const {
-  return Vector3 (y * vector.z - z * vector.y,
-                  z * vector.x - x * vector.z,
-                  x * vector.y - y * vector.x);
+  return Vector3(y * vector.z - z * vector.y,
+                 z * vector.x - x * vector.z,
+                 x * vector.y - y * vector.x);
 }
 
 float
