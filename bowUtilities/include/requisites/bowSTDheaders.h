@@ -26,6 +26,4 @@ using WeakPtr = std::weak_ptr<T>;
 
 using String = std::string;
 
-template <typename T>
-using Assert = assert<T>;
 }

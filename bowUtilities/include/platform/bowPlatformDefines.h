@@ -335,3 +335,10 @@
     */
     //# pragma warning(disable : 4481)
 #endif
+
+#ifndef NDEBUG
+#include <cassert>
+#define MI_ASSERT(condicion) assert(condicion)
+#else
+#define MI_ASSERT(condicion) ((void)0)
+#endif
