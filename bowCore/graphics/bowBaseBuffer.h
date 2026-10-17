@@ -1,0 +1,25 @@
+#pragma once
+
+#include "bowCoreRequisites.h"
+
+namespace bowEngineSDK
+{
+class BaseBuffer
+{
+ public:
+  BaseBuffer() = default;
+  ~BaseBuffer() = default;
+
+  void 
+  SetByteWidth(const uint32 bytewidth = 0) {
+    assert(bytewidth != 0);
+    m_byteWidth = bytewidth;
+  }
+
+  FORCEINLINE const uint32
+  GetByteWidth()const { return m_byteWidth; }
+
+ protected:
+  uint32 m_byteWidth;
+};
+}

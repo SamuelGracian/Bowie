@@ -12,12 +12,7 @@ set_target_properties(bowCore PROPERTIES
 
 SET_ENGINE_DEFAULTS(bowCore)
 
-target_include_directories(bowCore PUBLIC
-include/display
-include/utils
-include
-bowUtilities/include
-)
+add_recursive_includes(bowCore)
 
 target_link_libraries(bowCore
     PUBLIC bowUtilities
