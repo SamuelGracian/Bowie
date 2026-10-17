@@ -4,7 +4,7 @@
  * @author Samuel G
  * @date 13/10/2026
  * @brief
- *
+ *  Base class to represent a window.
  */
 /*************************************************************************/
 

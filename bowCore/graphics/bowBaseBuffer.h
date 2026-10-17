@@ -1,3 +1,12 @@
+/************************************************************************/
+/**
+ * @file bowBasebuffer.h
+ * @author Samuel G
+ * @date 15/10/2026
+ * @brief
+ *  Base class for buffers.
+ */
+ /*************************************************************************/
 #pragma once
 
 #include "bowCoreRequisites.h"
