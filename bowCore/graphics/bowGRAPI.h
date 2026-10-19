@@ -1,0 +1,90 @@
+#pragma once
+
+/// To do: alphabetical order, comments on functions
+#include "bowCoreRequisites.h"
+#include "bowMatrix.h"
+#include "bowVector3.h"
+#include "bowWindow.h"
+#include "bowRenderTargetView.h"
+#include "bowConstBuffer.h"
+#include "bowIndexBuffer.h"
+#include "bowVertexBuffer.h"
+
+namespace bowEngineSDK
+{
+
+struct SimpleVertex
+{
+  Vector<float, 4> position;
+  Vector<float, 4> normals;
+  Vector<float, 4> tangent;
+  Vector<float, 4> binormals;
+  Vector<float, 2> texture;
+
+  /*
+  * @brief
+  *  Constructor for simple vertex.???
+  */
+  SimpleVertex(
+    Vector<float, 4>& pos = Vector<float, 4>(),
+    Vector<float, 4>& normals = Vector<float, 4>(),
+    Vector<float, 4>& tangent = Vector<float, 4>(),
+    Vector<float, 4>& binormal = Vector<float, 4>(),
+    Vector<float, 2>& tex = Vector<float, 2>())
+    : position(pos), normals(normals), tangent(tangent), binormal(binormal),
+    texture(tex) {}
+};/// Simple vertex struct
+
+class GRAPI
+{
+public:
+
+  GRAPI():
+   m_shaderModel(0)
+  {}
+  
+  ~GRAPI() = default;
+  
+  virtual bool 
+  init(WeakPtr<DisplaySurface> windowHandler) = 0;
+  
+  virtual void 
+  cleanUpResources() = 0;
+  
+  virtual SPtr<SwapChain>
+  createSwapChain(WeakPtr<DisplaySurface> handle,
+                  GAPI_FORMAT::k = GAPI_FORMAT::FORMAT_UNKNOWN) = 0;
+
+  virtual SPtr<ConstBuffer> 
+  createConstBuffer(const uint32 byteWitdh = 0,
+                    void* data = nullptr,
+                    uint32 indexCount = 0) = 0;
+
+  virtual SPtr<Indexbuffer>
+  createIndexBuffer(const uint32 byteWidth = 0,
+                    void* data = nullptr,
+                    uint32 indexCount = 0) = 0;
+
+  virtual SPtr<VertexBuffer>
+  createVertexBuffer(const uint32 byteWidth = 0,
+                    void* data = nullptr,
+                    uint32 indexCount = 0) = 0;
+
+  virtual void
+  setConstBuffer(WeakPtr<ConstBuffer> buffer) = 0;
+
+  virtual void
+  setIndexBuffer(WeakPtr<Indexbuffer> buffer) = 0;
+
+  virtual void
+  setVertexBuffer(WeakPtr<VertexBuffer> buffer) = 0;
+
+  virtual void
+  updateConstBuffer(WeakPtr<ConstBuffer> buffer, const uint32 byteWidth,
+                    void* data = nullptr) = 0;
+
+ protected:
+	 uint32 m_shaderModel;
+
+};// GRAPI class
+}/// namespace bowEngineSDK

@@ -1,4 +1,4 @@
-#include "bowConstbuffer.h"
+#include "bowConstBuffer.h"
 
 namespace bowEngineSDK
 {
