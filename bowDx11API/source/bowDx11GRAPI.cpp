@@ -94,11 +94,11 @@ Dx11GraphicsAPI::createSwapChainInternal(HWND hwnd, uint32_t width,
 /*****************************************************/
 bool
 Dx11GraphicsAPI::init(WeakPtr<DisplaySurface> windowHandler) {
-  if (handleWindow.expired()) {
+  if (windowHandler.expired()) {
     return false;
   }
 
-  SPtr<DisplaySurface> window = handleWindow.lock();
+  SPtr<DisplaySurface> window = windowHandler.lock();
 
   UINT createDeviceFlags = 0;
 
@@ -189,9 +189,9 @@ Dx11GraphicsAPI::init(WeakPtr<DisplaySurface> windowHandler) {
       viewport.TopLeftX = 0.0f;
       viewport.TopLeftY = 0.0f;
 
-      viewport.Width = static_cast<float>(window->GetWidth());
+      viewport.Width = static_cast<float>(window->getWidth());
 
-      viewport.Height = static_cast<float>(window->GetHeight());
+      viewport.Height = static_cast<float>(window->getHeight());
 
       viewport.MinDepth = 0.0f;
       viewport.MaxDepth = 1.0f;
@@ -222,9 +222,9 @@ Dx11GraphicsAPI::init(WeakPtr<DisplaySurface> windowHandler) {
     viewport.TopLeftX = 0.0f;
     viewport.TopLeftY = 0.0f;
 
-    viewport.Width = static_cast<float>(window->GetWidth());
+    viewport.Width = static_cast<float>(window->getWidth());
 
-    viewport.Height = static_cast<float>(window->GetHeight());
+    viewport.Height = static_cast<float>(window->getHeight());
 
     viewport.MinDepth = 0.0f;
     viewport.MaxDepth = 1.0f;
@@ -246,19 +246,19 @@ Dx11GraphicsAPI::cleanUpResources() {
 }
 
 SPtr<SwapChain>
-Dx11GraphicsAPI::createSwapChain(WeakPtr<DisplaySurface> handle, GAPI_FORMAT::E) {
+Dx11GraphicsAPI::createSwapChain(WeakPtr<DisplaySurface> _windowHandler, GAPI_FORMAT::E _format) {
   SPtr<Dx11SwapChain> SChain = nullptr;
 
-  if (handleWindow.expired()) {
+  if (_windowHandler.expired()) {
     std::cout << "Handle window expired" << std::endl;
     return SChain;
   }
 
-  std::shared_ptr<DisplaySurface> tempSurface = handleWindow.lock();
+  std::shared_ptr<DisplaySurface> tempSurface = _windowHandler.lock();
 
-  if (auto* ResultSwapChain = CreateSwapChain_internal(tempSurface->GetHandle(), 
-                                                       tempSurface->GetClientWidth(), 
-                                                       tempSurface->GetClientHeight(), format)) {
+  if (auto* ResultSwapChain = CreateSwapChain_internal(tempSurface->getHandle(), 
+                                                       tempSurface->getClientWidth(), 
+                                                       tempSurface->getClientHeight(), format)) {
     if (auto* ResultRT = CreateBackBufferRT_internal(ResultSwapChain)) {
       SChain = std::make_shared<Dx11SwapChain>();
 

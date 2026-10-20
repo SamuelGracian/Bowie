@@ -17,8 +17,8 @@ class Dx11GraphicsAPI : public GraphicsAPI
    cleanUpResources() override;
 
    virtual SPtr<SwapChain>
-   createSwapChain(WeakPtr<DisplaySurface> handle,
-                     GAPI_FORMAT::E) override;
+   createSwapChain(WeakPtr<DisplaySurface> _windowHandler,
+                     GAPI_FORMAT::E _format) override;
    
    virtual SPtr<ConstBuffer>
    createConstBuffer(const uint32 byteWitdh = 0,
