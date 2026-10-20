@@ -15,7 +15,7 @@ namespace bowEngineSDK
 IDXGISwapChain* 
 Dx11GraphicsAPI::createSwapChainInternal(HWND hwnd, uint32_t width,
                                    uint32_t height, 
-                                   GAPI_FORMAT::K format) {
+                                   GAPI_FORMAT::E format) {
   IDXGIFactory1* dxgiFactory1 = nullptr;
 
   IDXGIFactory2* dxgiFactory2 = nullptr;
@@ -244,7 +244,7 @@ Dx11GraphicsAPI::cleanUpResources() {
 }
 
 SPtr<SwapChain>
-Dx11GraphicsAPI::createSwapChain(WeakPtr<DisplaySurface> handle, GAPI_FORMAT::K) {
+Dx11GraphicsAPI::createSwapChain(WeakPtr<DisplaySurface> handle, GAPI_FORMAT::E) {
   SPtr<Dx11SwapChain> SChain = nullptr;
 
   if (handleWindow.expired()) {

@@ -18,7 +18,7 @@ class Dx11GraphicsAPI : public GraphicsAPI
 
    virtual SPtr<SwapChain>
    createSwapChain(WeakPtr<DisplaySurface> handle,
-                     GAPI_FORMAT::K) override;
+                     GAPI_FORMAT::E) override;
    
    virtual SPtr<ConstBuffer>
    createConstBuffer(const uint32 byteWitdh = 0,
@@ -44,7 +44,7 @@ class Dx11GraphicsAPI : public GraphicsAPI
    IDXGISwapChain*
    createSwapChainInternal(HWND hwnd, uint32_t width,
                            uint32_t height,
-                           GAPI_FORMAT::K format);
+                           GAPI_FORMAT::E format);
 
 
  private:

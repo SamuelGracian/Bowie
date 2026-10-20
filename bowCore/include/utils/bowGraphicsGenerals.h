@@ -8,7 +8,7 @@ namespace bowEngineSDK
 
 namespace GAPI_FORMAT //texture format
 {
-enum K //E
+enum E //E
 {
   FORMAT_UNKNOWN = 0,
   FORMAT_D24_UNORM_S8_UINT,
@@ -19,7 +19,7 @@ enum K //E
 
 namespace GAPI_BIND_FLAGS //teture bind flags
 {
-enum K
+enum E
 {
   BIND_VERTEX_BUFFER = (1 << 0),
   BIND_INDEX_BUFFER = (1 << 1),
@@ -32,7 +32,7 @@ enum K
 
 namespace SHADER_TYPE
 {
-enum K
+enum E
 {
   VERTEX_SHADER = 0,
   PIXEL_SHADER
@@ -41,7 +41,7 @@ enum K
 
 namespace CULL_MODE
 {
-enum K
+enum E
 {
   CULL_NONE = 1,
   CULL_FRONT = 2,

@@ -55,7 +55,7 @@ public:
   
   virtual SPtr<SwapChain>
   createSwapChain(WeakPtr<DisplaySurface> handle,
-                  GAPI_FORMAT::k = GAPI_FORMAT::FORMAT_UNKNOWN) = 0;
+                  GAPI_FORMAT = GAPI_FORMAT::FORMAT_UNKNOWN) = 0;
 
   virtual SPtr<ConstBuffer> 
   createConstBuffer(const uint32 byteWitdh = 0,
