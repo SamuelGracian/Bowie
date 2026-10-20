@@ -51,7 +51,7 @@ enum E
 
 namespace FILL_MODE
 {
-enum FILL_MODE
+enum E
 {
   FILL_WIREFRAME = 2,
   FILL_SOLID = 3

@@ -6,6 +6,7 @@
 #include "bowDx11IndexBuffer.h"
 #include "bowDx11VertexBuffer.h"
 #include "bowDx11SwapChain.h"
+#include "bowDx11Helpers.h"
 
 namespace bowEngineSDK
 {
@@ -41,7 +42,7 @@ Dx11GraphicsAPI::createSwapChainInternal(HWND hwnd, uint32_t width,
 
           sd.Width = width;
           sd.Height = height;
-          sd.Format = Dx11HELPERS::GetDX11Format_internal(format);
+          sd.Format = Dx11Helpers::getDx11Format(format);
           sd.SampleDesc.Count = 1;
           sd.SampleDesc.Quality = 0;
           sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
@@ -58,11 +59,12 @@ Dx11GraphicsAPI::createSwapChainInternal(HWND hwnd, uint32_t width,
         }
         else {
           DXGI_SWAP_CHAIN_DESC sd = {};
+          DXGI_FORMAT tempformat = Dx11Helpers::getDx11Format(format);
 
           sd.BufferCount = 1;
           sd.BufferDesc.Width = width;
           sd.BufferDesc.Height = height;
-          sd.BufferDesc.Format = Dx11HELPERS::GetDX11Format_internal(format);
+          sd.BufferDesc.Format = tempformat;
           sd.BufferDesc.RefreshRate.Numerator = 60;
           sd.BufferDesc.RefreshRate.Denominator = 1;
           sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;

@@ -17,7 +17,7 @@ public:
   *  DXGI_FORMAT
   */
   DXGI_FORMAT
-  getDx11Format(GAPI_FORMAT _format) const;
+  getDx11Format(GAPI_FORMAT::E _format) const;
 
   /*
   */
@@ -25,13 +25,13 @@ public:
   getDx11BindFlags(const uint32 _bindFlag) const;
 
   const char*
-  getShaderModel(SHADER_TYPE _shaderType, uint32 _shaderModel) const;
+  getShaderModel(SHADER_TYPE::E _shaderType, uint32 _shaderModel) const;
 
   D3D11_CULL_MODE
-  getCullMode(CULL_MODE _cullMode) const;
+  getCullMode(CULL_MODE::E _cullMode) const;
 
   D3D11_FILL_MODE
-  getFillMode(FILL_MODE _fillMode) const;
+  getFillMode(FILL_MODE::E _fillMode) const;
 
 
   Vector<D3D11_INPUT_ELEMENT_DESC>
