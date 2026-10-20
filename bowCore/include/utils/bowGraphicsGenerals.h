@@ -6,9 +6,9 @@
 namespace bowEngineSDK
 {
 
-namespace GAPI_FORMAT
+namespace GAPI_FORMAT //texture format
 {
-enum K
+enum K //E
 {
   FORMAT_UNKNOWN = 0,
   FORMAT_D24_UNORM_S8_UINT,
@@ -17,7 +17,7 @@ enum K
 };
 }/// namespace GAPI_FORMAT
 
-namespace GAPI_BIND_FLAGS
+namespace GAPI_BIND_FLAGS //teture bind flags
 {
 enum K
 {
@@ -57,4 +57,7 @@ enum FILL_MODE
   FILL_SOLID = 3
 };
 }/// namespace FILL_MODE
+
+static constexpr uint32 BUFFER_HIGHER_AVAILABLE_SLOT = 8;
+
 }/// namespace bowEngineSDK

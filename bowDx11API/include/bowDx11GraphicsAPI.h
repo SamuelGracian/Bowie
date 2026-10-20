@@ -1,14 +1,14 @@
 #pragma once 
 
-#include "bowGRAPI.h"
+#include "bowGraphicsAPI.h"
 #include "bowDx11Requisites.h"
 
 namespace bowEngineSDK
 {
-class Dx11GRAPI : public GRAPI
+class Dx11GraphicsAPI : public GraphicsAPI
 {
  public:
-   Dx11GRAPI() = default;
+   Dx11GraphicsAPI() = default;
 
    virtual bool
    init(WeakPtr<DisplaySurface> handlewindow) override;
@@ -25,10 +25,10 @@ class Dx11GRAPI : public GRAPI
                      const uint32 slot = 0, void* data = nullptr) override;
 
    virtual SPtr<Indexbuffer>
-   createIndexBuffer() override;
+   createIndexBuffer(WeakPtr<Indexbuffer> buffer) override;
 
    virtual SPtr<VertexBuffer>
-   createVertexBuffer() override;
+   createVertexBuffer(WeakPtr<VertexBuffer> buffer ) override;
 
    virtual void
    setConstBuffer(WeakPtr<ConstBuffer> buffer) override;
@@ -52,4 +52,4 @@ class Dx11GRAPI : public GRAPI
    ID3D11DeviceContext* m_immediateContext = nullptr;
 
 };
-}/// namespace GRAPI
+}/// namespace GraphicsAPI

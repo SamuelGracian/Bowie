@@ -4,46 +4,48 @@
 #include "bowCoreRequisites.h"
 #include "bowMatrix.h"
 #include "bowVector3.h"
+#include "bowVector4.h"
 #include "bowWindow.h"
 #include "bowRenderTargetView.h"
 #include "bowConstBuffer.h"
 #include "bowIndexBuffer.h"
 #include "bowVertexBuffer.h"
+#include "bowGraphicsGenerals.h"
 
 namespace bowEngineSDK
 {
 
 struct SimpleVertex
 {
-  Vector<float, 4> position;
-  Vector<float, 4> normals;
-  Vector<float, 4> tangent;
-  Vector<float, 4> binormals;
-  Vector<float, 2> texture;
+  Vector4 position;
+  Vector4 normals;
+  Vector4 tangent;
+  Vector4 binormals;
+  Vector4 texture;
 
   /*
   * @brief
   *  Constructor for simple vertex.???
   */
   SimpleVertex(
-    Vector<float, 4>& pos = Vector<float, 4>(),
-    Vector<float, 4>& normals = Vector<float, 4>(),
-    Vector<float, 4>& tangent = Vector<float, 4>(),
-    Vector<float, 4>& binormal = Vector<float, 4>(),
-    Vector<float, 2>& tex = Vector<float, 2>())
-    : position(pos), normals(normals), tangent(tangent), binormal(binormal),
+    Vector4& pos,
+    Vector4& normal,
+    Vector4& tan ,
+    Vector4& binormal,
+    Vector4& tex )
+    : position(pos), normals(normal), tangent(tan), binormals(binormal),
     texture(tex) {}
 };/// Simple vertex struct
 
-class GRAPI
+class BOW_CORE_EXPORT GraphicsAPI 
 {
 public:
 
-  GRAPI():
+  GraphicsAPI():
    m_shaderModel(0)
   {}
   
-  ~GRAPI() = default;
+  ~GraphicsAPI() = default;
   
   virtual bool 
   init(WeakPtr<DisplaySurface> windowHandler) = 0;
@@ -86,5 +88,5 @@ public:
  protected:
 	 uint32 m_shaderModel;
 
-};// GRAPI class
+};// GraphicsAPI class
 }/// namespace bowEngineSDK

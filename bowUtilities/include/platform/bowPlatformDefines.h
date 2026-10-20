@@ -229,13 +229,15 @@
 //DLL export plugins
 #if BOW_PLATFORM == BOW_PLATFORM_WIN32
 # if BOW_COMPILER == BOW_COMPILER_MSVC
-#   define BOW_PLUGIN_EXPORT __declspec (dllexport)
+#   define BOW_DLL_EXPORT __declspec (dllexport)
+#   define BOW_DLL_IMPORT __declspec (dllimport)
 # else
-#   define BOW_PLUGIN_EXPORT __attribute__ ((dllexport))
+#   define BOW_DLL_EXPORT __attribute__ ((dllexport))
 # endif
 #else
-#   define BOW_PLUGIN_EXPORT __attribute__ ((visibility("default")))
+#   define BOW_DLL_EXPORT __attribute__ ((visibility("default")))
 #endif
+#define BOW_PLUGIN_EXPORT BOW_DLL_EXPORT
 
 /************************************************************************/
 /**
@@ -243,11 +245,7 @@
  */
 /************************************************************************/
 //WIN32
-# if defined (_DEBUG) || defined (DEBUG)
-#   define BOW_DEBUG_MODE 1
-#else
-#   define BOW_DEBUG_MODE 0
-# endif
+
 #if BOW_PLATFORM == BOW_PLATFORM_WIN32
 # if BOW_COMPILER == BOW_COMPILER_INTEL
 #   define BOW_TRHEADLOCAL __declspec(thread)
@@ -262,11 +260,6 @@
 #if BOW_PLATFORM == BOW_PLATFORM_LINUX || BOW_PLATFORM == BOW_PLATFORM_OSX
 
 // If we're in debug mode 
-# if defined (_DEBUG) || defined (DEBUG)
-#   define BOW_DEBUG_MODE 1
-# else
-#   define BOW_DEBUG_MODE 0
-# endif 
 # if BOW_COMPILER == BOW_COMPILER_INTEL
 #   define BOW_THREADLOCAL thread
 # endif
@@ -278,11 +271,12 @@
  */
 /************************************************************************/
 #if BOW_DEBUG_MODE
-# define BOW_DEBUG_ONLY (x) x
-# define BOW_ASSERT (x) assert (x)
+#include <cassert>
+# define BOW_DEBUG_ONLY(x) x
+# define BOW_ASSERT(x) assert(x)
 #else
-# define BOW_DEBUG_ONLY (x)
-# define BOW_ASSERT (x)
+# define BOW_DEBUG_ONLY(x)
+# define BOW_ASSERT(x)
 #endif
 
 /************************************************************************/
@@ -336,9 +330,3 @@
     //# pragma warning(disable : 4481)
 #endif
 
-#ifndef NDEBUG
-#include <cassert>
-#define MI_ASSERT(condicion) assert(condicion)
-#else
-#define MI_ASSERT(condicion) ((void)0)
-#endif

@@ -10,6 +10,7 @@
 #pragma once
 
 #include "bowCoreRequisites.h"
+#include "bowGraphicsGenerals.h"
 
 namespace bowEngineSDK
 {
@@ -31,4 +32,4 @@ class BaseBuffer
  protected:
   uint32 m_byteWidth;
 };
-}
+}/// namespace bowEngineSDK

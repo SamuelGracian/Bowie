@@ -1,18 +1,11 @@
-#include "bowDx11GRAPI.h"
+#include "bowDx11GraphicsAPI.h"
+
+#include <iostream>
 
 #include "bowDx11ConstBuffer.h"
 #include "bowDx11IndexBuffer.h"
 #include "bowDx11VertexBuffer.h"
 #include "bowDx11SwapChain.h"
-
-#pragma comment(lib, "d3d11.lib")
-#pragma comment(lib, "dxgi.lib")
-#pragma comment(lib, "d3dcompiler.lib")
-#pragma comment(lib, "dxguid.lib")
-#pragma comment(lib, "windowscodecs.lib")
-
-#define SAFE_RELEASE(x) if (x) {x -> Release(); x = nullptr;}
-#define HIGHER_AVAILABLE_SLOT 8
 
 namespace bowEngineSDK
 {
@@ -20,7 +13,7 @@ namespace bowEngineSDK
 /*  INTERNAL FUNCTIONS/ HELPERS  */
 /*****************************************************/
 IDXGISwapChain* 
-Dx11GRAPI::createSwapChainInternal(HWND hwnd, uint32_t width,
+Dx11GraphicsAPI::createSwapChainInternal(HWND hwnd, uint32_t width,
                                    uint32_t height, 
                                    GAPI_FORMAT::K format) {
   IDXGIFactory1* dxgiFactory1 = nullptr;
@@ -86,11 +79,11 @@ Dx11GRAPI::createSwapChainInternal(HWND hwnd, uint32_t width,
     }
   }
 
-  SAFE_RELEASE(dxgiFactory1);
-  SAFE_RELEASE(dxgiFactory2);
-  SAFE_RELEASE(dxgiDevice);
-  SAFE_RELEASE(adapter);
-  SAFE_RELEASE(swapChain1);
+  safeRelease(dxgiFactory1);
+  safeRelease(dxgiFactory2);
+  safeRelease(dxgiDevice);
+  safeRelease(adapter);
+  safeRelease(swapChain1);
 
   return ResultSwapChain;
 }
@@ -98,7 +91,7 @@ Dx11GRAPI::createSwapChainInternal(HWND hwnd, uint32_t width,
 
 /*****************************************************/
 bool
-Dx11GRAPI::init(WeakPtr<DisplaySurface> windowHandler) {
+Dx11GraphicsAPI::init(WeakPtr<DisplaySurface> windowHandler) {
   if (handleWindow.expired()) {
     return false;
   }
@@ -246,12 +239,12 @@ Dx11GRAPI::init(WeakPtr<DisplaySurface> windowHandler) {
 }
 
 bool
-Dx11GRAPI::cleanUpResources() {
+Dx11GraphicsAPI::cleanUpResources() {
 
 }
 
 SPtr<SwapChain>
-Dx11GRAPI::createSwapChain(WeakPtr<DisplaySurface> handle, GAPI_FORMAT::K) {
+Dx11GraphicsAPI::createSwapChain(WeakPtr<DisplaySurface> handle, GAPI_FORMAT::K) {
   SPtr<Dx11SwapChain> SChain = nullptr;
 
   if (handleWindow.expired()) {
@@ -276,7 +269,7 @@ Dx11GRAPI::createSwapChain(WeakPtr<DisplaySurface> handle, GAPI_FORMAT::K) {
 }
 
 SPtr<ConstBuffer>
-Dx11GRAPI::createConstBuffer(const uint32 byteWitdh,
+Dx11GraphicsAPI::createConstBuffer(const uint32 byteWitdh,
                              const uint32 slot, void* data) {
   ID3D11Buffer* Rawbuffer = nullptr;
   D3D11_BUFFER_DESC bd = {};
@@ -295,15 +288,15 @@ Dx11GRAPI::createConstBuffer(const uint32 byteWitdh,
     buffer->SetByteWidth(bytewidth);
     buffer->SetSlot(slot);
 
-    ASSIGN_DEBUG_NAME(buffer.get(), Rawbuffer);
+    //ASSIGN_DEBUG_NAME(buffer.get(), Rawbuffer);
     return buffer;
   }
   return nullptr;
 }
 
 SPtr<Indexbuffer>
-Dx11GRAPI::createIndexBuffer() {
-  assert(bytewidth != 0);
+Dx11GraphicsAPI::createIndexBuffer() {
+  BOW_ASSERT(bytewidth != 0);
   D3D11_BUFFER_DESC bd = {};
   ID3D11Buffer* Rawbuffer = nullptr;
   D3D11_SUBRESOURCE_DATA InitData = {};
@@ -323,7 +316,7 @@ Dx11GRAPI::createIndexBuffer() {
 }
 
 SPtr<VertexBuffer>
-Dx11GRAPI::createVertexBuffer() {
+Dx11GraphicsAPI::createVertexBuffer() {
   ID3D11Buffer* Rawbuffer = nullptr;
   std::shared_ptr<Dx11VertexBuffer> ResultBuffer;
 
@@ -345,13 +338,13 @@ Dx11GRAPI::createVertexBuffer() {
 }
 
 void
-Dx11GRAPI::setConstBuffer(WeakPtr<ConstBuffer> buffer) {
+Dx11GraphicsAPI::setConstBuffer(WeakPtr<ConstBuffer> buffer) {
   if (m_immediateContext == nullptr || buffer.expired()) {
     return;
   }
   auto pbuffer = std::static_pointer_cast<Dx11ConstantBuffer>(buffer.lock());
 
-  if (pbuffer == nullptr || pbuffer->m_buffer == nullptr || pbuffer->GetSlot() >= HIGHER_AVAILABLE_SLOT) {
+  if (pbuffer == nullptr || pbuffer->m_buffer == nullptr || pbuffer->GetSlot() >= BUFFER_HIGHER_AVAILABLE_SLOT) {
     return;
   }
 
@@ -360,7 +353,7 @@ Dx11GRAPI::setConstBuffer(WeakPtr<ConstBuffer> buffer) {
 }
 
 void 
-Dx11GRAPI::setIndexBuffer(WeakPtr<Indexbuffer> buffer) {
+Dx11GraphicsAPI::setIndexBuffer(WeakPtr<Indexbuffer> buffer) {
   if (m_immediateContext == nullptr || buffer.expired()) {
     return;
   }
@@ -375,7 +368,7 @@ Dx11GRAPI::setIndexBuffer(WeakPtr<Indexbuffer> buffer) {
 }
 
 void
-Dx11GRAPI::updateConstBuffer(WeakPtr<ConstBuffer> buffer,
+Dx11GraphicsAPI::updateConstBuffer(WeakPtr<ConstBuffer> buffer,
                              const uint32 byteWitdth, void* data) {
   if (m_immediateContext == nullptr || buffer.expired() || Data == nullptr) {
     return;

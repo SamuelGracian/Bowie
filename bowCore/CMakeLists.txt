@@ -18,6 +18,4 @@ target_link_libraries(bowCore
     PUBLIC bowUtilities
 )
 
-target_compile_definitions(bowCore
-    PRIVATE BOW_CORE_EXPORTS=1
-)
+target_compile_definitions(bowCore PRIVATE BOW_CORE_EXPORTS=1)

@@ -9,6 +9,6 @@ add_executable(bowDx11API ${SOURCES} ${HEADERS}
 
 SET_ENGINE_DEFAULTS(bowDx11API)
 
-target_link_libraries(bowDx11API PUBLIC bowCore)
+target_link_libraries(bowDx11API PUBLIC bowCore d3d11 dxgi d3dcompiler)
 
 add_recursive_includes(bowDx11API)

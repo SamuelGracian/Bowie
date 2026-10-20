@@ -11,8 +11,6 @@
 
 #include "bowBaseBuffer.h"
 
-#define HIGHER_AVAILABLE_SLOT 8
-
 namespace bowEngineSDK
 {
 class ConstBuffer : public BaseBuffer
@@ -54,7 +52,7 @@ class ConstBuffer : public BaseBuffer
    }
 
  private:
-   static constexpr uint32 HIGHER_AVAILABLE_SLOT = 8;
+
    uint32 m_slot;
    void* m_rawData;
    bool m_isUpdatePending;
