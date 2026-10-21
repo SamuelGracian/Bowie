@@ -49,21 +49,33 @@ public:
   static float
   tan(float angleInRadians);
 
-  /**
-   * @brief Computes the square root of a given number
-   * @param value, value to compute
-   * @return float, The result of the square root of the value
-  */
+   /**
+    * @brief Computes the square root of a given number
+    * @param value, value to compute
+   *  PLS BE SPECIFFIC WITH THE FLOAT VALUE TO NOT USE THE INT VERSION.
+    * @return float, The result of the square root of the value
+   */
   static float
   sqrt(float value);
 
-  /**
-   * @brief inverse square root of a value
-   * @param value, value to compute
-   * @return float, The inverse square root of a vlue.
+  /*
+  * @brief
+  *  Computes the squr root of a given number, to keep it int uses.
+  *  THIS FUNCTION IS NOT PRECISE, DO EXPECT LOSING DATA.
+  * @param INT
+  * @return INT
+  *  Returns the largest int whose square root is less than or equal to the param.
   */
-  static float
-  invSqrt(float value);
+  static int32
+  sqrt(int32 value);
+
+   /**
+    * @brief inverse square root of a value
+    * @param value, value to compute
+    * @return float, The inverse square root of a vlue.
+   */
+  static float 
+  invSqrt (float value);
 
   /**
    * @brief computes pow of a given value

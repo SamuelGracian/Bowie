@@ -76,8 +76,8 @@ public:
   * @return int32
   *  The lenght of the vector.
   */
-  //float
-  //magnitude() const;
+  int32
+  magnitude() const;
 
   /*
   * @brief
@@ -87,7 +87,7 @@ public:
   *  The lenght of the vector.
   */
   int32
-  sqrMagitude() const;
+  sqrMagnitude() const;
 
   /*
   * @brief
@@ -96,8 +96,8 @@ public:
   * @return int
   *  Returns the distance between two vectors.
   */
-  //int
-  //distance(const Vector2Int& vector) const;
+  int32
+  distance(const Vector2Int& vector) const;
 
   /*
   * @brief
