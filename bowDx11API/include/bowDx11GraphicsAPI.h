@@ -8,43 +8,73 @@ namespace bowEngineSDK
 class Dx11GraphicsAPI : public GraphicsAPI
 {
  public:
-   Dx11GraphicsAPI() = default;
+  Dx11GraphicsAPI() = default;
 
-   virtual bool
-   init(WeakPtr<DisplaySurface> handlewindow) override;
+  virtual bool
+  init(WeakPtr<DisplaySurface> handlewindow) override;
 
-   virtual bool
-   cleanUpResources() override;
+  virtual SPtr<SwapChain>
+  createSwapChain(WeakPtr<DisplaySurface> _windowHandler,
+                    GAPI_FORMAT::E _format) override;
+  
+  /*
+  * @brief 
+  * Create an empty buffer. It saves info in the update function.
+  * @param
+  * @return
+  */
+  virtual SPtr<ConstBuffer>
+  createConstBuffer(const uint32 byteWitdh ,
+                    const uint32 slot) override;
 
-   virtual SPtr<SwapChain>
-   createSwapChain(WeakPtr<DisplaySurface> _windowHandler,
-                     GAPI_FORMAT::E _format) override;
+  virtual SPtr<Indexbuffer>
+  createIndexBuffer(const uint32 _byteWidth, void* data) override;
+
+  virtual SPtr<VertexBuffer>
+  createVertexBuffer(const uint32 _byteWidth, const void* _vertices) override;
+
+  virtual void
+  setConstBuffer(WeakPtr<ConstBuffer> buffer, void* _data) override;
+
+  virtual void
+  setIndexBuffer(WeakPtr<Indexbuffer> buffer) override;
+
+  virtual void
+  updateConstBuffer(WeakPtr<ConstBuffer> buffer, const uint32 byteWitdth,
+                    void* data = nullptr) override;
+
+  /*  INTERNAL FUNCTIONS  */
+  
+  /*
+  * @brief
+  * @param HWND, uin32, uint32, GAPI_FORMAT, ID3D11Device
+  *  Window handler, width, height, format, reference to thr device.
+  * @return IDXGISwapChain
+  *  Returns a pointer of type swap chain.
+  */
+  IDXGISwapChain*
+  createSwapChainInternal(HWND hwnd, uint32 width,
+                          uint32 height,
+                          GAPI_FORMAT::E format);
    
-   virtual SPtr<ConstBuffer>
-   createConstBuffer(const uint32 byteWitdh = 0,
-                     const uint32 slot = 0, void* data = nullptr) override;
+  /* 
+  * @brief
+  *  Gets the according DXGI format to the GAPI_FORMAT
+  * @param GAPI_FORMAT
+  * @return
+  *  DXGI_FORMAT
+  */
+  DXGI_FORMAT
+  getDx11FormatInternal(GAPI_FORMAT::E _format) const;
 
-   virtual SPtr<Indexbuffer>
-   createIndexBuffer(WeakPtr<Indexbuffer> buffer) override;
-
-   virtual SPtr<VertexBuffer>
-   createVertexBuffer(WeakPtr<VertexBuffer> buffer ) override;
-
-   virtual void
-   setConstBuffer(WeakPtr<ConstBuffer> buffer) override;
-
-   virtual void
-   setIndexBuffer(WeakPtr<Indexbuffer> buffer) override;
-
-   virtual void
-   updateConstBuffer(WeakPtr<ConstBuffer> buffer, const uint32 byteWitdth,
-                     void* data = nullptr) override;
-
-   /*  INTERNAL FUNCTIONS  */
-   IDXGISwapChain*
-   createSwapChainInternal(HWND hwnd, uint32_t width,
-                           uint32_t height,
-                           GAPI_FORMAT::E format);
+  /*
+* @brief
+* create back buffer for the render target.
+* @param IDXGISwapChain*
+* @return ID3D11RendertTargetView*
+*/
+  ID3D11RenderTargetView*
+  createBackBufferRTInternal(IDXGISwapChain* _swapChain);
 
 
  private:

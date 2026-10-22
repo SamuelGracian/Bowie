@@ -4,7 +4,12 @@ file(GLOB_RECURSE SOURCES source/*.cpp
 file(GLOB_RECURSE HEADERS include/*.h
 )
 
-add_executable(bowDx11API ${SOURCES} ${HEADERS}
+add_library(bowDx11API SHARED 
+						${SOURCES} ${HEADERS}
+)
+
+set_target_properties(bowDx11API PROPERTIES
+    WINDOWS_EXPORT_ALL_SYMBOLS ON
 )
 
 SET_ENGINE_DEFAULTS(bowDx11API)

@@ -23,7 +23,7 @@ class Dx11IndexBuffer : public Indexbuffer
    */
    ~Dx11IndexBuffer() = default;
 
- private:
+
    ID3D11Buffer* m_buffer;
 };
 }/// namespace bowEngineSDK

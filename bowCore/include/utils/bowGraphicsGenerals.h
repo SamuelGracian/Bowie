@@ -1,5 +1,7 @@
 #pragma once 
 
+#include "bowPlatformTypes.h"
+
 /*
 * varios namespace o todo dentro de bowEngine
 */

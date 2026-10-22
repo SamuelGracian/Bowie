@@ -23,7 +23,7 @@ class Dx11VertexBuffer : public VertexBuffer
   */
   ~Dx11VertexBuffer() = default;
 
- private:
+ //private:
    ID3D11Buffer* m_buffer;
 
 };

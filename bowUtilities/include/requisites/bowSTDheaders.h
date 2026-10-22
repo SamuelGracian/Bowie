@@ -8,7 +8,7 @@
 #include <vector>
 
 
-#include "bowPlatformtypes.h"
+#include "bowPlatformTypes.h"
 
 namespace bowEngineSDK
 {

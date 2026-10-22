@@ -11,6 +11,7 @@
 #include "bowIndexBuffer.h"
 #include "bowVertexBuffer.h"
 #include "bowGraphicsGenerals.h"
+#include "bowSwapChain.h"
 
 namespace bowEngineSDK
 {
@@ -59,21 +60,16 @@ public:
 
   virtual SPtr<ConstBuffer> 
   createConstBuffer(const uint32 byteWitdh = 0,
-                    void* data = nullptr,
-                    uint32 indexCount = 0) = 0;
+                    uint32 _slot = 0) = 0;
 
   virtual SPtr<Indexbuffer>
-  createIndexBuffer(const uint32 byteWidth = 0,
-                    void* data = nullptr,
-                    uint32 indexCount = 0) = 0;
+  createIndexBuffer(const uint32 byteWidth = 0, void* data = nullptr) = 0;
 
   virtual SPtr<VertexBuffer>
-  createVertexBuffer(const uint32 byteWidth = 0,
-                    void* data = nullptr,
-                    uint32 indexCount = 0) = 0;
+  createVertexBuffer(const uint32 byteWidth = 0, const void* _vertices = nullptr) = 0;
 
   virtual void
-  setConstBuffer(WeakPtr<ConstBuffer> buffer) = 0;
+  setConstBuffer(WeakPtr<ConstBuffer> buffer, void* _data = nullptr) = 0;
 
   virtual void
   setIndexBuffer(WeakPtr<Indexbuffer> buffer) = 0;

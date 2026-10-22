@@ -60,7 +60,7 @@ public:
   getClientHeight() const { return m_clientHeight; }
 
   FORCEINLINE DisplaySurfaceHandler
-  getHandle() const { return handler; }
+  getHandle() const { return m_handler; }
 
 
 private:
@@ -77,6 +77,6 @@ private:
   /*
   * Window handler
   */
-  DisplaySurfaceHandler handler;
+  DisplaySurfaceHandler m_handler;
 };
 }//bowEngineSDK

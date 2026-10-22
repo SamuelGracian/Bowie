@@ -29,7 +29,7 @@ class Dx11ConstBuffer : public ConstBuffer
    */
    ID3D11Buffer* getBuffer();
 
- private:
+ 
    ID3D11Buffer* m_buffer;
 };
 }/// namespace bowEngineSDK

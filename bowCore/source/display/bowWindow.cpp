@@ -23,7 +23,7 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 
 DisplaySurface::~DisplaySurface() {
 #if BOW_PLATFORM == BOW_PLATFORM_WIN32
-  DestroyWindow(reinterpret_cast<HWND> (handler));
+  DestroyWindow(reinterpret_cast<HWND> (m_handler));
 #endif
 }
 

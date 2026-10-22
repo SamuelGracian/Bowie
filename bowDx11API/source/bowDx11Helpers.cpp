@@ -2,25 +2,6 @@
 
 namespace bowEngineSDK
 {
-DXGI_FORMAT
-Dx11Helpers::getDx11Format(GAPI_FORMAT::E _format) const {
-  switch (_format) {
-  default:
-    return DXGI_FORMAT::DXGI_FORMAT_UNKNOWN;
-    break;
-
-  case GAPI_FORMAT::FORMAT_D24_UNORM_S8_UINT:
-    return DXGI_FORMAT::DXGI_FORMAT_D24_UNORM_S8_UINT;
-    break;
-
-  case GAPI_FORMAT::FORMAT_R8G8B8A8_UNORM:
-    return DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM;
-
-  case GAPI_FORMAT::FORMAT_R32_FLOAT:
-    return DXGI_FORMAT::DXGI_FORMAT_R32_FLOAT;
-  }
-}
-
 
 uint32
 Dx11Helpers::getDx11BindFlags(const uint32 _bindFlag) const {
@@ -109,11 +90,11 @@ Dx11Helpers::getFillMode(FILL_MODE::E _fillMode) const {
 }
 
 Vector<D3D11_INPUT_ELEMENT_DESC>
-Dx11Helpers::createInputLayout(const ID3D10ShaderReflection* _reflection) const {
+Dx11Helpers::createInputLayout( ID3D11ShaderReflection* _reflection) const {
   Vector<D3D11_INPUT_ELEMENT_DESC> inputLayoutDesc;
   
   if (_reflection) {
-    D3D11_SHADER_DESC shaderDesc;
+      D3D11_SHADER_DESC shaderDesc;
     _reflection->GetDesc(&shaderDesc);
 
     inputLayoutDesc.reserve(shaderDesc.InputParameters);
@@ -162,107 +143,7 @@ Dx11Helpers::createInputLayout(const ID3D10ShaderReflection* _reflection) const 
 
 }
 
-IDXGISwapChain*
-Dx11Helpers::createSwapChain(HWND _windowHandler, uint32 _width, uint32 _height,
-                             GAPI_FORMAT::E _format, ID3D11Device& m_device) const {
-  IDXGIFactory1* dxgiFactory1 = nullptr;
+/// * or &
 
-  IDXGIFactory2* dxgiFactory2 = nullptr;
-
-  IDXGIDevice* dxgiDevice = nullptr;
-
-  IDXGIAdapter* adapter = nullptr;
-
-  IDXGISwapChain1* swapChain1 = nullptr;
-
-  IDXGISwapChain* ResultSwapChain = nullptr;
-
-  if (SUCCEEDED(m_device->QueryInterface(__uuidof(IDXGIDevice),
-                                         reinterpret_cast<void**>(&dxgiDevice)))) {
-
-    if (SUCCEEDED(dxgiDevice->GetAdapter(&adapter))) {
-      HRESULT hr = adapter->GetParent(__uuidof(IDXGIFactory1),
-                                      reinterpret_cast<void**>(&dxgiFactory1));
-
-      if (SUCCEEDED(hr)) {
-        hr = dxgiFactory1->QueryInterface(__uuidof(IDXGIFactory2),
-                                          reinterpret_cast<void**>(&dxgiFactory2));
-
-        if (SUCCEEDED(hr)) {
-
-          DXGI_SWAP_CHAIN_DESC1 sd = {};
-
-          sd.Width = _width;
-          sd.Height = _height;
-          sd.Format = getDx11Format(_format);
-          sd.SampleDesc.Count = 1;
-          sd.SampleDesc.Quality = 0;
-          sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-          sd.BufferCount = 2;
-          sd.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-          sd.Scaling = DXGI_SCALING_NONE;
-          sd.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
-
-          hr = dxgiFactory2->CreateSwapChainForHwnd(m_device, _windowHandler, 
-                                                    &sd, nullptr, nullptr, 
-                                                    &swapChain1);
-
-          if (SUCCEEDED(hr)) {
-            hr = swapChain1->QueryInterface(__uuidof(IDXGISwapChain), 
-                                            reinterpret_cast<void**>(&ResultSwapChain));
-          }
-        }
-        else {
-          DXGI_SWAP_CHAIN_DESC sd = {};
-
-          sd.BufferCount = 1;
-          sd.BufferDesc.Width = _width;
-          sd.BufferDesc.Height = _height;
-          sd.BufferDesc.Format = getDx11Format(_format);
-          sd.BufferDesc.RefreshRate.Numerator = 60;
-          sd.BufferDesc.RefreshRate.Denominator = 1;
-          sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-          sd.OutputWindow = _windowHandler;
-          sd.SampleDesc.Count = 1;
-          sd.SampleDesc.Quality = 0;
-          sd.Windowed = TRUE;
-
-          hr = dxgiFactory1->CreateSwapChain(m_device, &sd, &ResultSwapChain);
-        }
-
-        dxgiFactory1->MakeWindowAssociation(_windowHandler, DXGI_MWA_NO_ALT_ENTER);
-      }
-    }
-  }
-
-  safeRelease(dxgiFactory1);
-  safeRelease(dxgiFactory2);
-  safeRelease(dxgiDevice);
-  safeRelease(adapter);
-  safeRelease(swapChain1);
-
-  return ResultSwapChain;
-}
-
-ID3D11RenderTargetView*
-Dx11Helpers::createbackBufferRT(IDXGISwapChain& _swapChain, 
-                                ID3D11Device& m_device) const {
-
-  ID3D11Texture2D* resultTextureRT = nullptr;
-
-  ID3D11RenderTargetView* resultRT = nullptr;
-
-  if (_swapChain != nullptr && m_device != nullptr) {
-
-    if (SUCCEEDED(_swapChain.GetBuffer(0, __uuidof(ID3D11Texture2D),
-                                       reinterpret_cast<void**>(&resultTextureRT)))) {
-
-      m_device.CreateRenderTargetView(resultTextureRT, nullptr, &resultRT);
-    }
-  }
-  safeRelease(resultTextureRT);
-
-  return resultRT;
-}
 
 }/// namespace bowEngineSDK

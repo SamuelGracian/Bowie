@@ -1,6 +1,7 @@
 #include "bowDx11GraphicsAPI.h"
 
 #include <iostream>
+#include <windows.h>
 
 #include "bowDx11ConstBuffer.h"
 #include "bowDx11IndexBuffer.h"
@@ -13,10 +14,30 @@ namespace bowEngineSDK
 /*****************************************************/
 /*  INTERNAL FUNCTIONS/ HELPERS  */
 /*****************************************************/
+
+DXGI_FORMAT
+Dx11GraphicsAPI::getDx11FormatInternal(GAPI_FORMAT::E _format) const {
+  switch (_format) {
+  default:
+    return DXGI_FORMAT::DXGI_FORMAT_UNKNOWN;
+    break;
+
+  case GAPI_FORMAT::FORMAT_D24_UNORM_S8_UINT:
+    return DXGI_FORMAT::DXGI_FORMAT_D24_UNORM_S8_UINT;
+    break;
+
+  case GAPI_FORMAT::FORMAT_R8G8B8A8_UNORM:
+    return DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM;
+
+  case GAPI_FORMAT::FORMAT_R32_FLOAT:
+    return DXGI_FORMAT::DXGI_FORMAT_R32_FLOAT;
+  }
+}
+
+
 IDXGISwapChain* 
-Dx11GraphicsAPI::createSwapChainInternal(HWND hwnd, uint32_t width,
-                                   uint32_t height, 
-                                   GAPI_FORMAT::E format) {
+Dx11GraphicsAPI::createSwapChainInternal(HWND hwnd, uint32 width,
+                                         uint32 height, GAPI_FORMAT::E format) {
   IDXGIFactory1* dxgiFactory1 = nullptr;
 
   IDXGIFactory2* dxgiFactory2 = nullptr;
@@ -42,7 +63,7 @@ Dx11GraphicsAPI::createSwapChainInternal(HWND hwnd, uint32_t width,
 
           sd.Width = width;
           sd.Height = height;
-          sd.Format = Dx11Helpers::getDx11Format(format);
+          sd.Format = getDx11FormatInternal(format);
           sd.SampleDesc.Count = 1;
           sd.SampleDesc.Quality = 0;
           sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
@@ -59,7 +80,7 @@ Dx11GraphicsAPI::createSwapChainInternal(HWND hwnd, uint32_t width,
         }
         else {
           DXGI_SWAP_CHAIN_DESC sd = {};
-          DXGI_FORMAT tempformat = Dx11Helpers::getDx11Format(format);
+          DXGI_FORMAT tempformat = getDx11FormatInternal(format);
 
           sd.BufferCount = 1;
           sd.BufferDesc.Width = width;
@@ -88,6 +109,26 @@ Dx11GraphicsAPI::createSwapChainInternal(HWND hwnd, uint32_t width,
   safeRelease(swapChain1);
 
   return ResultSwapChain;
+}
+
+ID3D11RenderTargetView*
+Dx11GraphicsAPI::createBackBufferRTInternal(IDXGISwapChain* _swapChain) {
+
+  ID3D11Texture2D* resultTextureRT = nullptr;
+
+  ID3D11RenderTargetView* resultRT = nullptr;
+
+  if (_swapChain != nullptr && m_device != nullptr) {
+
+    if (SUCCEEDED(_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D),
+                                        reinterpret_cast<void**>(&resultTextureRT)))) {
+
+      m_device->CreateRenderTargetView(resultTextureRT, nullptr, &resultRT);
+    }
+  }
+  safeRelease(resultTextureRT);
+
+  return resultRT;
 }
 
 
@@ -240,13 +281,9 @@ Dx11GraphicsAPI::init(WeakPtr<DisplaySurface> windowHandler) {
   return false;
 }
 
-bool
-Dx11GraphicsAPI::cleanUpResources() {
-
-}
-
 SPtr<SwapChain>
-Dx11GraphicsAPI::createSwapChain(WeakPtr<DisplaySurface> _windowHandler, GAPI_FORMAT::E _format) {
+Dx11GraphicsAPI::createSwapChain(WeakPtr<DisplaySurface> _windowHandler,
+                                 GAPI_FORMAT::E _format) {
   SPtr<Dx11SwapChain> SChain = nullptr;
 
   if (_windowHandler.expired()) {
@@ -256,13 +293,15 @@ Dx11GraphicsAPI::createSwapChain(WeakPtr<DisplaySurface> _windowHandler, GAPI_FO
 
   std::shared_ptr<DisplaySurface> tempSurface = _windowHandler.lock();
 
-  if (auto* ResultSwapChain = CreateSwapChain_internal(tempSurface->getHandle(), 
-                                                       tempSurface->getClientWidth(), 
-                                                       tempSurface->getClientHeight(), format)) {
-    if (auto* ResultRT = CreateBackBufferRT_internal(ResultSwapChain)) {
+  if (auto* ResultSwapChain = createSwapChainInternal(
+                                  reinterpret_cast<HWND> (tempSurface->getHandle()),
+                                  tempSurface->getClientWidth(), 
+                                  tempSurface->getClientHeight(),
+                                  _format)) {
+    if (auto* ResultRT = createBackBufferRTInternal(ResultSwapChain)) {
       SChain = std::make_shared<Dx11SwapChain>();
 
-      SChain->m_BackBufferRT = ResultRT;
+      SChain->m_backBufferRT = ResultRT;
 
       SChain->m_swapChain = ResultSwapChain;
     }
@@ -271,13 +310,13 @@ Dx11GraphicsAPI::createSwapChain(WeakPtr<DisplaySurface> _windowHandler, GAPI_FO
 }
 
 SPtr<ConstBuffer>
-Dx11GraphicsAPI::createConstBuffer(const uint32 byteWitdh,
-                             const uint32 slot, void* data) {
+Dx11GraphicsAPI::createConstBuffer(const uint32 _byteWidth,
+                             const uint32 slot) {
   ID3D11Buffer* Rawbuffer = nullptr;
   D3D11_BUFFER_DESC bd = {};
-  if (bytewidth != 0) {
+  if (_byteWidth != 0) {
     bd.Usage = D3D11_USAGE_DEFAULT;
-    bd.ByteWidth = bytewidth;
+    bd.ByteWidth = _byteWidth;
     bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
     bd.CPUAccessFlags = 0;
   }
@@ -285,10 +324,10 @@ Dx11GraphicsAPI::createConstBuffer(const uint32 byteWitdh,
   if (SUCCEEDED((m_device->CreateBuffer(&bd, nullptr, &Rawbuffer))))
 
   {
-    auto buffer = std::make_shared<Dx11ConstantBuffer>();
+    auto buffer = std::make_shared<Dx11ConstBuffer>();
     buffer->m_buffer = Rawbuffer;
-    buffer->SetByteWidth(bytewidth);
-    buffer->SetSlot(slot);
+    buffer->setByteWidth(_byteWidth);
+    buffer->setSlot(slot);
 
     //ASSIGN_DEBUG_NAME(buffer.get(), Rawbuffer);
     return buffer;
@@ -297,18 +336,18 @@ Dx11GraphicsAPI::createConstBuffer(const uint32 byteWitdh,
 }
 
 SPtr<Indexbuffer>
-Dx11GraphicsAPI::createIndexBuffer() {
-  BOW_ASSERT(bytewidth != 0);
+Dx11GraphicsAPI::createIndexBuffer(const uint32 _byteWidth, void* _data) {
+  BOW_ASSERT(_byteWidth != 0);
   D3D11_BUFFER_DESC bd = {};
   ID3D11Buffer* Rawbuffer = nullptr;
   D3D11_SUBRESOURCE_DATA InitData = {};
   auto ResultBuffer = std::make_shared<Dx11IndexBuffer>();
 
   bd.Usage = D3D11_USAGE_DEFAULT;
-  bd.ByteWidth = bytewidth;
+  bd.ByteWidth = _byteWidth;
   bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
   bd.CPUAccessFlags = 0;
-  InitData.pSysMem = data;
+  InitData.pSysMem = _data;
 
   if (SUCCEEDED(m_device->CreateBuffer(&bd, &InitData, &Rawbuffer))) {
     ResultBuffer->m_buffer = Rawbuffer;
@@ -318,19 +357,20 @@ Dx11GraphicsAPI::createIndexBuffer() {
 }
 
 SPtr<VertexBuffer>
-Dx11GraphicsAPI::createVertexBuffer() {
+Dx11GraphicsAPI::createVertexBuffer(const uint32 _byteWidth,
+                                    const void* _vertices) {
   ID3D11Buffer* Rawbuffer = nullptr;
   std::shared_ptr<Dx11VertexBuffer> ResultBuffer;
 
   D3D11_BUFFER_DESC bd = {};
   bd.Usage = D3D11_USAGE_DEFAULT;
-  bd.ByteWidth = bytewidth;
+  bd.ByteWidth = _byteWidth;
   bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
   bd.CPUAccessFlags = 0;
   bd.StructureByteStride = 0;
 
   D3D11_SUBRESOURCE_DATA InitData = {};
-  InitData.pSysMem = vertices;
+  InitData.pSysMem = _vertices;
 
   if (SUCCEEDED(m_device->CreateBuffer(&bd, &InitData, &Rawbuffer))) {
     ResultBuffer = std::make_shared<Dx11VertexBuffer>();
@@ -340,18 +380,22 @@ Dx11GraphicsAPI::createVertexBuffer() {
 }
 
 void
-Dx11GraphicsAPI::setConstBuffer(WeakPtr<ConstBuffer> buffer) {
+Dx11GraphicsAPI::setConstBuffer(WeakPtr<ConstBuffer> buffer, void* _data) {
   if (m_immediateContext == nullptr || buffer.expired()) {
     return;
   }
-  auto pbuffer = std::static_pointer_cast<Dx11ConstantBuffer>(buffer.lock());
+  auto pbuffer = std::static_pointer_cast<Dx11ConstBuffer>(buffer.lock());
 
-  if (pbuffer == nullptr || pbuffer->m_buffer == nullptr || pbuffer->GetSlot() >= BUFFER_HIGHER_AVAILABLE_SLOT) {
+  if (pbuffer == nullptr || pbuffer->m_buffer == nullptr || pbuffer->getSlot() 
+      >= BUFFER_HIGHER_AVAILABLE_SLOT) {
     return;
   }
 
-  m_immediateContext->VSSetConstantBuffers(pbuffer->GetSlot(), 1, &pbuffer->m_buffer);
-  m_immediateContext->PSSetConstantBuffers(pbuffer->GetSlot(), 1, &pbuffer->m_buffer);
+  m_immediateContext->VSSetConstantBuffers(pbuffer->getSlot(), 1, &pbuffer->m_buffer);
+  m_immediateContext->PSSetConstantBuffers(pbuffer->getSlot(), 1, &pbuffer->m_buffer);
+
+  //Sets the data on the buffer
+  m_immediateContext->UpdateSubresource(pbuffer->m_buffer, 0, nullptr, _data, 0, 0);
 }
 
 void 
@@ -370,18 +414,18 @@ Dx11GraphicsAPI::setIndexBuffer(WeakPtr<Indexbuffer> buffer) {
 }
 
 void
-Dx11GraphicsAPI::updateConstBuffer(WeakPtr<ConstBuffer> buffer,
-                             const uint32 byteWitdth, void* data) {
-  if (m_immediateContext == nullptr || buffer.expired() || Data == nullptr) {
+Dx11GraphicsAPI::updateConstBuffer(WeakPtr<ConstBuffer> _buffer,
+                             const uint32 _byteWidth, void* _data) {
+  if (m_immediateContext == nullptr || _buffer.expired() || _data == nullptr) {
     return;
   }
-  auto pbuffer = std::static_pointer_cast <Dx11ConstantBuffer> (buffer.lock());
+  auto pbuffer = std::static_pointer_cast <Dx11ConstBuffer> (_buffer.lock());
 
-  if (pbuffer == nullptr || pbuffer->m_buffer == nullptr || pbuffer->GetByteWidth() != bytewidth) {
+  if (pbuffer == nullptr || pbuffer->m_buffer == nullptr || pbuffer->GetByteWidth() != _byteWidth) {
     return;
   }
 
-  m_immediateContext->UpdateSubresource(pbuffer->m_buffer, 0, nullptr, Data, 0, 0);
+  m_immediateContext->UpdateSubresource(pbuffer->m_buffer, 0, nullptr, _data, 0, 0);
 }
 
 

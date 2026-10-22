@@ -21,7 +21,7 @@ class Dx11SwapChain : public SwapChain
    * @brief
    *  Defualt destructor
    */
-   ~SwapChain() = default;
+   ~Dx11SwapChain() = default;
 
    void
    present(uint32 syncInterval, uint32 flags) override;
@@ -30,7 +30,6 @@ class Dx11SwapChain : public SwapChain
    getRenderTargetView() override;
 
 
- private:
    IDXGISwapChain* m_swapChain;
    ID3D11RenderTargetView* m_backBufferRT;
 };

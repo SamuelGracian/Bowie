@@ -23,7 +23,7 @@ public:
   */
   ~Dx11RenderTargetView() = default;
 
- protected:
+ //protected:
    ID3D11RenderTargetView* m_renderTargetView;
    ID3D11ShaderResourceView* m_resourceView;
 
