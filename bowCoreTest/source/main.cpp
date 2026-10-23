@@ -1,4 +1,6 @@
 #include "bowWindow.h"
+#include "bowGraphicsAPI.h"
+
 
 using namespace bowEngineSDK;
 

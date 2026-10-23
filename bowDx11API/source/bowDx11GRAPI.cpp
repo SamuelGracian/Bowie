@@ -8,6 +8,8 @@
 #include "bowDx11VertexBuffer.h"
 #include "bowDx11SwapChain.h"
 #include "bowDx11Helpers.h"
+#include "bowDx11Topology.h"
+#include "bowDx11DepthStencil.h"
 
 namespace bowEngineSDK
 {
@@ -426,6 +428,56 @@ Dx11GraphicsAPI::updateConstBuffer(WeakPtr<ConstBuffer> _buffer,
   }
 
   m_immediateContext->UpdateSubresource(pbuffer->m_buffer, 0, nullptr, _data, 0, 0);
+}
+
+SPtr<Topology> 
+Dx11GraphicsAPI::createTopology(Topology::Type _type) {
+  auto topo = std::make_shared<Dx11Topology>();
+
+  topo->setType(_type);
+
+  switch (_type) {
+  case bowEngineSDK::Topology::TriangleList:
+    topo->dx11Topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+    break;
+
+  case bowEngineSDK::Topology::TriangleStrip:
+    topo->dx11Topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+    break;
+
+  case bowEngineSDK::Topology::LineList:
+    topo->dx11Topology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
+    break;
+
+  case bowEngineSDK::Topology::PointList:
+    topo->dx11Topology = D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;
+    break;
+
+  default:
+    topo->dx11Topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+    break;
+  }
+
+}
+
+void 
+Dx11GraphicsAPI::setTopology(WeakPtr<Topology> _topology){
+  if (m_immediateContext == nullptr || _topology.expired()){
+    return;
+   }
+
+  auto pTopo = std::static_pointer_cast<Dx11Topology>(_topology.lock());
+  if (pTopo == nullptr) {
+    return;
+  }
+
+  m_immediateContext->IASetPrimitiveTopology(pTopo->dx11Topology);
+}
+
+SPtr<DepthStencilView>
+Dx11GraphicsAPI::createDepthStencil(uint32 _width, uint32 _height,
+                                    const GAPI_FORMAT::E _format) {
+  SPtr<Dx11Dep
 }
 
 
