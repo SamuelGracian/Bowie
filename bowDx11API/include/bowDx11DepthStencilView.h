@@ -14,7 +14,7 @@ class Dx11DepthStencilView : public DepthStencilView
    m_depthTexture(nullptr)
   {}
  
-  ~Dx11DepthStencilView() == default;
+  ~Dx11DepthStencilView() = default;
 
 
   static UINT 

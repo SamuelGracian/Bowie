@@ -130,6 +130,19 @@ public:
   ID3D11RenderTargetView*
   createBackBufferRTInternal(IDXGISwapChain* _swapChain);
 
+  /*
+  * @brief
+  *  Creates a texture of Dx11 type.
+  * @param uint32 width, uint32 hieght, const GAPI_FORMAT, uint32 bindflag
+  * @return ID3D11Texture2D*
+  */
+  ID3D11Texture2D*
+  createTexture2DInternal(uint32 _width, uint32 _height,
+                          const GAPI_FORMAT::E _format, uint32 _bindFlags);
+
+  uint32
+  getDx11BindFlagsInternal(const uint32 _bindFlag) const;
+
 
 private:
   ID3D11Device* m_device = nullptr;

@@ -11,14 +11,6 @@ public:
 
   /*
   * @brief
-  * @param uint32
-  * @return uint32
-  */
-  uint32
-  getDx11BindFlags(const uint32 _bindFlag) const;
-
-  /*
-  * @brief
   * @param SHADER_TYPE, uint32
   *   shader type and shader model.
   * @return const char*

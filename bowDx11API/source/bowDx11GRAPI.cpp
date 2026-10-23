@@ -9,7 +9,8 @@
 #include "bowDx11SwapChain.h"
 #include "bowDx11Helpers.h"
 #include "bowDx11Topology.h"
-#include "bowDx11DepthStencil.h"
+#include "bowDx11DepthStencilView.h"
+#include "bowDx11Helpers.h"
 
 namespace bowEngineSDK
 {
@@ -28,12 +29,44 @@ Dx11GraphicsAPI::getDx11FormatInternal(GAPI_FORMAT::E _format) const {
     return DXGI_FORMAT::DXGI_FORMAT_D24_UNORM_S8_UINT;
     break;
 
-  case GAPI_FORMAT::FORMAT_R8G8B8A8_UNORM:
+  case GAPI_FORMAT::FORMAT_R8G8B8A8_UNKNOWN:
     return DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM;
 
   case GAPI_FORMAT::FORMAT_R32_FLOAT:
     return DXGI_FORMAT::DXGI_FORMAT_R32_FLOAT;
   }
+}
+
+
+uint32
+Dx11GraphicsAPI::getDx11BindFlagsInternal(const uint32 _bindFlag) const {
+  uint32 ResultFlags = 0;
+
+  if ((_bindFlag & GAPI_BIND_FLAGS::BIND_CONSTANT_BUFFER) != 0) {
+    ResultFlags += D3D11_BIND_CONSTANT_BUFFER;
+  }
+
+  if ((_bindFlag & GAPI_BIND_FLAGS::BIND_INDEX_BUFFER) != 0) {
+    ResultFlags += D3D11_BIND_INDEX_BUFFER;
+  }
+
+  if ((_bindFlag & GAPI_BIND_FLAGS::BIND_VERTEX_BUFFER) != 0) {
+    ResultFlags += D3D11_BIND_VERTEX_BUFFER;
+  }
+
+  if ((_bindFlag & GAPI_BIND_FLAGS::DEPTH_STENCIL) != 0) {
+    ResultFlags += D3D11_BIND_DEPTH_STENCIL;
+  }
+
+  if ((_bindFlag & GAPI_BIND_FLAGS::RENDER_TARGET) != 0) {
+    ResultFlags += D3D11_BIND_RENDER_TARGET;
+  }
+
+  if ((_bindFlag & GAPI_BIND_FLAGS::SHADER_RESOURCE) != 0) {
+    ResultFlags += D3D11_BIND_SHADER_RESOURCE;
+  }
+
+  return ResultFlags;
 }
 
 
@@ -132,6 +165,34 @@ Dx11GraphicsAPI::createBackBufferRTInternal(IDXGISwapChain* _swapChain) {
 
   return resultRT;
 }
+
+ID3D11Texture2D*
+Dx11GraphicsAPI::createTexture2DInternal(uint32 _width, uint32 _height,
+                                         const GAPI_FORMAT::E _format,
+                                         uint32 _bindFlags) {
+  
+  ID3D11Texture2D* resultTexture = nullptr;
+
+  if (_width != 0 && _height != 0
+      && _format != GAPI_FORMAT::FORMAT_R8G8B8A8_UNKNOWN
+      && m_device != nullptr) {
+    D3D11_TEXTURE2D_DESC descTexture = {};
+    descTexture.Width = _width;
+    descTexture.Height = _height;
+    descTexture.MipLevels = 1;
+    descTexture.ArraySize = 1;
+    descTexture.Format = getDx11FormatInternal(_format);
+    descTexture.SampleDesc.Count = 1;
+    descTexture.SampleDesc.Quality = 0;
+    descTexture.Usage = D3D11_USAGE_DEFAULT;
+    descTexture.BindFlags = getDx11BindFlagsInternal(_bindFlags);
+    descTexture.CPUAccessFlags = 0;
+    descTexture.MiscFlags = 0;
+    m_device->CreateTexture2D(&descTexture, nullptr, &resultTexture);
+  }
+  return resultTexture;
+}
+
 
 
 /*****************************************************/
@@ -458,6 +519,7 @@ Dx11GraphicsAPI::createTopology(Topology::Type _type) {
     break;
   }
 
+  return topo;
 }
 
 void 
@@ -477,9 +539,35 @@ Dx11GraphicsAPI::setTopology(WeakPtr<Topology> _topology){
 SPtr<DepthStencilView>
 Dx11GraphicsAPI::createDepthStencil(uint32 _width, uint32 _height,
                                     const GAPI_FORMAT::E _format) {
-  SPtr<Dx11Dep
+  
+  SPtr<Dx11DepthStencilView> resultDS = nullptr;
+  ID3D11DepthStencilView* resultDepthStencilView = nullptr;
+  ID3D11Texture2D* depthStencilTexture = nullptr;
+
+  if (m_device != nullptr && _width != 0.0f && _height != 0.0
+      && _format != GAPI_FORMAT::FORMAT_R8G8B8A8_UNKNOWN) {
+
+    depthStencilTexture = createTexture2DInternal(_width,
+                                                  _height,
+                                                  _format,
+                                                  GAPI_BIND_FLAGS::DEPTH_STENCIL);
+
+    if (depthStencilTexture != nullptr){
+      D3D11_DEPTH_STENCIL_VIEW_DESC descDSV = {};
+      descDSV.Format = getDx11FormatInternal(_format);
+      descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+      descDSV.Texture2D.MipSlice = 0;
+
+      if (SUCCEEDED(m_device->CreateDepthStencilView(depthStencilTexture,
+                                                     &descDSV,
+                                                     &resultDepthStencilView))) {
+        resultDS = std::make_shared<Dx11DepthStencilView>();
+        resultDS->m_depthStencilView = resultDepthStencilView;
+      }
+    }
+  }
+  safeRelease(depthStencilTexture);
+  return resultDS;
 }
-
-
 
 }

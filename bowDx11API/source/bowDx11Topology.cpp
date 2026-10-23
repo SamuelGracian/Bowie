@@ -3,8 +3,7 @@
 namespace bowEngineSDK
 {
 Dx11Topology::Dx11Topology()
-  : dx11Topology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST)
-{
+  : dx11Topology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST) {
   switch (m_type) {
 
   case Topology::Type::TriangleList:
@@ -28,3 +27,4 @@ Dx11Topology::Dx11Topology()
     break;
   }
 }
+}/// namespace bowEngineSDK

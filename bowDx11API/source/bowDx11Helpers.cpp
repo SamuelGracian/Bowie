@@ -3,37 +3,6 @@
 namespace bowEngineSDK
 {
 
-uint32
-Dx11Helpers::getDx11BindFlags(const uint32 _bindFlag) const {
-  uint32 ResultFlags = 0;
-
-  if ((_bindFlag & GAPI_BIND_FLAGS::BIND_CONSTANT_BUFFER) != 0) {
-    ResultFlags += D3D11_BIND_FLAG::D3D11_BIND_CONSTANT_BUFFER;
-  }
-
-  if ((_bindFlag & GAPI_BIND_FLAGS::BIND_INDEX_BUFFER) != 0) {
-    ResultFlags += D3D11_BIND_INDEX_BUFFER;
-  }
-
-  if ((_bindFlag & GAPI_BIND_FLAGS::BIND_VERTEX_BUFFER) != 0) {
-    ResultFlags += D3D11_BIND_VERTEX_BUFFER;
-  }
-
-  if ((_bindFlag & GAPI_BIND_FLAGS::DEPTH_STENCIL) != 0) {
-    ResultFlags += D3D11_BIND_DEPTH_STENCIL;
-  }
-
-  if ((_bindFlag & GAPI_BIND_FLAGS::RENDER_TARGET) != 0) {
-    ResultFlags += D3D11_BIND_RENDER_TARGET;
-  }
-
-  if ((_bindFlag & GAPI_BIND_FLAGS::SHADER_RESOURCE) != 0) {
-    ResultFlags += D3D11_BIND_SHADER_RESOURCE;
-  }
-
-  return ResultFlags;
-}
-
 const char*
 Dx11Helpers::getShaderModel(SHADER_TYPE::E _shaderType, uint32 _shaderModel) const {
   static String ResultShader;

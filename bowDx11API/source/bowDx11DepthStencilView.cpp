@@ -9,7 +9,7 @@ Dx11DepthStencilView::getClearFlagsDx11(const DepthStencilView::ClearFlags _flag
     resultFlag |= D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH;
   }
 
-  if (hasFlag(flag, DepthStencilView::ClearFlags::Stencil)) {
+  if (hasFlag(_flags, DepthStencilView::ClearFlags::Stencil)) {
     resultFlag |= D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL;
   }
   return resultFlag;
