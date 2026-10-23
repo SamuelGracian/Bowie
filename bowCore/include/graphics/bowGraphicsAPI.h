@@ -197,8 +197,7 @@ public:
   * @return SharedPtr<ViewPort>
   */
   virtual SPtr<ViewPort>
-  createViewPort(float _width = 0, float _height = 0,
-                 const GAPI_FORMAT::E _format = GAPI_FORMAT::FORMAT_R8G8B8A8_UNKNOWN) = 0;
+  createViewPort() = 0;
 
 
  protected:

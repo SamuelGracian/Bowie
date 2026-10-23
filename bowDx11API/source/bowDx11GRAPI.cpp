@@ -570,4 +570,10 @@ Dx11GraphicsAPI::createDepthStencil(uint32 _width, uint32 _height,
   return resultDS;
 }
 
+SPtr<ViewPort>
+Dx11GraphicsAPI::createViewPort() {
+  return SPtr<ViewPort> ();
 }
+
+
+}/// namespace bowEngineSDK

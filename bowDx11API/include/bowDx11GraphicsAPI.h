@@ -8,11 +8,27 @@ namespace bowEngineSDK
 class Dx11GraphicsAPI : public GraphicsAPI
 {
 public:
+  /*
+  * @brief
+  *  Default constructor.
+  */
   Dx11GraphicsAPI() = default;
 
+  /*
+  * @brief
+  *  Initialize function.
+  * @param WeakPtr<DisplaySurface> windowHandler
+  * @return bool
+  */
   virtual bool
   init(WeakPtr<DisplaySurface> handlewindow) override;
 
+  /*
+  * @brief
+  *  Create a swap chain.
+  * @param WeakPtr<DisplaySurface> windowHandler, GAPI_FORMAT format
+  * @return SharedPtr<SwapChain>
+  */
   virtual SPtr<SwapChain>
   createSwapChain(WeakPtr<DisplaySurface> _windowHandler,
                   GAPI_FORMAT::E _format) override;
@@ -20,7 +36,7 @@ public:
   /*
   * @brief
   * Create an empty buffer. It saves info in the update function.
-  * @param
+  * @param const uint32 byteWith, const uint32 slot
   * @return
   */
   virtual SPtr<ConstBuffer>
@@ -30,7 +46,7 @@ public:
   /*
   * @brief
   * Creates and index buffer and sets an initial data.
-  * @param uint32, void*
+  * @param uint32 bytewidth, void* data
   * @return sharedPtr<IndexBuffer>.
   */
   virtual SPtr<Indexbuffer>
@@ -39,7 +55,7 @@ public:
   /*
   * @brief
   *  Creates a vertex buffer.
-  * @param uint32, const void*
+  * @param uint32 byteWidth, const void* data
   * @return shared ptr <VertexBuffer>
   */
   virtual SPtr<VertexBuffer>
@@ -48,7 +64,7 @@ public:
   /*
   * @brief
   *  Sets the constant buffer with a given data.
-  * @param weaKPtr<ConstBuffer>, void*
+  * @param weaKPtr<ConstBuffer>, void* data
   * @return void.
   */
   virtual void
@@ -83,18 +99,28 @@ public:
   virtual SPtr<Topology>
   createTopology(Topology::Type _type) override;
 
+  /*
+  * @brief
+  *  Sets the topology.
+  * @param WeakPtr<Topology> topology.
+  * @return none
+  */
   virtual void
   setTopology(WeakPtr<Topology> _topology) override;
 
-
+  /*
+  * @brief
+  *  Create a depth stencil.
+  * @param uint32 width, uint32 height, const GAPI_FORMAT format
+  * @return SharedPtr<DepthStencilView>
+  */
   virtual SPtr<DepthStencilView>
   createDepthStencil(uint32 _width, uint32 _height,
                      const GAPI_FORMAT::E _format) override;
 
 
-  virtual SPtr <ViewPort>
-  createViewPort(float _width, float height, 
-                 const GAPI_FORMAT::E _format)override;
+  virtual SPtr <ViewPort> /// TO DO: create an actual implementation for the view port
+  createViewPort()override;
 
 
   /*  INTERNAL FUNCTIONS  */
@@ -102,7 +128,8 @@ public:
   /*
   * @brief
   * @param HWND, uin32, uint32, GAPI_FORMAT, ID3D11Device
-  *  Window handler, width, height, format, reference to thr device.
+  *  Window handler, uint32 width, uint32 height,
+  *  GAPI_FORMAT format
   * @return IDXGISwapChain
   *  Returns a pointer of type swap chain.
   */
@@ -140,12 +167,27 @@ public:
   createTexture2DInternal(uint32 _width, uint32 _height,
                           const GAPI_FORMAT::E _format, uint32 _bindFlags);
 
+  /*
+  * @brief
+  *  Getter for the dx11 bind flags.
+  * @param const uint32 bindflag
+  * @return uint32
+  *  Value of the bind flag.
+  */
   uint32
   getDx11BindFlagsInternal(const uint32 _bindFlag) const;
 
 
 private:
+
+  /// <summary>
+  /// Dx11 Device
+  /// </summary>
   ID3D11Device* m_device = nullptr;
+
+  /// <summary>
+  /// Dx11 immediate context.
+  /// </summary>
   ID3D11DeviceContext* m_immediateContext = nullptr;
 
 };
