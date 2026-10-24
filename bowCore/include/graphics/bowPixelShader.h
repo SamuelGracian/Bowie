@@ -28,6 +28,6 @@ class PixelShader : public BaseShader
    * @brief
    *  Defeault destructor.
    */
-   ~PixelShader()
+   ~PixelShader() = default;
 };
 }/// namespace bowEngineSDK

@@ -344,6 +344,11 @@ Dx11GraphicsAPI::init(WeakPtr<DisplaySurface> windowHandler) {
   return false;
 }
 
+//void Dx11GraphicsAPI::draw(uint32 _vertexCount, uint32 _startVertexLocation) {}
+
+void
+Dx11GraphicsAPI::cleanUpResources(){}
+
 SPtr<SwapChain>
 Dx11GraphicsAPI::createSwapChain(WeakPtr<DisplaySurface> _windowHandler,
                                  GAPI_FORMAT::E _format) {
@@ -574,6 +579,16 @@ SPtr<ViewPort>
 Dx11GraphicsAPI::createViewPort() {
   return SPtr<ViewPort> ();
 }
+
+//SPtr<VertexShader> Dx11GraphicsAPI::createVertexShader(const String& _shaderCode, const String& _entryPoint, Vector<String> _defines) {
+//  return SPtr<VertexShader>();
+//}
+//
+//void Dx11GraphicsAPI::setVertexShader(WeakPtr<VertexShader> _shader) {}
+//
+//SPtr<PixelShader> Dx11GraphicsAPI::createPixelShader(const String& _shaderCode, const String& _entryPoint, Vector<String> _defines) {
+//  return SPtr<PixelShader>();
+//}
 
 
 }/// namespace bowEngineSDK

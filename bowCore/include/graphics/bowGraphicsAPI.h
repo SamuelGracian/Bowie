@@ -15,6 +15,9 @@
 #include "bowTopology.h"
 #include "bowDepthstencilView.h"
 #include "bowViewPort.h"
+#include "bowVertexShader.h"
+#include "bowPixelShader.h"
+#include "bowModule.h"
 
 namespace bowEngineSDK
 {
@@ -41,7 +44,7 @@ struct SimpleVertex
     texture(tex) {}
 };/// Simple vertex struct
 
-class BOW_CORE_EXPORT GraphicsAPI 
+class BOW_CORE_EXPORT GraphicsAPI : public Module <GraphicsAPI>
 {
 public:
 
@@ -58,7 +61,7 @@ public:
   * @brief
   *  Default destructor.
   */
-  ~GraphicsAPI() = default;
+  virtual ~GraphicsAPI();
   
   /*
   * @brief
@@ -69,6 +72,9 @@ public:
   virtual bool 
   init(WeakPtr<DisplaySurface> windowHandler) = 0;
   
+  //virtual void
+  //draw(uint32 _vertexCount = 0, uint32 _startVertexLocation = 0) = 0;
+
   /*
   * @brief
   *  Clean up function.
@@ -144,8 +150,8 @@ public:
   * @param WeakPtr<vertexBuffer>
   * @return none
   */
-  virtual void
-  setVertexBuffer(WeakPtr<VertexBuffer> buffer) = 0;
+  //virtual void
+  //setVertexBuffer(WeakPtr<VertexBuffer> buffer) = 0;
 
   /*
   * @brief
@@ -189,6 +195,20 @@ public:
   createDepthStencil(uint32 _width = 0, uint32 _height = 0,
                      const GAPI_FORMAT::E  _format = GAPI_FORMAT::FORMAT_UNKNOWN) = 0;
 
+  /// Shaders
+  /*virtual SPtr<VertexShader>
+  createVertexShader(const String& _shaderCode, const String& _entryPoint,
+                     Vector<String> _defines) = 0;
+
+  virtual void
+  setVertexShader(WeakPtr<VertexShader> _shader ) = 0;
+
+  virtual SPtr<PixelShader>
+  createPixelShader(const String& _shaderCode, const String& _entryPoint,
+                    Vector<String> _defines) = 0;
+
+  virtual void
+  setPixelShader(WeakPtr<PixelShader> _shader) = 0;*/
 
   /*
   * @brief

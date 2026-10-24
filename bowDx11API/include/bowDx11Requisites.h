@@ -7,7 +7,8 @@
 #include <Windows.h>
 
 #include "bowGraphicsGenerals.h"
-#include "bowPlatformTypes.h"
+
+#include "bowCoreRequisites.h"
 
 namespace bowEngineSDK
 {

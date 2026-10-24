@@ -6,10 +6,6 @@ add_library(bowCore SHARED
     ${HEADERS}
 )
 
-set_target_properties(bowCore PROPERTIES
-    WINDOWS_EXPORT_ALL_SYMBOLS ON
-)
-
 SET_ENGINE_DEFAULTS(bowCore)
 
 add_recursive_includes(bowCore)

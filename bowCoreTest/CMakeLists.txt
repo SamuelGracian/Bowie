@@ -9,4 +9,4 @@ add_executable(bowCoreTest ${SOURCES} ${HEADERS}
 
 SET_ENGINE_DEFAULTS(bowCoreTest)
 
-target_link_libraries(bowCoreTest PUBLIC bowCore bowDx11API)
+target_link_libraries(bowCoreTest PRIVATE bowDx11API)

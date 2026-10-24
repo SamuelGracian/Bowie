@@ -5,7 +5,7 @@
 
 namespace bowEngineSDK
 {
-class Dx11GraphicsAPI : public GraphicsAPI
+class BOW_PLUGIN_EXPORT Dx11GraphicsAPI : public GraphicsAPI
 {
 public:
   /*
@@ -22,6 +22,12 @@ public:
   */
   virtual bool
   init(WeakPtr<DisplaySurface> handlewindow) override;
+
+  void
+  cleanUpResources() override;
+
+  //virtual void
+  //draw(uint32 _vertexCount, uint32 _startVertexLocation) override;
 
   /*
   * @brief
@@ -122,6 +128,18 @@ public:
   virtual SPtr <ViewPort> /// TO DO: create an actual implementation for the view port
   createViewPort()override;
 
+
+  //virtual SPtr<VertexShader>
+  //createVertexShader(const String& _shaderCode, const String& _entryPoint,
+  //                   Vector<String> _defines) override;
+
+  //virtual void
+  //setVertexShader(WeakPtr<VertexShader> _shader) override;
+
+
+  //virtual SPtr<PixelShader>
+  //createPixelShader(const String& _shaderCode, const String& _entryPoint,
+  //                  Vector<String> _defines) override;
 
   /*  INTERNAL FUNCTIONS  */
 

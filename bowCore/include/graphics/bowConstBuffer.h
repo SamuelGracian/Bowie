@@ -10,6 +10,7 @@
 #pragma once 
 
 #include "bowBaseBuffer.h"
+#include "bowCoreRequisites.h"
 
 namespace bowEngineSDK
 {
@@ -36,8 +37,11 @@ class ConstBuffer : public BaseBuffer
    *  Slot where the buffer is going to be assign.
    * @return NONE
    */
-   void
-   setSlot(const uint32 slot);
+   FORCEINLINE void
+   setSlot(const uint32 _slot) {
+     BOW_ASSERT(_slot < BUFFER_HIGHER_AVAILABLE_SLOT);
+     m_slot = _slot;
+   }
 
    /*
    * @brief

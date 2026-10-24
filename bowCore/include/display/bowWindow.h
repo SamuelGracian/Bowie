@@ -16,7 +16,7 @@ namespace bowEngineSDK
 {
 using DisplaySurfaceHandler = void*;
 
-class DisplaySurface
+class BOW_CORE_EXPORT DisplaySurface
 {
 public:
 
