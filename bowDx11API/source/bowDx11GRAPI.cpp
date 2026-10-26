@@ -3,6 +3,8 @@
 #include <iostream>
 #include <windows.h>
 #include <d3dcompiler.h>
+#include <limits>
+#include <d3d11shader.h>
 
 #include "bowDx11ConstBuffer.h"
 #include "bowDx11IndexBuffer.h"
@@ -746,11 +748,13 @@ bowEngineSDK::Dx11GraphicsAPI::createVertexShader(const String& _shaderCode,
 
       const auto desc = createInputLayoutInternal(shaderReflection);
 
+      const UINT numElements = static_cast<UINT>(desc.size());
+
       if (desc.empty()) {
         if (SUCCEEDED(m_device->CreateVertexShader(binaryBlob->GetBufferPointer(),
                                                    binaryBlob->GetBufferSize(),
                                                    nullptr, &resultShader)) &&
-            SUCCEEDED(m_device->CreateInputLayout(desc.data(), desc.size(), ///  warning C4267: 'argument': conversion from 'size_t' to 'UINT', possible loss of data
+            SUCCEEDED(m_device->CreateInputLayout(desc.data(), numElements, ///  warning C4267: 'argument': conversion from 'size_t' to 'UINT', possible loss of data
                                                   binaryBlob->GetBufferPointer(),
                                                   binaryBlob->GetBufferSize(),
                                                   &resultLayout))) {
