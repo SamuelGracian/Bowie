@@ -11,15 +11,6 @@ public:
 
   /*
   * @brief
-  * @param SHADER_TYPE, uint32
-  *   shader type and shader model.
-  * @return const char*
-  */
-  const char*
-  getShaderModel(SHADER_TYPE::E _shaderType, uint32 _shaderModel) const;
-
-  /*
-  * @brief
   *  recieves a cull mode of type bowie and returns the Dx11 version of it.
   * @param CULL_MODE
   * @reutrn D3D11_CULL_MODE
@@ -36,14 +27,8 @@ public:
   D3D11_FILL_MODE
   getFillMode(FILL_MODE::E _fillMode) const;
 
-  /*
-  * @brief
-  *  Creates an input layout.
-  * @param ID3D10ShaderReflection
-  * @return   Vector<D3D11_INPUT_ELEMENT_DESC>
-  */
-  Vector<D3D11_INPUT_ELEMENT_DESC>
-  createInputLayout(ID3D11ShaderReflection* _reflection) const;
+
+
 
 };
 }/// namespace bowEngineSDK

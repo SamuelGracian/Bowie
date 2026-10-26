@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <windows.h>
+#include <d3dcompiler.h>
 
 #include "bowDx11ConstBuffer.h"
 #include "bowDx11IndexBuffer.h"
@@ -11,6 +12,8 @@
 #include "bowDx11Topology.h"
 #include "bowDx11DepthStencilView.h"
 #include "bowDx11Helpers.h"
+#include "bowDx11VertexShader.h"
+#include "bowDx11PixelShader.h"
 
 namespace bowEngineSDK
 {
@@ -69,6 +72,29 @@ Dx11GraphicsAPI::getDx11BindFlagsInternal(const uint32 _bindFlag) const {
   return ResultFlags;
 }
 
+const char*
+Dx11GraphicsAPI::getShaderModelInternal(SHADER_TYPE::E _shaderType,
+                                        uint32 _shaderModel) const {
+  static String ResultShader;
+
+  String modelVersion = std::to_string(_shaderModel) + "_0";
+
+  switch (_shaderType) {
+  case SHADER_TYPE::E::VERTEX_SHADER:
+    ResultShader = "vs_" + modelVersion;
+    break;
+
+  case SHADER_TYPE::E::PIXEL_SHADER:
+    ResultShader = "ps_" + modelVersion;
+    break;
+
+  default:
+    ResultShader = "vs_4_0";
+    break;
+  }
+
+  return ResultShader.c_str();
+}
 
 IDXGISwapChain* 
 Dx11GraphicsAPI::createSwapChainInternal(HWND hwnd, uint32 width,
@@ -193,6 +219,105 @@ Dx11GraphicsAPI::createTexture2DInternal(uint32 _width, uint32 _height,
   return resultTexture;
 }
 
+ID3DBlob*
+Dx11GraphicsAPI::compileShaderInternal(const String& _shaderCode,
+                                       const String& _entryPoint,
+                                       Vector<String> _defines,
+                                       SHADER_TYPE::E _shaderType) {
+  ID3DBlob* errorBlob = nullptr;
+  ID3DBlob* binaryBlob = nullptr;
+
+  if (!_shaderCode.empty() && !_entryPoint.empty()) {
+    String finalShaderCore;
+
+    uint32 dwShaderFlag = D3DCOMPILE_ENABLE_STRICTNESS;
+
+#ifdef BOW_DEBUG_MODE
+    /*
+    * Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
+    * Settings this flag improves the shader debugging experience, but still
+    * allows the shader to be optimized and run exactly the way they will run 
+    * in the release configuration of this program.
+    */
+    dwShaderFlag |= D3DCOMPILE_DEBUG;
+    dwShaderFlag |= D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif // BOW_DEBUG_MODE
+
+    for (auto& macro : _defines) {
+      finalShaderCore += (macro = '\n');
+    }
+
+    finalShaderCore += _shaderCode;
+
+    if (FAILED(D3DCompile(finalShaderCore.c_str(), finalShaderCore.length(),
+                          nullptr, nullptr, nullptr,_entryPoint.c_str(),
+                          getShaderModelInternal(_shaderType, m_shaderModel), 
+                          dwShaderFlag, 0, &binaryBlob, &errorBlob))) {
+      if (errorBlob) {
+        std::cout << "Shader compilation error" <<
+          reinterpret_cast<const char*>(errorBlob->GetBufferPointer()) 
+          << std::endl;
+      }
+    }
+  }
+
+  safeRelease(errorBlob);
+  return binaryBlob;
+}
+
+Vector<D3D11_INPUT_ELEMENT_DESC>
+Dx11GraphicsAPI::createInputLayoutInternal(ID3D11ShaderReflection* _reflection) 
+const {
+  Vector<D3D11_INPUT_ELEMENT_DESC> inputLayoutDesc;
+
+  if (_reflection) {
+    D3D11_SHADER_DESC shaderDesc;
+    _reflection->GetDesc(&shaderDesc);
+
+    inputLayoutDesc.reserve(shaderDesc.InputParameters);
+
+    for (uint32 i = 0; i < shaderDesc.InputParameters; ++i) {
+      D3D11_SIGNATURE_PARAMETER_DESC paramDesc;
+      _reflection->GetInputParameterDesc(i, &paramDesc);
+
+      D3D11_INPUT_ELEMENT_DESC elementDesc = {};
+      elementDesc.SemanticName = paramDesc.SemanticName;
+      elementDesc.SemanticIndex = paramDesc.SemanticIndex;
+      elementDesc.InputSlot = 0;
+      elementDesc.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+      elementDesc.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+      elementDesc.InstanceDataStepRate = 0;
+
+      uint32 componentCount = 0;
+      if (paramDesc.Mask == 1) componentCount = 1;
+      else if (paramDesc.Mask <= 3) componentCount = 2;
+      else if (paramDesc.Mask <= 7) componentCount = 3;
+      else if (paramDesc.Mask <= 15) componentCount = 4;
+
+      if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32) {
+        if (componentCount == 1) elementDesc.Format = DXGI_FORMAT_R32_FLOAT;
+        else if (componentCount == 2) elementDesc.Format = DXGI_FORMAT_R32G32_FLOAT;
+        else if (componentCount == 3) elementDesc.Format = DXGI_FORMAT_R32G32B32_FLOAT;
+        else if (componentCount == 4) elementDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+      }
+      else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_UINT32) {
+        if (componentCount == 1) elementDesc.Format = DXGI_FORMAT_R32_UINT;
+        else if (componentCount == 2) elementDesc.Format = DXGI_FORMAT_R32G32_UINT;
+        else if (componentCount == 3) elementDesc.Format = DXGI_FORMAT_R32G32B32_UINT;
+        else if (componentCount == 4) elementDesc.Format = DXGI_FORMAT_R32G32B32A32_UINT;
+      }
+      else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_SINT32) {
+        if (componentCount == 1) elementDesc.Format = DXGI_FORMAT_R32_SINT;
+        else if (componentCount == 2) elementDesc.Format = DXGI_FORMAT_R32G32_SINT;
+        else if (componentCount == 3) elementDesc.Format = DXGI_FORMAT_R32G32B32_SINT;
+        else if (componentCount == 4) elementDesc.Format = DXGI_FORMAT_R32G32B32A32_SINT;
+      }
+
+      inputLayoutDesc.push_back(elementDesc);
+    }
+  }
+  return inputLayoutDesc;
+}
 
 
 /*****************************************************/
@@ -344,7 +469,12 @@ Dx11GraphicsAPI::init(WeakPtr<DisplaySurface> windowHandler) {
   return false;
 }
 
-//void Dx11GraphicsAPI::draw(uint32 _vertexCount, uint32 _startVertexLocation) {}
+void
+Dx11GraphicsAPI::draw(uint32 _vertexCount, uint32 _startVertexLocation) {
+  if (m_immediateContext) {
+    m_immediateContext->DrawIndexed(_vertexCount, _startVertexLocation, 0);
+  }
+}
 
 void
 Dx11GraphicsAPI::cleanUpResources(){}
@@ -466,7 +596,21 @@ Dx11GraphicsAPI::setConstBuffer(WeakPtr<ConstBuffer> buffer, void* _data) {
   m_immediateContext->UpdateSubresource(pbuffer->m_buffer, 0, nullptr, _data, 0, 0);
 }
 
-void 
+void
+Dx11GraphicsAPI::setVertexBuffer(WeakPtr<VertexBuffer> _buffer, uint32 _stride,
+                                 uint32 _offset) {
+  if (!_buffer.expired() || m_immediateContext != nullptr) {
+    auto pBuffer = std::static_pointer_cast<Dx11VertexBuffer>(_buffer.lock());
+
+    if (pBuffer && pBuffer->m_buffer) {
+      m_immediateContext->IASetVertexBuffers(0, 1, &pBuffer->m_buffer,
+                                             &_stride, &_offset);
+    }
+  }
+  return;
+}
+
+void
 Dx11GraphicsAPI::setIndexBuffer(WeakPtr<Indexbuffer> buffer) {
   if (m_immediateContext == nullptr || buffer.expired()) {
     return;
@@ -496,7 +640,7 @@ Dx11GraphicsAPI::updateConstBuffer(WeakPtr<ConstBuffer> _buffer,
   m_immediateContext->UpdateSubresource(pbuffer->m_buffer, 0, nullptr, _data, 0, 0);
 }
 
-SPtr<Topology> 
+SPtr<Topology>
 Dx11GraphicsAPI::createTopology(Topology::Type _type) {
   auto topo = std::make_shared<Dx11Topology>();
 
@@ -527,7 +671,7 @@ Dx11GraphicsAPI::createTopology(Topology::Type _type) {
   return topo;
 }
 
-void 
+void
 Dx11GraphicsAPI::setTopology(WeakPtr<Topology> _topology){
   if (m_immediateContext == nullptr || _topology.expired()){
     return;
@@ -580,15 +724,102 @@ Dx11GraphicsAPI::createViewPort() {
   return SPtr<ViewPort> ();
 }
 
-//SPtr<VertexShader> Dx11GraphicsAPI::createVertexShader(const String& _shaderCode, const String& _entryPoint, Vector<String> _defines) {
-//  return SPtr<VertexShader>();
-//}
-//
-//void Dx11GraphicsAPI::setVertexShader(WeakPtr<VertexShader> _shader) {}
-//
-//SPtr<PixelShader> Dx11GraphicsAPI::createPixelShader(const String& _shaderCode, const String& _entryPoint, Vector<String> _defines) {
-//  return SPtr<PixelShader>();
-//}
+SPtr<VertexShader>
+bowEngineSDK::Dx11GraphicsAPI::createVertexShader(const String& _shaderCode,
+                                                  const String& _entryPoint,
+                                                  Vector<String> _defines) {
+  ID3DBlob* binaryBlob = nullptr;
+  ID3D11ShaderReflection* shaderReflection = nullptr;
+  ID3D11VertexShader* resultShader = nullptr;
+  ID3D11InputLayout* resultLayout = nullptr;
+
+  binaryBlob = compileShaderInternal(_shaderCode, _entryPoint, _defines,
+                                     SHADER_TYPE::VERTEX_SHADER);
+
+  SPtr<Dx11VertexShader> resultVShader = nullptr;
+
+  if (binaryBlob != nullptr && m_device != nullptr) {
+    if (SUCCEEDED(D3DReflect(binaryBlob->GetBufferPointer(),
+                             binaryBlob->GetBufferSize(),
+                             IID_ID3D11ShaderReflection,
+                             (void**)&shaderReflection))) {
+
+      const auto desc = createInputLayoutInternal(shaderReflection);
+
+      if (desc.empty()) {
+        if (SUCCEEDED(m_device->CreateVertexShader(binaryBlob->GetBufferPointer(),
+                                                   binaryBlob->GetBufferSize(),
+                                                   nullptr, &resultShader)) &&
+            SUCCEEDED(m_device->CreateInputLayout(desc.data(), desc.size(), ///  warning C4267: 'argument': conversion from 'size_t' to 'UINT', possible loss of data
+                                                  binaryBlob->GetBufferPointer(),
+                                                  binaryBlob->GetBufferSize(),
+                                                  &resultLayout))) {
+          resultVShader = std::make_shared<Dx11VertexShader>();
+          resultVShader->m_shader = resultShader;
+          resultVShader->m_InputLayout = resultLayout;
+        }
+      }
+    }
+  }
+  safeRelease(shaderReflection);
+  safeRelease(binaryBlob);
+  return resultVShader;
+}
+
+void
+Dx11GraphicsAPI::setVertexShader(WeakPtr<VertexShader> _shader) {
+  if (_shader.expired()) {
+    return;
+  }
+
+  auto resultShader = 
+    std::reinterpret_pointer_cast<Dx11VertexShader>(_shader.lock());
+
+  if (resultShader && m_immediateContext) {
+    m_immediateContext->IASetInputLayout(resultShader->m_InputLayout);
+    m_immediateContext->VSSetShader(resultShader->m_shader, nullptr, 0);
+  }
+}
+
+SPtr<PixelShader>
+Dx11GraphicsAPI::createPixelShader(const String& _shaderCode,
+                                   const String& _entryPoint,
+                                   Vector<String> _defines) {
+  ID3DBlob* binaryBlob = nullptr;
+  ID3D11PixelShader* resultShader = nullptr;
+  SPtr<Dx11PixelShader> shaderPtr = nullptr;
+
+  binaryBlob = compileShaderInternal(_shaderCode, _entryPoint, _defines,
+                                     SHADER_TYPE::PIXEL_SHADER);
+
+  if (binaryBlob == nullptr || m_device == nullptr) {
+    std::cout <<
+      "createPixelShader function, binary blob = nullptr, or device = nullptr" <<
+      std::endl;
+    return nullptr;
+  }
+  
+  if (SUCCEEDED(m_device->CreatePixelShader(binaryBlob->GetBufferPointer(),
+                                            binaryBlob->GetBufferSize(),
+                                            nullptr, &resultShader))) {
+    shaderPtr = std::make_shared<Dx11PixelShader>();
+
+    shaderPtr->pixShader = resultShader;
+  }
+  safeRelease(binaryBlob);
+  return shaderPtr;
+}
+
+void Dx11GraphicsAPI::setPixelShader(WeakPtr<PixelShader> _shader) {
+  if (_shader.expired() || m_immediateContext == nullptr) {
+    std::cout <<
+      "setPixelShader function" << '/n' << 
+      "shader or immmediate contextex = nullptr" << 
+      std::endl;
+  }
+  auto p_Ps = std::reinterpret_pointer_cast<Dx11PixelShader> (_shader.lock());
+  m_immediateContext->PSSetShader(p_Ps->pixShader, nullptr, 0);
+}
 
 
 }/// namespace bowEngineSDK

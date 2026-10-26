@@ -26,8 +26,8 @@ public:
   void
   cleanUpResources() override;
 
-  //virtual void
-  //draw(uint32 _vertexCount, uint32 _startVertexLocation) override;
+  virtual void
+  draw(uint32 _vertexCount, uint32 _startVertexLocation) override;
 
   /*
   * @brief
@@ -75,6 +75,17 @@ public:
   */
   virtual void
   setConstBuffer(WeakPtr<ConstBuffer> buffer, void* _data) override;
+
+
+  /*
+  * @brief
+  *  Sets the vertex buffer
+  * @param WeakPtr<VertexBuffer>
+  * @return none 
+  */
+  virtual void
+  setVertexBuffer(WeakPtr<VertexBuffer> _buffer, uint32 _stride,
+                  uint32 _offset) override;
 
   /*
   * @brief
@@ -129,17 +140,20 @@ public:
   createViewPort()override;
 
 
-  //virtual SPtr<VertexShader>
-  //createVertexShader(const String& _shaderCode, const String& _entryPoint,
-  //                   Vector<String> _defines) override;
+  virtual SPtr<VertexShader>
+  createVertexShader(const String& _shaderCode, const String& _entryPoint,
+                     Vector<String> _defines) override;
 
-  //virtual void
-  //setVertexShader(WeakPtr<VertexShader> _shader) override;
+  virtual void
+  setVertexShader(WeakPtr<VertexShader> _shader) override;
 
 
-  //virtual SPtr<PixelShader>
-  //createPixelShader(const String& _shaderCode, const String& _entryPoint,
-  //                  Vector<String> _defines) override;
+  virtual SPtr<PixelShader>
+  createPixelShader(const String& _shaderCode, const String& _entryPoint,
+                    Vector<String> _defines) override;
+
+  virtual void
+  setPixelShader(WeakPtr<PixelShader> _shader) override;
 
   /*  INTERNAL FUNCTIONS  */
 
@@ -195,6 +209,27 @@ public:
   uint32
   getDx11BindFlagsInternal(const uint32 _bindFlag) const;
 
+  ID3DBlob*
+  compileShaderInternal(const String& _shaderCode, const String& _entryPoint,
+                        Vector<String> _defines, SHADER_TYPE::E _shaderType);
+  
+  /*
+* @brief
+*  Creates an input layout.
+* @param ID3D10ShaderReflection
+* @return   Vector<D3D11_INPUT_ELEMENT_DESC>
+*/
+  Vector<D3D11_INPUT_ELEMENT_DESC>
+  createInputLayoutInternal(ID3D11ShaderReflection* _reflection) const;
+
+  /*
+  * @brief
+  * @param SHADER_TYPE, uint32
+  *   shader type and shader model.
+  * @return const char*
+  */
+  const char*
+  getShaderModelInternal(SHADER_TYPE::E _shaderType, uint32 _shaderModel) const;
 
 private:
 

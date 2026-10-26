@@ -72,8 +72,8 @@ public:
   virtual bool 
   init(WeakPtr<DisplaySurface> windowHandler) = 0;
   
-  //virtual void
-  //draw(uint32 _vertexCount = 0, uint32 _startVertexLocation = 0) = 0;
+  virtual void
+  draw(uint32 _vertexCount = 0, uint32 _startVertexLocation = 0) = 0;
 
   /*
   * @brief
@@ -150,8 +150,9 @@ public:
   * @param WeakPtr<vertexBuffer>
   * @return none
   */
-  //virtual void
-  //setVertexBuffer(WeakPtr<VertexBuffer> buffer) = 0;
+  virtual void
+  setVertexBuffer(WeakPtr<VertexBuffer> buffer, uint32 _stide,
+                  uint32 _offset) = 0;
 
   /*
   * @brief
@@ -196,7 +197,7 @@ public:
                      const GAPI_FORMAT::E  _format = GAPI_FORMAT::FORMAT_UNKNOWN) = 0;
 
   /// Shaders
-  /*virtual SPtr<VertexShader>
+  virtual SPtr<VertexShader>
   createVertexShader(const String& _shaderCode, const String& _entryPoint,
                      Vector<String> _defines) = 0;
 
@@ -208,7 +209,7 @@ public:
                     Vector<String> _defines) = 0;
 
   virtual void
-  setPixelShader(WeakPtr<PixelShader> _shader) = 0;*/
+  setPixelShader(WeakPtr<PixelShader> _shader) = 0;
 
   /*
   * @brief
