@@ -18,6 +18,8 @@
 #include "bowVertexShader.h"
 #include "bowPixelShader.h"
 #include "bowModule.h"
+#include "bowRasterizerState.h"
+#include "bowSamplerState.h"
 
 namespace bowEngineSDK
 {
@@ -220,9 +222,89 @@ public:
   virtual SPtr<ViewPort>
   createViewPort() = 0;
 
+  /// texture
+  //virtual Vector<uint8>
+  //loadImageFromFile(const String& _filePath, int32* _width, int32* _height,
+  //                  int32* _channels) = 0;
+
+  virtual SPtr<Texture2D>
+  createTexture2D(const Vector<uint8>& _imgData, int32 _witdh,
+                  int32 _height) = 0;
+
+  virtual SPtr<Texture2D>
+  createTexture2DFromFile(const String& _filePath) = 0;
+
+  virtual void
+  setTexture2D(uint32 _slot, WeakPtr<Texture2D> _texture) = 0;
+
+  /// rasterizer state
+  virtual SPtr<RasterizerState>
+   createRasterizerState(CULL_MODE::E _cullMode, FILL_MODE::E _fillMode,
+                         bool _deathClip) = 0;
+
+  virtual void
+  setRasterizerState(WeakPtr<RasterizerState> _rasterizer) = 0;
+
+  /// render target view
+
+  virtual SPtr<RenderTargetView>
+  createRenderTargetView(uint32 _width, uint32 _height,
+                         GAPI_FORMAT::E _format) = 0;
+
+  virtual void
+   setRenderTargetView(WeakPtr<RenderTargetView> _renderTarget,
+                       WeakPtr<DepthStencilView> _deptStencill) = 0;
+
+  virtual void
+  setRenderTargetViews(Vector<RenderTargetView>& _renderTargets,
+                       WeakPtr<DepthStencilView> _depthStencil) = 0;
+
+  virtual void
+  clearRenderTargetView(WeakPtr<RenderTargetView> _renderTarget,
+                        float _color[4]) = 0;
+
+  virtual void
+  clearDepthStencilView(WeakPtr<DepthStencilView> _depthStencil,
+                                   DepthStencilView::ClearFlags _flag,
+                                   float _depth, uint32 _stencil) = 0;
+
+  /// sampler state
+  virtual SPtr <SamplerState>
+  createSamplerState() = 0;
+
+  virtual void
+  setSamplerState(uint32 _slot, WeakPtr<SamplerState> _sampler) = 0;
+
+  /// shadow map
+  virtual SPtr<DepthStencilView>
+  createShadowMap(uint32 _width, uint32 _height) = 0;
+
+  virtual bool
+  readShadowMap(WeakPtr<DepthStencilView> _shadowDepth,
+                Vector<float>& outDepth) = 0;
+
+  virtual void
+  setShadowMap(uint32 _slot, WeakPtr<Texture2D> _mapTexture) = 0;
+
+  virtual bool
+  isOccluded(WeakPtr<DepthStencilView> _shadowDepth, const Vector3& worldPos,
+             const Matrix4& _shadowView, const Matrix4 _shadowProjection,
+             float bias) = 0;
+
+  virtual void
+  setShadowMapFromDepthView(uint32 _slot,
+                            WeakPtr<DepthStencilView> _shadowDepth) = 0;
 
  protected:
 	 uint32 m_shaderModel;
 
 };// GraphicsAPI class
 }/// namespace bowEngineSDK
+
+/*
+* rasterizer state and functions, // Dx11 file 
+* render target //
+* depth stencil //
+* create and set sampler /// 
+* Shadow functions///
+*/

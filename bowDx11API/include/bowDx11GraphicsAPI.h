@@ -155,6 +155,70 @@ public:
   virtual void
   setPixelShader(WeakPtr<PixelShader> _shader) override;
 
+  SPtr<Texture2D>
+  createTexture2D(const Vector<uint8>& _imgData, int32 _witdh,
+                  int32 _height) override;
+
+  SPtr<Texture2D>
+  createTexture2DFromFile(const String& _filePath) override;
+
+  void
+  setTexture2D(uint32 _slot, WeakPtr<Texture2D> _texture) override;
+
+  SPtr<RasterizerState>
+  createRasterizerState(CULL_MODE::E _cullMode, FILL_MODE::E _fillMode,
+                        bool _deathClip) override;
+
+  void
+  setRasterizerState(WeakPtr<RasterizerState> _rasterizer) override;
+
+  SPtr<RenderTargetView>
+  createRenderTargetView(uint32 _width, uint32 _height,
+                         GAPI_FORMAT::E _format) override;
+
+  void
+  setRenderTargetView(WeakPtr<RenderTargetView> _renderTarget,
+                      WeakPtr<DepthStencilView> _deptStencill) override;
+
+  void
+  setRenderTargetViews(Vector<RenderTargetView>& _renderTargets,
+                       WeakPtr<DepthStencilView> _depthStencil) override;
+
+  void
+  clearRenderTargetView(WeakPtr<RenderTargetView> _renderTarget,
+                        float _color[4]) override;
+
+  void
+  clearDepthStencilView(WeakPtr<DepthStencilView> _depthStencil,
+                        DepthStencilView::ClearFlags _flag,
+                          float _depth, uint32 _stencil) override;
+
+
+  virtual SPtr <SamplerState>
+  createSamplerState() override;
+
+  virtual void
+  setSamplerState(uint32 _slot, WeakPtr<SamplerState> _sampler) override;
+
+  virtual SPtr<DepthStencilView>
+  createShadowMap(uint32 _width, uint32 _height) = 0;
+
+  virtual bool
+  readShadowMap(WeakPtr<DepthStencilView> _shadowDepth,
+                Vector<float>& outDepth) override;
+
+  virtual void
+  setShadowMap(uint32 _slot, WeakPtr<Texture2D> _mapTexture) override;
+
+  virtual bool
+  isOccluded(WeakPtr<DepthStencilView> _shadowDepth, const Vector3& worldPos,
+             const Matrix4& _shadowView, const Matrix4 _shadowProjection,
+             float bias) override;
+
+  virtual void
+  setShadowMapFromDepthView(uint32 _slot,
+                            WeakPtr<DepthStencilView> _shadowDepth) override;
+
   /*  INTERNAL FUNCTIONS  */
 
   /*
@@ -230,6 +294,28 @@ public:
   */
   const char*
   getShaderModelInternal(SHADER_TYPE::E _shaderType, uint32 _shaderModel) const;
+
+  /*
+  * @brief
+  *  Recieves a fill mode of type bowie and returns the Dx11 version fo it.
+  * @param FILL_MODE
+  * @return D3D11_FILL_MODE
+  */
+  D3D11_FILL_MODE
+  getFillModeInternal(FILL_MODE::E _fillMode) const;
+
+  /*
+  * @brief
+  *  recieves a cull mode of type bowie and returns the Dx11 version of it.
+  * @param CULL_MODE
+  * @reutrn D3D11_CULL_MODE
+  */
+  D3D11_CULL_MODE
+  getCullModeInternal(CULL_MODE::E _cullMode) const;
+
+  //Vector<uint8>
+  //loadImageFromFileInternal(const String& _filePath, int32* _width, int32 _height,
+  //                  int32* _chanels);
 
 private:
 
