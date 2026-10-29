@@ -256,7 +256,7 @@ public:
                        WeakPtr<DepthStencilView> _deptStencill) = 0;
 
   virtual void
-  setRenderTargetViews(Vector<RenderTargetView>& _renderTargets,
+  setRenderTargetViews(Vector<WeakPtr<RenderTargetView>>& _renderTargets,
                        WeakPtr<DepthStencilView> _depthStencil) = 0;
 
   virtual void

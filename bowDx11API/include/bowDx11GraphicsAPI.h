@@ -181,7 +181,7 @@ public:
                       WeakPtr<DepthStencilView> _deptStencill) override;
 
   void
-  setRenderTargetViews(Vector<RenderTargetView>& _renderTargets,
+  setRenderTargetViews(Vector<WeakPtr<RenderTargetView>>& _renderTargets,
                        WeakPtr<DepthStencilView> _depthStencil) override;
 
   void
@@ -313,9 +313,9 @@ public:
   D3D11_CULL_MODE
   getCullModeInternal(CULL_MODE::E _cullMode) const;
 
-  //Vector<uint8>
-  //loadImageFromFileInternal(const String& _filePath, int32* _width, int32 _height,
-  //                  int32* _chanels);
+  Vector<uint8>
+  loadImageFromFileInternal(const String& _filePath, int32* _width, int32 _height,
+                    int32* _chanels);
 
 private:
 

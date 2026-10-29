@@ -21,6 +21,7 @@
 #include "bowDx11RenderTargetView.h"
 #include "bowWindow.h"
 #include "bowDx11SamplerState.h"
+#include "bowMath.h"
 
 
 namespace bowEngineSDK
@@ -357,26 +358,27 @@ Dx11GraphicsAPI::getCullModeInternal(CULL_MODE::E _cullMode) const {
   }
 }
 
-//Vector<uint8>
-//Dx11GraphicsAPI::loadImageFromFileInternal(const String& _filePath,
-//                                           int32* _width, int32 _height,
-//                                           int32* _chanels) {
+Vector<uint8>
+Dx11GraphicsAPI::loadImageFromFileInternal(const String& _filePath,
+                                           int32* _width, int32 _height,
+                                           int32* _chanels) {
 
-  //std::vector<uint8_t> imageData;
+  std::vector<uint8_t> imageData;
 
-  //uint8* data = stbi_load(_filePath.c_str(), 
-  //                          _width, _height, _chanels, STBI_rgb_alpha);
+  uint8* data = stbi_load(_filePath.c_str(),
+                          _width, _height, _chanels, STBI_rgb_alpha);
 
-  //if (data) {
-  //  imageData.resize((*_width) * (*_height) * STBI_rgb_alpha);
-  //  memcpy(imageData.data(), data, imageData.size());
-  //  stbi_image_free(data);
-  //}
-  //else {
-  //  std::cout << "Error loading image: " << _filePath << std::endl;
-  //}
+  if (data) {
+    imageData.resize((*_width) * (*_height) * STBI_rgb_alpha);
+    memcpy(imageData.data(), data, imageData.size());
+    stbi_image_free(data);
+  }
+  else {
+    std::cout << "Error loading image: " << _filePath << std::endl;
+  }
 
-  //return imageData;
+  return imageData;
+}
 
 
 /*****************************************************/
@@ -1020,7 +1022,7 @@ Dx11GraphicsAPI::setRenderTargetView(WeakPtr<RenderTargetView> _renderTarget,
 }
 
 void 
-Dx11GraphicsAPI::setRenderTargetViews( Vector<RenderTargetView>& _renderTargets, 
+Dx11GraphicsAPI::setRenderTargetViews( Vector<WeakPtr<RenderTargetView>>& _renderTargets, 
                                       WeakPtr<DepthStencilView> _depthStencil) {
   if (m_immediateContext == nullptr) {
     std::cout << "Null immediate context" << std::endl;
@@ -1030,7 +1032,7 @@ Dx11GraphicsAPI::setRenderTargetViews( Vector<RenderTargetView>& _renderTargets,
   std::vector<ID3D11RenderTargetView*> rtvs;
   rtvs.reserve(_renderTargets.size());
 
-  for (const WeakPtr<RenderTargetView>& weakRTV : _renderTargets) {
+  for (const auto& weakRTV : _renderTargets) {
     if (weakRTV.expired())
       continue;
 
@@ -1316,10 +1318,10 @@ Dx11GraphicsAPI::isOccluded(WeakPtr<DepthStencilView> _shadowDepth,
     return false;
   }
 
-  int tx = static_cast<int>(clamp(u * static_cast<float>(width), 0.0f, 
+  int tx = static_cast<int>(Math::clamp(u * static_cast<float>(width), 0.0f, 
                              static_cast<float>(width - 1)));
 
-  int ty = static_cast<int>(std::clamp(v * static_cast<float>(height), 0.0f,
+  int ty = static_cast<int>(Math::clamp(v * static_cast<float>(height), 0.0f,
                                        static_cast<float>(height - 1)));
 
   float stored = depthData[ty * width + tx];
@@ -1408,7 +1410,7 @@ Dx11GraphicsAPI::createTexture2DFromFile(const String& _filePath) {
   int32 height = 0;
   int32 channels = 0;
 
-  std::vector<uint8> pixels = loadImageFromFile(_filePath, &width,
+  std::vector<uint8> pixels = loadImageFromFileInternal(_filePath, &width,
                                                   &height, &channels);
   if (pixels.empty()) {
     return nullptr;
