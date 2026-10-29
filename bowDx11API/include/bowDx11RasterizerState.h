@@ -13,10 +13,7 @@ class Dx11RasterizerState : public RasterizerState
       rasterizerDesc(nullptr)
   {}
   
-  ~Dx11RasterizerState() {
-    safeRelease(rasterizer);
-    safeRelease(rasterizerDesc);
-  }
+  ~Dx11RasterizerState() = default;
 
   /// <summary>
   /// rasterizer state member

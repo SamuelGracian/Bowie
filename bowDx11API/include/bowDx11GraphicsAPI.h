@@ -159,8 +159,8 @@ public:
   createTexture2D(const Vector<uint8>& _imgData, int32 _witdh,
                   int32 _height) override;
 
-  SPtr<Texture2D>
-  createTexture2DFromFile(const String& _filePath) override;
+  //SPtr<Texture2D>
+  //createTexture2DFromFile(const String& _filePath) override;
 
   void
   setTexture2D(uint32 _slot, WeakPtr<Texture2D> _texture) override;
@@ -191,7 +191,7 @@ public:
   void
   clearDepthStencilView(WeakPtr<DepthStencilView> _depthStencil,
                         DepthStencilView::ClearFlags _flag,
-                          float _depth, uint32 _stencil) override;
+                          float _depth, uint8 _stencil) override;
 
 
   virtual SPtr <SamplerState>
@@ -313,9 +313,9 @@ public:
   D3D11_CULL_MODE
   getCullModeInternal(CULL_MODE::E _cullMode) const;
 
-  Vector<uint8>
-  loadImageFromFileInternal(const String& _filePath, int32* _width, int32 _height,
-                    int32* _chanels);
+  //Vector<uint8>
+  //loadImageFromFileInternal(const String& _filePath, int32* _width, int32 _height,
+  //                  int32* _chanels);
 
 private:
 

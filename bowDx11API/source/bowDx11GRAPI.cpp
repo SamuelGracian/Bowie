@@ -358,27 +358,27 @@ Dx11GraphicsAPI::getCullModeInternal(CULL_MODE::E _cullMode) const {
   }
 }
 
-Vector<uint8>
-Dx11GraphicsAPI::loadImageFromFileInternal(const String& _filePath,
-                                           int32* _width, int32 _height,
-                                           int32* _chanels) {
-
-  std::vector<uint8_t> imageData;
-
-  uint8* data = stbi_load(_filePath.c_str(),
-                          _width, _height, _chanels, STBI_rgb_alpha);
-
-  if (data) {
-    imageData.resize((*_width) * (*_height) * STBI_rgb_alpha);
-    memcpy(imageData.data(), data, imageData.size());
-    stbi_image_free(data);
-  }
-  else {
-    std::cout << "Error loading image: " << _filePath << std::endl;
-  }
-
-  return imageData;
-}
+//Vector<uint8>
+//Dx11GraphicsAPI::loadImageFromFileInternal(const String& _filePath,
+//                                           int32* _width, int32 _height,
+//                                           int32* _chanels) {
+//
+//  std::vector<uint8_t> imageData;
+//
+//  uint8* data = stbi_load(_filePath.c_str(),
+//                          _width, _height, _chanels, STBI_rgb_alpha);
+//
+//  if (data) {
+//    imageData.resize((*_width) * (*_height) * STBI_rgb_alpha);
+//    memcpy(imageData.data(), data, imageData.size());
+//    stbi_image_free(data);
+//  }
+//  else {
+//    std::cout << "Error loading image: " << _filePath << std::endl;
+//  }
+//
+//  return imageData;
+//}
 
 
 /*****************************************************/
@@ -1081,7 +1081,7 @@ Dx11GraphicsAPI::clearRenderTargetView(WeakPtr<RenderTargetView> _renderTarget,
 
 void Dx11GraphicsAPI::clearDepthStencilView(WeakPtr<DepthStencilView> _depthStencil,
                                             DepthStencilView::ClearFlags _flag,
-                                            float _depth, uint32 _stencil) {
+                                            float _depth, uint8 _stencil) {
 
   if (_depthStencil.expired() || m_immediateContext == nullptr) {
     std::cout << "Expired Depth Stencil View" << std::endl;
@@ -1298,7 +1298,7 @@ Dx11GraphicsAPI::isOccluded(WeakPtr<DepthStencilView> _shadowDepth,
   }
 
   Matrix4 vp = _shadowProjection * _shadowView;
-  Vector4 clip = vp * Vector4(worldPos.x, worldPos.y, worldPos.z, 1.0f);
+  Vector4 clip = vp.transformPosition(worldPos);
 
   if (clip.w == 0.0f) {
     return false;
@@ -1404,20 +1404,18 @@ Dx11GraphicsAPI::createTexture2D(const Vector<uint8>& _imgData, int32 _witdh,
   return nullptr;
 }
 
-SPtr<Texture2D>
-Dx11GraphicsAPI::createTexture2DFromFile(const String& _filePath) {
-  int32 width = 0;
-  int32 height = 0;
-  int32 channels = 0;
-
-  std::vector<uint8> pixels = loadImageFromFileInternal(_filePath, &width,
-                                                  &height, &channels);
-  if (pixels.empty()) {
-    return nullptr;
-  }
-
-  return createTexture2D(pixels, width, height);
-}
+//SPtr<Texture2D>
+//Dx11GraphicsAPI::createTexture2DFromFile(const String& _filePath) {
+//  int32 width = 0;
+//  int32 height = 0;
+//
+//  std::vector<uint8> pixels ;
+//  if (pixels.empty()) {
+//    return nullptr;
+//  }
+//
+//  return createTexture2D(pixels, width, height);
+//}
 
 void
 Dx11GraphicsAPI::setTexture2D(uint32 _slot, WeakPtr<Texture2D> _texture) {

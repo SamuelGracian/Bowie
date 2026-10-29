@@ -231,8 +231,8 @@ public:
   createTexture2D(const Vector<uint8>& _imgData, int32 _witdh,
                   int32 _height) = 0;
 
-  virtual SPtr<Texture2D>
-  createTexture2DFromFile(const String& _filePath) = 0;
+  //virtual SPtr<Texture2D>
+  //createTexture2DFromFile(const String& _filePath) = 0;
 
   virtual void
   setTexture2D(uint32 _slot, WeakPtr<Texture2D> _texture) = 0;
@@ -266,7 +266,7 @@ public:
   virtual void
   clearDepthStencilView(WeakPtr<DepthStencilView> _depthStencil,
                                    DepthStencilView::ClearFlags _flag,
-                                   float _depth, uint32 _stencil) = 0;
+                                   float _depth, uint8 _stencil) = 0;
 
   /// sampler state
   virtual SPtr <SamplerState>

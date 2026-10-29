@@ -9,8 +9,6 @@ int main() {
 
   window.init(800, 600, "Window test");
 
-  GraphicsAPI::startUp<Dx11GraphicsAPI>();
-
   while (true) {
     window.processMessages();
   }
