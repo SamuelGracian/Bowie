@@ -9,7 +9,6 @@
 #pragma once
 
 #include "bowUtilitiesRequisites.h"
-#include "bowSTDHeaders.h"
 #include "bowVector3.h"
 
 namespace bowEngineSDK

@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include "bowGraphicsGenerals.h"
+
 namespace bowEngineSDK
 {
 class Texture2D
@@ -20,6 +22,12 @@ class Texture2D
    * @brief
    *  Default destructor.
    */
-   ~Texture2D() = default;
+   virtual ~Texture2D() = default;
+
+ protected:
+   uint32 m_width = 0;
+   uint32 m_height = 0;
+   TEXTURE_FORMAT::E m_format = TEXTURE_FORMAT::Unknown;
+
 };
 }/// namespace bowEngineSDK

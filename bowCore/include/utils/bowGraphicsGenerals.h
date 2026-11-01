@@ -62,4 +62,40 @@ enum E
 
 static constexpr uint32 BUFFER_HIGHER_AVAILABLE_SLOT = 8;
 
+
+namespace TEXTURE_TYPE
+{
+enum E
+{
+  Texture1D = 0,
+  Texture2D,
+  Texture3D
+};
+}/// namespace TEXTURE_TYPE
+
+namespace TEXTURE_FORMAT
+{
+enum E
+{
+  Unknown = 0,
+  R8G8B8A8_UNORM,
+  B8G8R8A8_UNORM,
+  B8G8R8A8_SRGB,
+  R16G16B16A16_SFLOAT,
+  D32_SFLOAT,
+  D24_UNORM_S8_UINT,
+  R8_UNORM,
+  R8G8_UNORM,
+  R8G8B8A8_SRGB,
+  A2B10G10R10_UNORM,
+  B10G11R11_UFLOAT,
+  R16_SFLOAT,
+  R16G16_SFLOAT,
+  R32_SFLOAT,
+  R32G32B32A32_SFLOAT,
+  R32_UINT,
+  D32_SFLOAT_S8_UINT,
+};
+}/// namespace TEXTURE_FORMAT
+
 }/// namespace bowEngineSDK

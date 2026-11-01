@@ -1,7 +1,7 @@
 #pragma once 
 #include "bowDx11Requisites.h"
 
-#include "bowIndexbuffer.h"
+#include "bowIndexBuffer.h"
 
 namespace bowEngineSDK
 {

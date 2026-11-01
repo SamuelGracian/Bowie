@@ -16,7 +16,7 @@ public:
   Dx11RenderTargetView()
     :m_renderTargetView(nullptr), m_resourceView(nullptr)
   {}
-
+  
   /*
   * @brief
   *  Default destructor

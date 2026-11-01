@@ -358,28 +358,6 @@ Dx11GraphicsAPI::getCullModeInternal(CULL_MODE::E _cullMode) const {
   }
 }
 
-//Vector<uint8>
-//Dx11GraphicsAPI::loadImageFromFileInternal(const String& _filePath,
-//                                           int32* _width, int32 _height,
-//                                           int32* _chanels) {
-//
-//  std::vector<uint8_t> imageData;
-//
-//  uint8* data = stbi_load(_filePath.c_str(),
-//                          _width, _height, _chanels, STBI_rgb_alpha);
-//
-//  if (data) {
-//    imageData.resize((*_width) * (*_height) * STBI_rgb_alpha);
-//    memcpy(imageData.data(), data, imageData.size());
-//    stbi_image_free(data);
-//  }
-//  else {
-//    std::cout << "Error loading image: " << _filePath << std::endl;
-//  }
-//
-//  return imageData;
-//}
-
 
 /*****************************************************/
 bool
@@ -694,7 +672,7 @@ Dx11GraphicsAPI::updateConstBuffer(WeakPtr<ConstBuffer> _buffer,
   }
   auto pbuffer = std::static_pointer_cast <Dx11ConstBuffer> (_buffer.lock());
 
-  if (pbuffer == nullptr || pbuffer->m_buffer == nullptr || pbuffer->GetByteWidth() != _byteWidth) {
+  if (pbuffer == nullptr || pbuffer->m_buffer == nullptr || pbuffer->getByteWidth() != _byteWidth) {
     return;
   }
 
@@ -876,7 +854,7 @@ Dx11GraphicsAPI::createPixelShader(const String& _shaderCode,
 void Dx11GraphicsAPI::setPixelShader(WeakPtr<PixelShader> _shader) {
   if (_shader.expired() || m_immediateContext == nullptr) {
     std::cout <<
-      "setPixelShader function" << '/n' << 
+      "setPixelShader function" << "/n" << 
       "shader or immmediate contextex = nullptr" << 
       std::endl;
   }
@@ -1361,8 +1339,8 @@ Dx11GraphicsAPI::setShadowMapFromDepthView(uint32 _slot,
 
 
 SPtr <Texture2D>
-Dx11GraphicsAPI::createTexture2D(const Vector<uint8>& _imgData, int32 _witdh,
-                                 int32 _height) {
+Dx11GraphicsAPI::createTexture2DWithImageData(const Vector<uint8>& _imgData,
+                                              int32 _witdh,int32 _height) {
   auto texture = std::make_shared<Dx11Texture2D>();
 
   if (_imgData.empty() || _witdh <= 0 || _height <= 0 || m_device == nullptr) {
@@ -1414,7 +1392,7 @@ Dx11GraphicsAPI::createTexture2D(const Vector<uint8>& _imgData, int32 _witdh,
 //    return nullptr;
 //  }
 //
-//  return createTexture2D(pixels, width, height);
+//  return createTexture2DWithImageData(pixels, width, height);
 //}
 
 void

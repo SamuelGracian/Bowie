@@ -5,7 +5,7 @@
 
 namespace bowEngineSDK
 {
-class BOW_PLUGIN_EXPORT Dx11GraphicsAPI : public GraphicsAPI
+class BOW_PLUGIN_EXPORT Dx11GraphicsAPI final : public GraphicsAPI
 {
 public:
   /*
@@ -156,11 +156,8 @@ public:
   setPixelShader(WeakPtr<PixelShader> _shader) override;
 
   SPtr<Texture2D>
-  createTexture2D(const Vector<uint8>& _imgData, int32 _witdh,
+  createTexture2DWithImageData(const Vector<uint8>& _imgData, int32 _witdh,
                   int32 _height) override;
-
-  //SPtr<Texture2D>
-  //createTexture2DFromFile(const String& _filePath) override;
 
   void
   setTexture2D(uint32 _slot, WeakPtr<Texture2D> _texture) override;
@@ -201,7 +198,7 @@ public:
   setSamplerState(uint32 _slot, WeakPtr<SamplerState> _sampler) override;
 
   virtual SPtr<DepthStencilView>
-  createShadowMap(uint32 _width, uint32 _height) = 0;
+  createShadowMap(uint32 _width, uint32 _height) override;
 
   virtual bool
   readShadowMap(WeakPtr<DepthStencilView> _shadowDepth,
@@ -312,10 +309,6 @@ public:
   */
   D3D11_CULL_MODE
   getCullModeInternal(CULL_MODE::E _cullMode) const;
-
-  //Vector<uint8>
-  //loadImageFromFileInternal(const String& _filePath, int32* _width, int32 _height,
-  //                  int32* _chanels);
 
 private:
 

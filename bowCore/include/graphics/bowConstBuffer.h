@@ -55,7 +55,7 @@ class ConstBuffer : public BaseBuffer
      return m_slot;
    }
 
- private:
+ protected:
 
    uint32 m_slot;
    void* m_rawData;

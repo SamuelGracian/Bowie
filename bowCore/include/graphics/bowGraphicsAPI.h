@@ -13,7 +13,7 @@
 #include "bowGraphicsGenerals.h"
 #include "bowSwapChain.h"
 #include "bowTopology.h"
-#include "bowDepthstencilView.h"
+#include "bowDepthStencilView.h"
 #include "bowViewPort.h"
 #include "bowVertexShader.h"
 #include "bowPixelShader.h"
@@ -223,16 +223,13 @@ public:
   createViewPort() = 0;
 
   /// texture
-  //virtual Vector<uint8>
-  //loadImageFromFile(const String& _filePath, int32* _width, int32* _height,
-  //                  int32* _channels) = 0;
 
   virtual SPtr<Texture2D>
-  createTexture2D(const Vector<uint8>& _imgData, int32 _witdh,
+  createTexture2DWithImageData(const Vector<uint8>& _imgData, int32 _witdh,
                   int32 _height) = 0;
 
-  //virtual SPtr<Texture2D>
-  //createTexture2DFromFile(const String& _filePath) = 0;
+  SPtr<Texture2D>
+  createTexture2DFromFile(const String& _filePath);
 
   virtual void
   setTexture2D(uint32 _slot, WeakPtr<Texture2D> _texture) = 0;

@@ -18,7 +18,7 @@ using DisplaySurfaceHandler = void*;
 
 class BOW_CORE_EXPORT DisplaySurface
 {
-public:
+ public:
 
   /*
   * @brief

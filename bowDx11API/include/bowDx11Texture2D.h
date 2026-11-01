@@ -19,6 +19,9 @@ class Dx11Texture2D : public Texture2D
     safeRelease(textureView);
   }
 
+  FORCEINLINE virtual uint32
+    getWidth() const { return m_width; }
+
   /// <summary>
   /// texture member
   /// </summary>

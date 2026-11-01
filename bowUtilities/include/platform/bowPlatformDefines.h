@@ -110,7 +110,10 @@
 #     define RESTRICT
 #  endif
 #endif
-#else
+#else 
+#ifdef FORCEINLINE 
+#undef FORCEINLINE
+#endif
 #define FORCEINLINE __inline
 #ifndef RESTRICT
 #   define  RESTRICT
@@ -214,9 +217,9 @@
 #           define BOW_UTILITIES_EXPORT
 #       else
 #           if defined(BOW_UTILITIES_EXPORTS)
-#               define BOW_UTILITIES_EXPORTS __attribute__((dllexport))
+#               define BOW_UTILITIES_EXPORT __attribute__((dllexport))
 #           else
-#               define BOW_UTILITIES_EXPORTS __attribute__((dllimport))
+#               define BOW_UTILITIES_EXPORT __attribute__((dllimport))
 #           endif
 #       endif
 #   endif
@@ -233,9 +236,11 @@
 #   define BOW_DLL_IMPORT __declspec (dllimport)
 # else
 #   define BOW_DLL_EXPORT __attribute__ ((dllexport))
+#   define BOW_DLL_IMPORT __attribute__ ((dllimport))
 # endif
 #else
 #   define BOW_DLL_EXPORT __attribute__ ((visibility("default")))
+#   define BOW_DLL_IMPORT
 #endif
 #define BOW_PLUGIN_EXPORT BOW_DLL_EXPORT
 

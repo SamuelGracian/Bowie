@@ -26,8 +26,8 @@ class BaseBuffer
     m_byteWidth = bytewidth;
   }
 
-  FORCEINLINE const uint32
-  GetByteWidth()const { return m_byteWidth; }
+  FORCEINLINE uint32
+  getByteWidth() const { return m_byteWidth; }
 
  protected:
   uint32 m_byteWidth;

@@ -19,7 +19,7 @@ class SwapChain
    * @brief
    *  Default destructor.
    */
-   ~SwapChain() = default;
+   virtual ~SwapChain() = default;
 
    virtual void
    present(uint32 syncInterval, uint32 flags) = 0;
