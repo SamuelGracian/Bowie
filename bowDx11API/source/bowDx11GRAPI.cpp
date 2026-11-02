@@ -31,20 +31,20 @@ namespace bowEngineSDK
 /*****************************************************/
 
 DXGI_FORMAT
-Dx11GraphicsAPI::getDx11FormatInternal(GAPI_FORMAT::E _format) const {
+Dx11GraphicsAPI::getDx11FormatInternal(TEXTURE_FORMAT::E _format) const {
   switch (_format) {
   default:
     return DXGI_FORMAT::DXGI_FORMAT_UNKNOWN;
     break;
 
-  case GAPI_FORMAT::FORMAT_D24_UNORM_S8_UINT:
+  case TEXTURE_FORMAT::FORMAT_D24_UNORM_S8_UINT:
     return DXGI_FORMAT::DXGI_FORMAT_D24_UNORM_S8_UINT;
     break;
 
-  case GAPI_FORMAT::FORMAT_R8G8B8A8_UNKNOWN:
+  case TEXTURE_FORMAT::FORMAT_R8G8B8A8_UNKNOWN:
     return DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM;
 
-  case GAPI_FORMAT::FORMAT_R32_FLOAT:
+  case TEXTURE_FORMAT::FORMAT_R32_FLOAT:
     return DXGI_FORMAT::DXGI_FORMAT_R32_FLOAT;
   }
 }
@@ -107,7 +107,7 @@ Dx11GraphicsAPI::getShaderModelInternal(SHADER_TYPE::E _shaderType,
 
 IDXGISwapChain* 
 Dx11GraphicsAPI::createSwapChainInternal(HWND hwnd, uint32 width,
-                                         uint32 height, GAPI_FORMAT::E format) {
+                                         uint32 height, TEXTURE_FORMAT::E format) {
   IDXGIFactory1* dxgiFactory1 = nullptr;
 
   IDXGIFactory2* dxgiFactory2 = nullptr;
@@ -203,13 +203,13 @@ Dx11GraphicsAPI::createBackBufferRTInternal(IDXGISwapChain* _swapChain) {
 
 ID3D11Texture2D*
 Dx11GraphicsAPI::createTexture2DInternal(uint32 _width, uint32 _height,
-                                         const GAPI_FORMAT::E _format,
+                                         const TEXTURE_FORMAT::E _format,
                                          uint32 _bindFlags) {
   
   ID3D11Texture2D* resultTexture = nullptr;
 
   if (_width != 0 && _height != 0
-      && _format != GAPI_FORMAT::FORMAT_R8G8B8A8_UNKNOWN
+      && _format != TEXTURE_FORMAT::FORMAT_R8G8B8A8_UNKNOWN
       && m_device != nullptr) {
     D3D11_TEXTURE2D_DESC descTexture = {};
     descTexture.Width = _width;
@@ -520,7 +520,7 @@ Dx11GraphicsAPI::cleanUpResources(){}
 
 SPtr<SwapChain>
 Dx11GraphicsAPI::createSwapChain(WeakPtr<DisplaySurface> _windowHandler,
-                                 GAPI_FORMAT::E _format) {
+                                 TEXTURE_FORMAT::E _format) {
   SPtr<Dx11SwapChain> SChain = nullptr;
 
   if (_windowHandler.expired()) {
@@ -726,14 +726,14 @@ Dx11GraphicsAPI::setTopology(WeakPtr<Topology> _topology){
 
 SPtr<DepthStencilView>
 Dx11GraphicsAPI::createDepthStencil(uint32 _width, uint32 _height,
-                                    const GAPI_FORMAT::E _format) {
+                                    const TEXTURE_FORMAT::E _format) {
   
   SPtr<Dx11DepthStencilView> resultDS = nullptr;
   ID3D11DepthStencilView* resultDepthStencilView = nullptr;
   ID3D11Texture2D* depthStencilTexture = nullptr;
 
   if (m_device != nullptr && _width != 0.0f && _height != 0.0
-      && _format != GAPI_FORMAT::FORMAT_R8G8B8A8_UNKNOWN) {
+      && _format != TEXTURE_FORMAT::FORMAT_R8G8B8A8_UNKNOWN) {
 
     depthStencilTexture = createTexture2DInternal(_width,
                                                   _height,
@@ -917,7 +917,7 @@ Dx11GraphicsAPI::setRasterizerState(WeakPtr<RasterizerState> _rasterizer) {
 SPtr<RenderTargetView>
 Dx11GraphicsAPI::createRenderTargetView(uint32 _width,
                                         uint32 _height,
-                                        GAPI_FORMAT::E _format) {
+                                        TEXTURE_FORMAT::E _format) {
 
   std::shared_ptr<Dx11RenderTargetView> resultRTV = nullptr;
   ID3D11Texture2D* renderTargetTexture = nullptr;
@@ -926,7 +926,7 @@ Dx11GraphicsAPI::createRenderTargetView(uint32 _width,
 
 
   if (m_device != nullptr && _width != 0 && _height != 0 && 
-      _format != GAPI_FORMAT::FORMAT_UNKNOWN) {
+      _format != TEXTURE_FORMAT::FORMAT_UNKNOWN) {
     renderTargetTexture = createTexture2DInternal(
       _width,
       _height,

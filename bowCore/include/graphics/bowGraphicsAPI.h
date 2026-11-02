@@ -96,7 +96,7 @@ public:
   */
   virtual SPtr<SwapChain>
   createSwapChain(WeakPtr<DisplaySurface> handle,
-                  GAPI_FORMAT::E = GAPI_FORMAT::FORMAT_UNKNOWN) = 0;
+                  TEXTURE_FORMAT::E = TEXTURE_FORMAT::FORMAT_UNKNOWN) = 0;
 
   /// Buffers
 
@@ -196,7 +196,7 @@ public:
   */
   virtual SPtr<DepthStencilView>
   createDepthStencil(uint32 _width = 0, uint32 _height = 0,
-                     const GAPI_FORMAT::E  _format = GAPI_FORMAT::FORMAT_UNKNOWN) = 0;
+                     const TEXTURE_FORMAT::E  _format = TEXTURE_FORMAT::FORMAT_UNKNOWN) = 0;
 
   /// Shaders
   virtual SPtr<VertexShader>
@@ -216,7 +216,7 @@ public:
   /*
   * @brief
   *  Creates a View Port.
-  * @param foat, float, const GAPI_FORMAT
+  * @param foat, float, const TEXTURE_FORMAT
   * @return SharedPtr<ViewPort>
   */
   virtual SPtr<ViewPort>
@@ -246,7 +246,7 @@ public:
 
   virtual SPtr<RenderTargetView>
   createRenderTargetView(uint32 _width, uint32 _height,
-                         GAPI_FORMAT::E _format) = 0;
+                         TEXTURE_FORMAT::E _format) = 0;
 
   virtual void
    setRenderTargetView(WeakPtr<RenderTargetView> _renderTarget,

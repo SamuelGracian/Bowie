@@ -32,12 +32,12 @@ public:
   /*
   * @brief
   *  Create a swap chain.
-  * @param WeakPtr<DisplaySurface> windowHandler, GAPI_FORMAT format
+  * @param WeakPtr<DisplaySurface> windowHandler, TEXTURE_FORMAT format
   * @return SharedPtr<SwapChain>
   */
   virtual SPtr<SwapChain>
   createSwapChain(WeakPtr<DisplaySurface> _windowHandler,
-                  GAPI_FORMAT::E _format) override;
+                  TEXTURE_FORMAT::E _format) override;
 
   /*
   * @brief
@@ -128,12 +128,12 @@ public:
   /*
   * @brief
   *  Create a depth stencil.
-  * @param uint32 width, uint32 height, const GAPI_FORMAT format
+  * @param uint32 width, uint32 height, const TEXTURE_FORMAT format
   * @return SharedPtr<DepthStencilView>
   */
   virtual SPtr<DepthStencilView>
   createDepthStencil(uint32 _width, uint32 _height,
-                     const GAPI_FORMAT::E _format) override;
+                     const TEXTURE_FORMAT::E _format) override;
 
 
   virtual SPtr <ViewPort> /// TO DO: create an actual implementation for the view port
@@ -171,7 +171,7 @@ public:
 
   SPtr<RenderTargetView>
   createRenderTargetView(uint32 _width, uint32 _height,
-                         GAPI_FORMAT::E _format) override;
+                         TEXTURE_FORMAT::E _format) override;
 
   void
   setRenderTargetView(WeakPtr<RenderTargetView> _renderTarget,
@@ -220,26 +220,26 @@ public:
 
   /*
   * @brief
-  * @param HWND, uin32, uint32, GAPI_FORMAT, ID3D11Device
+  * @param HWND, uin32, uint32, TEXTURE_FORMAT, ID3D11Device
   *  Window handler, uint32 width, uint32 height,
-  *  GAPI_FORMAT format
+  *  TEXTURE_FORMAT format
   * @return IDXGISwapChain
   *  Returns a pointer of type swap chain.
   */
   IDXGISwapChain*
   createSwapChainInternal(HWND hwnd, uint32 width,
                           uint32 height,
-                          GAPI_FORMAT::E format);
+                          TEXTURE_FORMAT::E format);
 
   /*
   * @brief
-  *  Gets the according DXGI format to the GAPI_FORMAT
-  * @param GAPI_FORMAT
+  *  Gets the according DXGI format to the TEXTURE_FORMAT
+  * @param TEXTURE_FORMAT
   * @return
   *  DXGI_FORMAT
   */
   DXGI_FORMAT
-  getDx11FormatInternal(GAPI_FORMAT::E _format) const;
+  getDx11FormatInternal(TEXTURE_FORMAT::E _format) const;
 
   /*
   * @brief
@@ -253,12 +253,12 @@ public:
   /*
   * @brief
   *  Creates a texture of Dx11 type.
-  * @param uint32 width, uint32 hieght, const GAPI_FORMAT, uint32 bindflag
+  * @param uint32 width, uint32 hieght, const TEXTURE_FORMAT, uint32 bindflag
   * @return ID3D11Texture2D*
   */
   ID3D11Texture2D*
   createTexture2DInternal(uint32 _width, uint32 _height,
-                          const GAPI_FORMAT::E _format, uint32 _bindFlags);
+                          const TEXTURE_FORMAT::E _format, uint32 _bindFlags);
 
   /*
   * @brief
