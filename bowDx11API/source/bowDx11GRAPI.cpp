@@ -33,19 +33,62 @@ namespace bowEngineSDK
 DXGI_FORMAT
 Dx11GraphicsAPI::getDx11FormatInternal(TEXTURE_FORMAT::E _format) const {
   switch (_format) {
+
+  case bowEngineSDK::TEXTURE_FORMAT::FORMAT_UNKNOWN:
+    return DXGI_FORMAT_UNKNOWN;
+    break;
+
+  case bowEngineSDK::TEXTURE_FORMAT::D24_UNORM_S8_UINT:
+    return DXGI_FORMAT_D24_UNORM_S8_UINT;
+    break;
+
+  case bowEngineSDK::TEXTURE_FORMAT::R32_FLOAT:
+    return DXGI_FORMAT_R32_FLOAT;
+    break;
+
+  case bowEngineSDK::TEXTURE_FORMAT::R8G8B8A8_UNORM:
+    return DXGI_FORMAT_R8G8B8A8_UNORM;
+    break;
+
+  case bowEngineSDK::TEXTURE_FORMAT::B8G8R8A8_UNORM:
+    return DXGI_FORMAT_B8G8R8A8_UNORM;
+    break;
+
+  case bowEngineSDK::TEXTURE_FORMAT::R16G16B16A16_FLOAT:
+    return DXGI_FORMAT_R16G16B16A16_FLOAT;
+    break;
+
+  case bowEngineSDK::TEXTURE_FORMAT::D32_FLOAT:
+    return DXGI_FORMAT_D32_FLOAT;
+    break;
+
+  case bowEngineSDK::TEXTURE_FORMAT::R8_UNORM:
+    return DXGI_FORMAT_R8_UNORM;
+    break;
+
+  case bowEngineSDK::TEXTURE_FORMAT::R8G8_UNORM:
+    return DXGI_FORMAT_R8G8_UNORM;
+    break;
+
+  case bowEngineSDK::TEXTURE_FORMAT::R16_FLOAT:
+    return DXGI_FORMAT_R16_FLOAT;
+    break;
+
+  case bowEngineSDK::TEXTURE_FORMAT::R16G16_FLOAT:
+    return DXGI_FORMAT_R16G16_FLOAT;
+    break;
+
+  case bowEngineSDK::TEXTURE_FORMAT::R32G32B32A32_FLOAT:
+    return DXGI_FORMAT_R32G32B32A32_FLOAT;
+    break;
+
+  case bowEngineSDK::TEXTURE_FORMAT::R32_UINT:
+    return DXGI_FORMAT_R32_UINT;
+    break;
+
   default:
-    return DXGI_FORMAT::DXGI_FORMAT_UNKNOWN;
+    return DXGI_FORMAT_UNKNOWN;
     break;
-
-  case TEXTURE_FORMAT::FORMAT_D24_UNORM_S8_UINT:
-    return DXGI_FORMAT::DXGI_FORMAT_D24_UNORM_S8_UINT;
-    break;
-
-  case TEXTURE_FORMAT::FORMAT_R8G8B8A8_UNKNOWN:
-    return DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM;
-
-  case TEXTURE_FORMAT::FORMAT_R32_FLOAT:
-    return DXGI_FORMAT::DXGI_FORMAT_R32_FLOAT;
   }
 }
 
@@ -120,12 +163,16 @@ Dx11GraphicsAPI::createSwapChainInternal(HWND hwnd, uint32 width,
 
   IDXGISwapChain* ResultSwapChain = nullptr;
 
-  if (SUCCEEDED(m_device->QueryInterface(__uuidof(IDXGIDevice), reinterpret_cast<void**>(&dxgiDevice)))) {
+  if (SUCCEEDED(m_device->QueryInterface(__uuidof(IDXGIDevice),
+                                         reinterpret_cast<void**>(&dxgiDevice)))) {
+
     if (SUCCEEDED(dxgiDevice->GetAdapter(&adapter))) {
-      HRESULT hr = adapter->GetParent(__uuidof(IDXGIFactory1), reinterpret_cast<void**>(&dxgiFactory1));
+      HRESULT hr = adapter->GetParent(__uuidof(IDXGIFactory1),
+                                      reinterpret_cast<void**>(&dxgiFactory1));
 
       if (SUCCEEDED(hr)) {
-        hr = dxgiFactory1->QueryInterface(__uuidof(IDXGIFactory2), reinterpret_cast<void**>(&dxgiFactory2));
+        hr = dxgiFactory1->QueryInterface(__uuidof(IDXGIFactory2),
+                                          reinterpret_cast<void**>(&dxgiFactory2));
 
         if (SUCCEEDED(hr)) {
 
@@ -142,10 +189,13 @@ Dx11GraphicsAPI::createSwapChainInternal(HWND hwnd, uint32 width,
           sd.Scaling = DXGI_SCALING_NONE;
           sd.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
 
-          hr = dxgiFactory2->CreateSwapChainForHwnd(m_device, hwnd, &sd, nullptr, nullptr, &swapChain1);
+          hr = dxgiFactory2->CreateSwapChainForHwnd(m_device, hwnd, &sd,
+                                                    nullptr, nullptr,
+                                                    &swapChain1);
 
           if (SUCCEEDED(hr)) {
-            hr = swapChain1->QueryInterface(__uuidof(IDXGISwapChain), reinterpret_cast<void**>(&ResultSwapChain));
+            hr = swapChain1->QueryInterface(__uuidof(IDXGISwapChain),
+                                            reinterpret_cast<void**>(&ResultSwapChain));
           }
         }
         else {
@@ -209,7 +259,7 @@ Dx11GraphicsAPI::createTexture2DInternal(uint32 _width, uint32 _height,
   ID3D11Texture2D* resultTexture = nullptr;
 
   if (_width != 0 && _height != 0
-      && _format != TEXTURE_FORMAT::FORMAT_R8G8B8A8_UNKNOWN
+      && _format != TEXTURE_FORMAT::FORMAT_UNKNOWN
       && m_device != nullptr) {
     D3D11_TEXTURE2D_DESC descTexture = {};
     descTexture.Width = _width;
@@ -529,10 +579,10 @@ Dx11GraphicsAPI::createSwapChain(WeakPtr<DisplaySurface> _windowHandler,
   }
 
   std::shared_ptr<DisplaySurface> tempSurface = _windowHandler.lock();
+  HWND tempHandler = reinterpret_cast<HWND> (tempSurface->getHandle());
 
-  if (auto* ResultSwapChain = createSwapChainInternal(
-                                  reinterpret_cast<HWND> (tempSurface->getHandle()),
-                                  tempSurface->getClientWidth(), 
+  if (auto* ResultSwapChain = createSwapChainInternal(tempHandler,
+                                  tempSurface->getClientWidth(),
                                   tempSurface->getClientHeight(),
                                   _format)) {
     if (auto* ResultRT = createBackBufferRTInternal(ResultSwapChain)) {
@@ -733,7 +783,7 @@ Dx11GraphicsAPI::createDepthStencil(uint32 _width, uint32 _height,
   ID3D11Texture2D* depthStencilTexture = nullptr;
 
   if (m_device != nullptr && _width != 0.0f && _height != 0.0
-      && _format != TEXTURE_FORMAT::FORMAT_R8G8B8A8_UNKNOWN) {
+      && _format != TEXTURE_FORMAT::FORMAT_UNKNOWN) {
 
     depthStencilTexture = createTexture2DInternal(_width,
                                                   _height,
@@ -1382,18 +1432,6 @@ Dx11GraphicsAPI::createTexture2DWithImageData(const Vector<uint8>& _imgData,
   return nullptr;
 }
 
-//SPtr<Texture2D>
-//Dx11GraphicsAPI::createTexture2DFromFile(const String& _filePath) {
-//  int32 width = 0;
-//  int32 height = 0;
-//
-//  std::vector<uint8> pixels ;
-//  if (pixels.empty()) {
-//    return nullptr;
-//  }
-//
-//  return createTexture2DWithImageData(pixels, width, height);
-//}
 
 void
 Dx11GraphicsAPI::setTexture2D(uint32 _slot, WeakPtr<Texture2D> _texture) {

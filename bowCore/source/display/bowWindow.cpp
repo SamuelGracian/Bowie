@@ -58,6 +58,9 @@ bool DisplaySurface::init(int32 _width, int32 _height, const String& windowName)
     return false;
   }
 
+  /// Save the handler as hwnd
+  m_handler = reinterpret_cast<DisplaySurfaceHandler>(hwnd);
+
   RECT rc;
   GetClientRect(hwnd, &rc);
   m_clientWidth = rc.right - rc.left;

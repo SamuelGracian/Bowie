@@ -38,7 +38,8 @@ GraphicsAPI::createTexture2DFromFile(const String& _filePath) {
   int32 height = 0;
   int32 channels = 0;
 
-  Vector<uint8> imgData = ImageLoader::loadImageFromFile(_filePath, &width, &height, &channels);
+  Vector<uint8> imgData = ImageLoader::loadImageFromFile(_filePath, &width,
+                                                         &height, &channels);
   if (imgData.empty()) {
     return nullptr;
   }

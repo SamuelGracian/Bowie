@@ -32,7 +32,8 @@ class BOW_CORE_EXPORT DisplaySurface
   */
   DisplaySurface(int32 _width, int32 _height)
     : m_width(_width),
-      m_height(_height)
+      m_height(_height),
+      m_handler(nullptr)
   {}
 
   /*
@@ -79,4 +80,4 @@ private:
   */
   DisplaySurfaceHandler m_handler;
 };
-}//bowEngineSDK
+}/// namespace bowEngineSDK

@@ -19,5 +19,4 @@ void safeRelease(T*& p) {
     p = nullptr;
   }
 }
-
 }
