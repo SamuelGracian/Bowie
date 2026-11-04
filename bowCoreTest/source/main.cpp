@@ -1,5 +1,6 @@
 #include "bowWindow.h"
 #include "bowDx11GraphicsAPI.h"
+#include "bowMath.h"
 
 using namespace bowEngineSDK;
 
@@ -10,8 +11,7 @@ struct GeneralConstBuffer
   Matrix4 Perspective;
   Matrix4 worldMatrix;
   Matrix4 ShadowView;
-  Matrix4 ShadowProjection;
-  Vector4 cameraPosition;
+  Vector3 cameraPosition;
   float Shininess;
 };
 
@@ -27,19 +27,24 @@ int main() {
   //bowEngineSDK::DisplaySurface window;
 
   bool running = true;
+  float handenes = -1.0f; /// 1.0 for right handed, -1.0 left handed
+  float width = 800;
+  float height = 600;
 
   /// Cameras
-  Vector3 Eye(100.0f, 100.0f, 500.0f);
+  Vector3 Eye(150.0f, 150.0f, 500.0f);
   Vector3 At(0.0f, 0.0f, 0.0f);
   Vector3 Up(0.0f, 1.0f, 0.0f);
 
-  float handenes; /// 1.0 for right handed,
 
   Matrix4 view = Matrix4::lookAt(At, Eye, Up, handenes);
+  Matrix4 perspective = Matrix4::persepctive(Math::PI / 4.0f,
+                                             (float) width / (float)height,
+                                             0.01f,1000.0f, handenes);
 
   auto window = std::make_shared<DisplaySurface>();
 
-  if (!window->init(800, 600, "Window test")) {
+  if (!window->init(width, height, "Window test")) {
     std::cout << "Failed to start window" << std::endl;
     return -1;
   }
@@ -72,10 +77,11 @@ int main() {
   }
 
   ///const buffer for camera
-  float amplitude = 0.0f;
-  MoveVertex moveData = { 1.0, amplitude, 1.0f,1.0 };
   GeneralConstBuffer cameraData;
   cameraData.View = view;
+  cameraData.Perspective = perspective;
+  cameraData.cameraPosition = Eye;
+  cameraData.Shininess = 2;
 
   while (running) {
     window->processMessages();
