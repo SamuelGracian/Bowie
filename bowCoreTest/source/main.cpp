@@ -1,11 +1,38 @@
 #include "bowWindow.h"
 #include "bowDx11GraphicsAPI.h"
 
-
 using namespace bowEngineSDK;
+
+
+struct GeneralConstBuffer
+{
+  Matrix4 View;
+  Matrix4 Perspective;
+  Matrix4 worldMatrix;
+  Matrix4 ShadowView;
+  Matrix4 ShadowProjection;
+  Vector4 cameraPosition;
+  float Shininess;
+};
+
+struct MoveVertex
+{
+  float cosValue;
+  float amplitude;
+  float c;
+  float d;
+};
 
 int main() {
   //bowEngineSDK::DisplaySurface window;
+
+  bool running = true;
+
+  /// Cameras
+  Vector3 Eye(100.0f, 100.0f, 500.0f);
+  Vector3 At(0.0f, 0.0f, 0.0f);
+  Vector3 Up(0.0f, 1.0f, 0.0f);
+
 
   auto window = std::make_shared<DisplaySurface>();
 
@@ -34,7 +61,18 @@ int main() {
     return -1;
   }
 
-  bool running = true;
+  /// Render target view
+  auto renderTV = swapChain->getRenderTargetView();
+ 
+  if (!renderTV) {
+    std::cout << "Failed to create render target view " << std::endl;
+  }
+
+  ///const buffer for camera
+  float amplitude = 0.0f;
+  MoveVertex moveData = { 1.0, amplitude, 1.0f,1.0 };
+  GeneralConstBuffer cameraData;
+  //cameraData.View = view
 
   while (running) {
     window->processMessages();
