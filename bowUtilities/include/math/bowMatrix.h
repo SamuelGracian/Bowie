@@ -121,9 +121,25 @@ public:
   NODISCARD Matrix4
   getInverse() const;
 
-  NODISCARD Matrix4
+  /*
+  * @brief
+  * @param
+  * @return
+  */
+  NODISCARD static Matrix4
   lookAt(const Vector3& _at, const Vector3& _eye, const Vector3& _up,
          float _handenes);
+
+  /*
+  * @brief
+  *  Creates a 4x4 perspective matrix.
+  * @param float field of view, float aspect ratio, float near plane location,
+  * float far plane location, float handedness
+  * @return
+  */
+  NODISCARD static Matrix4
+  persepctive(float _foV, float _aspect, float _zNear, float _zFar,
+              float _handedness);
 
   /********************************************/
   /*  OPERATORS  */

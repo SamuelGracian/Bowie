@@ -10,15 +10,23 @@
 #include "bowMatrix.h"
 #include "bowVector3.h"
 #include "bowVector4.h"
+#include "bowMath.h"
 
 namespace bowEngineSDK
 {
 
-void
+bool
 lookAtHelperCalculateAxes(const Vector3& _at,
                           const Vector3& _eye, const Vector3& _up,
                           float _handenes, Vector3* const _axes) {
+
+  if (_axes == nullptr) {
+    return false;
+  }
+
   Vector3 direction = _at;
+
+  direction -= _eye;
 
   _axes[2] = direction.normalize();
 
@@ -44,19 +52,55 @@ lookAtHelperCalculateAxes(const Vector3& _at,
 
   _axes[0] *= neg;
   _axes[2] *= neg;
+  
+  return true;
 }
 
 Matrix4
 lookAtHelper(const Vector3& _at, const Vector3& _eye, const Vector3& _up,
              float _handenes) {
   Vector3 axes[4];
-  lookAtHelperCalculateAxes(_at, _eye, _up, _handenes, axes);
-  const Vector4 column0(axes[0][0], axes[1][0], axes[2][0], 0);
-  const Vector4 column1(axes[0][1], axes[1][1], axes[2][1], 0);
-  const Vector4 column2(axes[0][2], axes[1][2], axes[2][2], 0);
-  const Vector4 column3(axes[3], 1);
 
-  return Matrix4(column0, column1, column2, column3);
+  if (!lookAtHelperCalculateAxes(_at, _eye, _up, _handenes, axes)) {
+    /// If  failed to calculate axes return identity matrix
+    return Matrix4::IDENTITY;
+  }
+
+  return Matrix4(
+    axes[0].x, axes[1].x, axes[2].x, 0.0f,
+    axes[0].y, axes[1].y, axes[2].y, 0.0f,
+    axes[0].z, axes[1].z, axes[2].z, 0.0f,
+    axes[3].x, axes[3].y, axes[3].z, 1.0f);
+}
+
+Matrix4
+perspectiveHelper(float _foV, float _aspect, float _zNear, float _zFar,
+                  float _handedness) {
+
+  if (_aspect == 0.0f ||
+      _zNear == _zFar ||
+      _zNear <= 0.0f ||
+      _zFar <= 0.0f) {
+    return Matrix4::ZERO;
+  }
+
+  const float y =
+    1.0f / Math::tan(_foV * 0.5f);
+
+  const float x = y / _aspect;
+
+  const float zDistance = _zNear - _zFar;
+  const float zFarPerDistance = _zFar / zDistance;
+
+  return Matrix4(
+    x, 0.0f, 0.0f, 0.0f,
+
+    0.0f, y, 0.0f, 0.0f,
+
+    0.0f,0.0f,zFarPerDistance * _handedness,-_handedness,
+
+    0.0f,0.0f,2.0f * _zNear * zFarPerDistance,0.0f
+  );
 }
 
 
@@ -328,6 +372,13 @@ NODISCARD Matrix4
 Matrix4::lookAt(const Vector3& _at, const Vector3& _eye, const Vector3& _up,
                 float _handenes) {
   return lookAtHelper(_at, _eye, _up, _handenes);
+}
+
+NODISCARD Matrix4
+Matrix4::persepctive(float _foV, float _aspect, float _zNear, float _zFar,
+                     float _handedness) {
+
+  return perspectiveHelper(_foV, _aspect, _zNear, _zFar, _handedness);
 }
 
 /*     OPERATORS     */
