@@ -14,6 +14,52 @@
 namespace bowEngineSDK
 {
 
+void
+lookAtHelperCalculateAxes(const Vector3& _at,
+                          const Vector3& _eye, const Vector3& _up,
+                          float _handenes, Vector3* const _axes) {
+  Vector3 direction = _at;
+
+  _axes[2] = direction.normalize();
+
+  // X axis : right
+  _axes[0] = _up.cross(_axes[2]).normalize();
+
+  // Y axis : up
+  _axes[1] = _axes[2].cross(_axes[0]);
+
+  // view matrix traslation
+  _axes[3] = Vector3(_handenes * _axes[0].dot(_eye),
+                     -_axes[1].dot(_eye),
+                     _handenes * _axes[2].dot(_eye));
+
+  /*
+  * left handed:
+  *  handenes = -1.0f
+  * 
+  * right handed:
+  *  handenes = +1.0f
+  */
+  const float neg = -_handenes;
+
+  _axes[0] *= neg;
+  _axes[2] *= neg;
+}
+
+Matrix4
+lookAtHelper(const Vector3& _at, const Vector3& _eye, const Vector3& _up,
+             float _handenes) {
+  Vector3 axes[4];
+  lookAtHelperCalculateAxes(_at, _eye, _up, _handenes, axes);
+  const Vector4 column0(axes[0][0], axes[1][0], axes[2][0], 0);
+  const Vector4 column1(axes[0][1], axes[1][1], axes[2][1], 0);
+  const Vector4 column2(axes[0][2], axes[1][2], axes[2][2], 0);
+  const Vector4 column3(axes[3], 1);
+
+  return Matrix4(column0, column1, column2, column3);
+}
+
+
 const Matrix4
 Matrix4::IDENTITY(1.0f, 0.0f, 0.0f, 0.0f,
                   0.0f, 1.0f, 0.0f, 0.0f,
@@ -37,6 +83,29 @@ Matrix4::Matrix4(float M00, float M01, float M02, float M03,
   {M20, M21, M22, M23},
   {M30, M31, M32, M33}
   } {}
+
+Matrix4::Matrix4(Vector4 column0, Vector4 column1,
+                 Vector4 column2, Vector4 column3) {
+  data[0][0] = column0.x;
+  data[1][0] = column0.y;
+  data[2][0] = column0.z;
+  data[3][0] = column0.w;
+
+  data[0][1] = column1.x;
+  data[1][1] = column1.y;
+  data[2][1] = column1.z;
+  data[3][1] = column1.w;
+
+  data[0][2] = column2.x;
+  data[1][2] = column2.y;
+  data[2][2] = column2.z;
+  data[3][2] = column2.w;
+
+  data[0][3] = column3.x;
+  data[1][3] = column3.y;
+  data[2][3] = column3.z;
+  data[3][3] = column3.w;
+}
 
 void
 Matrix4::setIdentity() {
@@ -253,6 +322,12 @@ Matrix4::getInverse() const {
   }
 
   return result;
+}
+
+NODISCARD Matrix4 
+Matrix4::lookAt(const Vector3& _at, const Vector3& _eye, const Vector3& _up,
+                float _handenes) {
+  return lookAtHelper(_at, _eye, _up, _handenes);
 }
 
 /*     OPERATORS     */

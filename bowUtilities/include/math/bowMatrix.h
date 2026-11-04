@@ -42,6 +42,8 @@ public:
           float M20, float M21, float M22, float M23,
           float M30, float M31, float M32, float M33);
 
+  Matrix4(Vector4 column0, Vector4 column1, Vector4 column2, Vector4 column3);
+
   /*
   * @brief
   *  Copy constructor.
@@ -118,6 +120,10 @@ public:
   */
   NODISCARD Matrix4
   getInverse() const;
+
+  NODISCARD Matrix4
+  lookAt(const Vector3& _at, const Vector3& _eye, const Vector3& _up,
+         float _handenes);
 
   /********************************************/
   /*  OPERATORS  */

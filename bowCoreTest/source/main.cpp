@@ -33,6 +33,7 @@ int main() {
   Vector3 At(0.0f, 0.0f, 0.0f);
   Vector3 Up(0.0f, 1.0f, 0.0f);
 
+  float handenes; /// 1.0 for right handed, 
 
   auto window = std::make_shared<DisplaySurface>();
 
