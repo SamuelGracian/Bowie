@@ -2,6 +2,10 @@
 #include "bowDx11GraphicsAPI.h"
 #include "bowMath.h"
 
+#include <iostream>
+#include <fstream>
+#include <sstream>
+
 using namespace bowEngineSDK;
 
 
@@ -15,6 +19,8 @@ struct GeneralConstBuffer
   float Shininess;
 };
 
+Vector<String> defines { "#defines BOWIE_TEST" };
+
 struct MoveVertex
 {
   float cosValue;
@@ -22,6 +28,21 @@ struct MoveVertex
   float c;
   float d;
 };
+
+String
+readFileToString(const std::wstring& _filePath) {
+  std::ifstream file (_filePath, std::ios::in | std::ios::binary);
+
+  if (!file.is_open()) {
+    std::cout << "unable  to open file" << std::endl;
+    return "";
+  }
+  std::stringstream buffer;
+  buffer << file.rdbuf();
+  file.close();
+
+  return buffer.str();
+}
 
 int main() {
   //bowEngineSDK::DisplaySurface window;
@@ -44,7 +65,9 @@ int main() {
 
   auto window = std::make_shared<DisplaySurface>();
 
-  if (!window->init(width, height, "Window test")) {
+  if (!window->init(static_cast<int32>(width),static_cast<int32>(height),
+                    "Bowie")) {
+
     std::cout << "Failed to start window" << std::endl;
     return -1;
   }
@@ -58,6 +81,17 @@ int main() {
     std::cout << "Failed to init grapi" << std::endl;
     return -1;
   }
+
+  SPtr<PixelShader> p_pixelShader = grapi.createPixelShader(
+                                          readFileToString(L"Shaders.fxh"),
+                                          "PShader", defines);
+
+  SPtr<PixelShader> p_pixelShader1 = grapi.createPixelShader(
+                                           readFileToString(L"PixelShader.fxh"),
+                                           "PShader", defines);
+
+  SPtr<VertexShader> p_vertexShader = grapi.createVertexShader(
+    readFileToString(L"VertexShader.fxh"), "VShader", defines);
 
   auto swapChain = grapi.createSwapChain(window,
                                          TEXTURE_FORMAT::R8G8B8A8_UNORM);
@@ -85,7 +119,156 @@ int main() {
 
 
   Vector<SimpleVertex> cubeVertices {
-    
+    // Front
+    // Normal (0,0,1)
+    SimpleVertex({-1.0f, 1.0f, 1.0f, 1.0f},
+                 {0.0f, 0.0f, 1.0f, 0.0f},
+                 {1.0f, 0.0f, 0.0f, 0.0f},
+                 {0.0f, 1.0f, 0.0f, 0.0f},
+                 {0.0f, 0.0f}),
+
+    SimpleVertex({ 1.0f,  1.0f, 1.0f, 1.0f},
+                 {0.0f, 0.0f, 1.0f, 0.0f},
+                 {1.0f, 0.0f, 0.0f, 0.0f},
+                 {0.0f, 1.0f, 0.0f, 0.0f},
+                 {1.0f, 0.0f}),
+
+    SimpleVertex({ 1.0f, -1.0f, 1.0f, 1.0f},
+                 {0.0f, 0.0f, 1.0f, 0.0f},
+                 {1.0f, 0.0f, 0.0f, 0.0f},
+                 {0.0f, 1.0f, 0.0f, 0.0f},
+                 {1.0f, 1.0f}),
+
+    SimpleVertex({-1.0f, -1.0f, 1.0f, 1.0f},
+                 {0.0f, 0.0f, 1.0f, 0.0f},
+                 {1.0f, 0.0f, 0.0f, 0.0f},
+                 {0.0f, 1.0f, 0.0f, 0.0f},
+                 {0.0f, 1.0f}),
+
+    // BACK (-Z)
+    SimpleVertex({ 1.0f, 1.0f, -1.0f, 1.0f},
+                 {0.0f, 0.0f, -1.0f, 0.0f},
+                 {-1.0f, 0.0f, 0.0f, 0.0f},
+                 {0.0f, 1.0f, 0.0f, 0.0f},
+                 {0.0f, 0.0f}),
+
+    SimpleVertex({-1.0f, 1.0f, -1.0f, 1.0f},
+                 {0.0f, 0.0f, -1.0f, 0.0f},
+                 {-1.0f, 0.0f, 0.0f, 0.0f},
+                 {0.0f, 1.0f, 0.0f, 0.0f},
+                 {1.0f, 0.0f}),
+
+    SimpleVertex({-1.0f, -1.0f, -1.0f, 1.0f},
+                 {0.0f, 0.0f, -1.0f, 0.0f},
+                 {-1.0f, 0.0f, 0.0f, 0.0f},
+                 {0.0f, 1.0f, 0.0f, 0.0f},
+                 {1.0f, 1.0f}),
+
+    SimpleVertex({ 1.0f, -1.0f, -1.0f, 1.0f},
+                 {0.0f, 0.0f, -1.0f, 0.0f},
+                 {-1.0f, 0.0f, 0.0f, 0.0f},
+                 {0.0f, 1.0f, 0.0f, 0.0f},
+                 {0.0f, 1.0f}),
+
+    // RIGHT (+X)
+    SimpleVertex({ 1.0f, 1.0f, 1.0f, 1.0f},
+                 {1.0f, 0.0f, 0.0f, 0.0f},
+                 {0.0f, 0.0f, -1.0f, 0.0f},
+                 {0.0f, 1.0f, 0.0f, 0.0f},
+                 {0.0f, 0.0f}),
+
+    SimpleVertex({ 1.0f,  1.0f, -1.0f, 1.0f},
+                 {1.0f, 0.0f, 0.0f, 0.0f},
+                 {0.0f, 0.0f, -1.0f, 0.0f},
+                 {0.0f, 1.0f, 0.0f, 0.0f},
+                 {1.0f, 0.0f}),
+
+    SimpleVertex({ 1.0f, -1.0f, -1.0f, 1.0f},
+                 {1.0f, 0.0f, 0.0f, 0.0f},
+                 {0.0f, 0.0f, -1.0f, 0.0f},
+                 {0.0f, 1.0f, 0.0f, 0.0f},
+                 {1.0f, 1.0f}),
+
+    SimpleVertex({1.0f, -1.0f,1.0f, 1.0f},
+                 {1.0f, 0.0f, 0.0f, 0.0f},
+                 {0.0f, 0.0f, -1.0f, 0.0f},
+                 {0.0f, 1.0f, 0.0f, 0.0f},
+                 {0.0f, 1.0f}),
+
+    // LEFT (-X)
+    SimpleVertex({-1.0f, 1.0f, -1.0f, 1.0f},
+                 {-1.0f, 0.0f, 0.0f, 0.0f},
+                 {0.0f, 0.0f, 1.0f, 0.0f},
+                 {0.0f, 1.0f, 0.0f, 0.0f},
+                 {0.0f, 0.0f}),
+
+    SimpleVertex({-1.0f, 1.0f, 1.0f, 1.0f},
+                 {-1.0f, 0.0f, 0.0f, 0.0f},
+                 {0.0f, 0.0f, 1.0f, 0.0f},
+                 {0.0f, 1.0f, 0.0f, 0.0f},
+                 {1.0f, 0.0f}),
+
+    SimpleVertex({-1.0f, -1.0f, 1.0f, 1.0f},
+                 {-1.0f, 0.0f, 0.0f, 0.0f},
+                 {0.0f, 0.0f, 1.0f, 0.0f},
+                 {0.0f, 1.0f, 0.0f, 0.0f},
+                 {1.0f, 1.0f}),
+
+    SimpleVertex({-1.0f, -1.0f, -1.0f, 1.0f},
+                 {-1.0f, 0.0f, 0.0f, 0.0f},
+                 {0.0f, 0.0f, 1.0f, 0.0f},
+                 {0.0f, 1.0f, 0.0f, 0.0f},
+                 {0.0f, 1.0f}),
+
+    // TOP (+Y)
+    SimpleVertex({-1.0f, 1.0f, -1.0f, 1.0f},
+                 {0.0f, 1.0f, 0.0f, 0.0f},
+                 {1.0f, 0.0f, 0.0f, 0.0f},
+                 {0.0f, 0.0f,-1.0f, 0.0f},
+                 {0.0f, 0.0f}),
+
+    SimpleVertex({ 1.0f, 1.0f, -1.0f, 1.0f},
+                {0.0f, 1.0f, 0.0f, 0.0f},
+                {1.0f, 0.0f, 0.0f, 0.0f},
+                {0.0f, 0.0f,-1.0f, 0.0f},
+                {1.0f, 0.0f}),
+
+    SimpleVertex({ 1.0f, 1.0f, 1.0f, 1.0f},
+                 {0.0f, 1.0f, 0.0f, 0.0f},
+                 {1.0f, 0.0f, 0.0f, 0.0f},
+                 {0.0f, 0.0f,-1.0f, 0.0f},
+                 {1.0f, 1.0f}),
+
+    SimpleVertex({-1.0f, 1.0f, 1.0f, 1.0f},
+                 {0.0f, 1.0f, 0.0f, 0.0f},
+                 {1.0f, 0.0f, 0.0f, 0.0f},
+                 {0.0f, 0.0f,-1.0f, 0.0f},
+                 {0.0f, 1.0f}),
+
+    // BOTTOM (-Y)
+    SimpleVertex({-1.0f, -1.0f, 1.0f, 1.0f},
+                 {0.0f, -1.0f, 0.0f, 0.0f},
+                 {1.0f, 0.0f, 0.0f, 0.0f},
+                 {0.0f, 0.0f, 1.0f, 0.0f},
+                 {0.0f, 0.0f}),
+
+    SimpleVertex({ 1.0f, -1.0f, 1.0f, 1.0f},
+                 {0.0f,-1.0f, 0.0f, 0.0f},
+                 {1.0f, 0.0f, 0.0f, 0.0f},
+                 {0.0f, 0.0f, 1.0f, 0.0f},
+                 {1.0f, 0.0f}),
+
+    SimpleVertex({ 1.0f, -1.0f, -1.0f, 1.0f},
+                 {0.0f, -1.0f, 0.0f, 0.0f},
+                 {1.0f, 0.0f, 0.0f, 0.0f},
+                 {0.0f, 0.0f, 1.0f, 0.0f},
+                 {1.0f, 1.0f}),
+
+    SimpleVertex({-1.0f, -1.0f, -1.0f, 1.0f},
+                 {0.0f,-1.0f, 0.0f, 0.0f},
+                 {1.0f, 0.0f, 0.0f, 0.0f},
+                 {0.0f, 0.0f, 1.0f, 0.0f},
+                 {0.0f, 1.0f})
   };
 
   Vector<uint16> cubeIndices = {
@@ -106,8 +289,18 @@ int main() {
   SPtr<VertexBuffer> p_cubeVertexBuffer = nullptr;
   SPtr<IndexBuffer> p_cubeIndexBuffer = nullptr;
 
-  uint32 cubeIndexCount = 0;
+  //uint32 cubeIndexCount = 0;
 
+  SPtr<IndexBuffer> p_indexBuffer = nullptr;
+  SPtr<VertexBuffer> p_vertexBuffer = nullptr;
+
+  p_indexBuffer = grapi.createIndexBuffer(sizeof(uint16) * 
+                                          static_cast<uint32> (cubeIndices.size()),
+                                          cubeIndices.data());
+
+  p_vertexBuffer = grapi.createVertexBuffer(sizeof(SimpleVertex) *
+                                            static_cast<uint32>(cubeVertices.size()),
+                                            cubeVertices.data());
 
   while (running) {
     window->processMessages();

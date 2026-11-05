@@ -30,15 +30,15 @@ struct SimpleVertex
   Vector4 normals;
   Vector4 tangent;
   Vector4 binormals;
-  Vector4 texture;
+  Vector2 texture;
 
 
   SimpleVertex(
-    Vector4& pos,
-    Vector4& normal,
-    Vector4& tan ,
-    Vector4& binormal,
-    Vector4& tex )
+    const Vector4& pos,
+    const Vector4& normal,
+    const Vector4& tan ,
+    const Vector4& binormal,
+    const Vector2& tex )
     : position(pos), normals(normal), tangent(tan), binormals(binormal),
     texture(tex) {}
 };/// Simple vertex struct
