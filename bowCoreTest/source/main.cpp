@@ -83,6 +83,32 @@ int main() {
   cameraData.cameraPosition = Eye;
   cameraData.Shininess = 2;
 
+
+  Vector<SimpleVertex> cubeVertices {
+    
+  };
+
+  Vector<uint16> cubeIndices = {
+    /// front
+    0,1,2,0,2,3,
+    /// back
+    4,5,6,4,6,7,
+    /// right
+    8,9,10,8,10,11,
+    /// left
+    12,13,14,12,14,15,
+    /// Top
+    16,17,18,16,18,19,
+    /// bottom
+    20,21,22,20,22,23
+  };
+
+  SPtr<VertexBuffer> p_cubeVertexBuffer = nullptr;
+  SPtr<IndexBuffer> p_cubeIndexBuffer = nullptr;
+
+  uint32 cubeIndexCount = 0;
+
+
   while (running) {
     window->processMessages();
   }

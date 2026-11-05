@@ -32,10 +32,7 @@ struct SimpleVertex
   Vector4 binormals;
   Vector4 texture;
 
-  /*
-  * @brief
-  *  Constructor for simple vertex.???
-  */
+
   SimpleVertex(
     Vector4& pos,
     Vector4& normal,
@@ -116,7 +113,7 @@ public:
   * @param const uint32, void*
   * @return SharedPtr<IndeXBuffer>
   */
-  virtual SPtr<Indexbuffer>
+  virtual SPtr<IndexBuffer>
   createIndexBuffer(const uint32 byteWidth = 0, void* data = nullptr) = 0;
 
   /*
@@ -144,7 +141,7 @@ public:
   * @return none
   */
   virtual void
-  setIndexBuffer(WeakPtr<Indexbuffer> buffer) = 0;
+  setIndexBuffer(WeakPtr<IndexBuffer> buffer) = 0;
 
   /*
   * @brief

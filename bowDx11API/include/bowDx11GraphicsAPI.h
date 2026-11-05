@@ -55,7 +55,7 @@ public:
   * @param uint32 bytewidth, void* data
   * @return sharedPtr<IndexBuffer>.
   */
-  virtual SPtr<Indexbuffer>
+  virtual SPtr<IndexBuffer>
   createIndexBuffer(const uint32 _byteWidth, void* data) override;
 
   /*
@@ -94,7 +94,7 @@ public:
   * @return void
   */
   virtual void
-  setIndexBuffer(WeakPtr<Indexbuffer> buffer) override;
+  setIndexBuffer(WeakPtr<IndexBuffer> buffer) override;
 
   /*
   * @brief
