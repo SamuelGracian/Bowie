@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <filesystem>
 
 using namespace bowEngineSDK;
 
@@ -31,15 +32,34 @@ struct MoveVertex
 
 String
 readFileToString(const std::wstring& _filePath) {
-  std::ifstream file (_filePath, std::ios::in | std::ios::binary);
+  const std::filesystem::path filePath(_filePath);
+  const std::filesystem::path absolutePath =
+    std::filesystem::absolute(filePath);
+
+  std::ifstream file(absolutePath, std::ios::in | std::ios::binary);
 
   if (!file.is_open()) {
-    std::cout << "unable  to open file" << std::endl;
-    return "";
+    std::wcerr
+      << L"Unable to open file: "
+      << absolutePath.wstring()
+      << L"\nCurrent working directory: "
+      << std::filesystem::current_path().wstring()
+      << L"\n";
+
+    return {};
   }
+
   std::stringstream buffer;
   buffer << file.rdbuf();
-  file.close();
+
+  if (file.fail() && !file.eof()) {
+    std::wcerr
+      << L"Error while reading file: "
+      << absolutePath.wstring()
+      << L"\n";
+
+    return {};
+  }
 
   return buffer.str();
 }
@@ -83,15 +103,13 @@ int main() {
   }
 
   SPtr<PixelShader> p_pixelShader = grapi.createPixelShader(
-                                          readFileToString(L"Shaders.fxh"),
-                                          "PShader", defines);
+    readFileToString(L"RawData/Shaders.fxh"),"PShader", defines);
 
   SPtr<PixelShader> p_pixelShader1 = grapi.createPixelShader(
-                                           readFileToString(L"PixelShader.fxh"),
-                                           "PShader", defines);
+    readFileToString(L"RawData/PixelShader.fxh"),"PShader", defines);
 
   SPtr<VertexShader> p_vertexShader = grapi.createVertexShader(
-    readFileToString(L"VertexShader.fxh"), "VShader", defines);
+    readFileToString(L"RawData/VertexShader.fxh"), "VShader", defines);
 
   auto swapChain = grapi.createSwapChain(window,
                                          TEXTURE_FORMAT::R8G8B8A8_UNORM);
@@ -117,7 +135,7 @@ int main() {
   cameraData.cameraPosition = Eye;
   cameraData.Shininess = 2;
 
-
+  /// CUBE OBJECTS
   Vector<SimpleVertex> cubeVertices {
     // Front
     // Normal (0,0,1)
@@ -301,6 +319,15 @@ int main() {
   p_vertexBuffer = grapi.createVertexBuffer(sizeof(SimpleVertex) *
                                             static_cast<uint32>(cubeVertices.size()),
                                             cubeVertices.data());
+
+  /// RASTERIZER STATE
+  SPtr<RasterizerState> p_rasterizer = nullptr;
+  p_rasterizer = grapi.createRasterizerState(CULL_MODE::CULL_BACK,
+                                             FILL_MODE::FILL_SOLID, true);
+  if (!p_rasterizer)     {
+    std::cout << "Failed to create rasterizer state" << std::endl;
+    return -1;
+  }
 
   while (running) {
     window->processMessages();

@@ -880,12 +880,20 @@ Dx11GraphicsAPI::createPixelShader(const String& _shaderCode,
   ID3D11PixelShader* resultShader = nullptr;
   SPtr<Dx11PixelShader> shaderPtr = nullptr;
 
+  if (m_device == nullptr) {
+    std::cout << 
+      "createPixelShader function, error m_device = nullptr" << std::endl;
+    return nullptr;
+  }
+
+  m_shaderModel = ps_5_0;
+
   binaryBlob = compileShaderInternal(_shaderCode, _entryPoint, _defines,
                                      SHADER_TYPE::PIXEL_SHADER);
 
-  if (binaryBlob == nullptr || m_device == nullptr) {
+  if (binaryBlob == nullptr) {
     std::cout <<
-      "createPixelShader function, binary blob = nullptr, or device = nullptr" <<
+      "createPixelShader function, binary blob = nullptr" <<
       std::endl;
     return nullptr;
   }
