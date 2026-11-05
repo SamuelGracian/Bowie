@@ -1,5 +1,8 @@
 #include "bowWindow.h"
 #include "bowDx11GraphicsAPI.h"
+#include "bowMatrix.h"
+#include "bowVector4.h"
+#include "bowVector3.h"
 
 using namespace bowEngineSDK;
 
@@ -22,6 +25,24 @@ struct MoveVertex
   float c;
   float d;
 };
+
+struct SimpleVertex
+{
+  Vector4 position;
+  Vector4 normals;
+  Vector4 tangent;
+  Vector4 binormals;
+  Vector4 texture;
+
+  SimpleVertex(
+    Vector4& pos,
+    Vector4& normal,
+    Vector4& tan,
+    Vector4& binormal,
+    Vector4& tex)
+    : position(pos), normals(normal), tangent(tan), binormals(binormal),
+    texture(tex) {}
+};/// Simple vertex struct
 
 int main() {
   //bowEngineSDK::DisplaySurface window;
@@ -62,7 +83,7 @@ int main() {
   }
 
   /// Render target view
-  auto renderTV = swapChain->getRenderTargetView();
+  SPtr<RenderTargetView> renderTV = swapChain->getRenderTargetView();
  
   if (!renderTV) {
     std::cout << "Failed to create render target view " << std::endl;
@@ -71,7 +92,7 @@ int main() {
   ///const buffer for camera
   float amplitude = 0.0f;
   MoveVertex moveData = { 1.0, amplitude, 1.0f,1.0 };
-  GeneralConstBuffer cameraData;
+  //GeneralConstBuffer cameraData;
   //cameraData.View = view
 
   while (running) {

@@ -5,6 +5,24 @@
 
 namespace bowEngineSDK
 {
+class Vector3;
+class Vector4;
+class DisplaySurface;
+class SwapChain;
+class ConstBuffer;
+class Indexbuffer;
+class VertexBuffer;
+class Topology;
+class DepthStencilView;
+class PixelShader;
+class VertexShader;
+class ViewPort;
+class Texture2D;
+class SamplerState;
+class Matrix4;
+class RenderTargetView;
+class RasterizerState;
+
 class BOW_PLUGIN_EXPORT Dx11GraphicsAPI final : public GraphicsAPI
 {
 public:
@@ -20,13 +38,13 @@ public:
   * @param WeakPtr<DisplaySurface> windowHandler
   * @return bool
   */
-  virtual bool
+  bool
   init(WeakPtr<DisplaySurface> handlewindow) override;
 
   void
   cleanUpResources() override;
 
-  virtual void
+  void
   draw(uint32 _vertexCount, uint32 _startVertexLocation) override;
 
   /*
@@ -35,7 +53,7 @@ public:
   * @param WeakPtr<DisplaySurface> windowHandler, TEXTURE_FORMAT format
   * @return SharedPtr<SwapChain>
   */
-  virtual SPtr<SwapChain>
+  SPtr<SwapChain>
   createSwapChain(WeakPtr<DisplaySurface> _windowHandler,
                   TEXTURE_FORMAT::E _format) override;
 
@@ -45,7 +63,7 @@ public:
   * @param const uint32 byteWith, const uint32 slot
   * @return
   */
-  virtual SPtr<ConstBuffer>
+  SPtr<ConstBuffer>
   createConstBuffer(const uint32 byteWitdh,
                     const uint32 slot) override;
 
@@ -55,7 +73,7 @@ public:
   * @param uint32 bytewidth, void* data
   * @return sharedPtr<IndexBuffer>.
   */
-  virtual SPtr<Indexbuffer>
+  SPtr<Indexbuffer>
   createIndexBuffer(const uint32 _byteWidth, void* data) override;
 
   /*
@@ -64,7 +82,7 @@ public:
   * @param uint32 byteWidth, const void* data
   * @return shared ptr <VertexBuffer>
   */
-  virtual SPtr<VertexBuffer>
+  SPtr<VertexBuffer>
   createVertexBuffer(const uint32 _byteWidth, const void* _vertices) override;
 
   /*
@@ -73,8 +91,8 @@ public:
   * @param weaKPtr<ConstBuffer>, void* data
   * @return void.
   */
-  virtual void
-  setConstBuffer(WeakPtr<ConstBuffer> buffer, void* _data) override;
+  void
+  setConstBuffer(WeakPtr<ConstBuffer> buffer) override;
 
 
   /*
@@ -83,7 +101,7 @@ public:
   * @param WeakPtr<VertexBuffer>
   * @return none 
   */
-  virtual void
+  void
   setVertexBuffer(WeakPtr<VertexBuffer> _buffer, uint32 _stride,
                   uint32 _offset) override;
 
@@ -93,7 +111,7 @@ public:
   * @param weakPtr <IndexBuffer>
   * @return void
   */
-  virtual void
+  void
   setIndexBuffer(WeakPtr<Indexbuffer> buffer) override;
 
   /*
@@ -102,7 +120,7 @@ public:
   * @param weakPtr <constBUffer>, const uint32 byteWidth.
   * @return void
   */
-  virtual void
+  void
   updateConstBuffer(WeakPtr<ConstBuffer> buffer, const uint32 byteWitdth,
                     void* data = nullptr) override;
 
@@ -113,8 +131,8 @@ public:
   * @param TOPOLOGY::TYPE
   * @return SharedPtr Topology
   */
-  virtual SPtr<Topology>
-  createTopology(Topology::Type _type) override;
+  SPtr<Topology>
+  createTopology(TOPOLOGY_TYPE::E _type) override;
 
   /*
   * @brief
@@ -122,7 +140,7 @@ public:
   * @param WeakPtr<Topology> topology.
   * @return none
   */
-  virtual void
+  void
   setTopology(WeakPtr<Topology> _topology) override;
 
   /*
@@ -131,28 +149,31 @@ public:
   * @param uint32 width, uint32 height, const TEXTURE_FORMAT format
   * @return SharedPtr<DepthStencilView>
   */
-  virtual SPtr<DepthStencilView>
+  SPtr<DepthStencilView>
   createDepthStencil(uint32 _width, uint32 _height,
                      const TEXTURE_FORMAT::E _format) override;
 
 
-  virtual SPtr <ViewPort> /// TO DO: create an actual implementation for the view port
-  createViewPort()override;
+  SPtr <ViewPort> /// TO DO: create an actual implementation for the view port
+  createViewPort(float width, float height, float minDepth, float maxDepth,
+                 float topLeftX, float topLeftY)override;
 
+  bool
+  setViewPort(WeakPtr<ViewPort> _viewPort) override;
 
-  virtual SPtr<VertexShader>
+  SPtr<VertexShader>
   createVertexShader(const String& _shaderCode, const String& _entryPoint,
-                     Vector<String> _defines) override;
+                     Vector<String>& _defines, uint32 _shaderModel) override;
 
-  virtual void
+  void
   setVertexShader(WeakPtr<VertexShader> _shader) override;
 
 
-  virtual SPtr<PixelShader>
+  SPtr<PixelShader>
   createPixelShader(const String& _shaderCode, const String& _entryPoint,
-                    Vector<String> _defines) override;
+                    Vector<String>& _defines, uint32 _shaderModel) override;
 
-  virtual void
+  void
   setPixelShader(WeakPtr<PixelShader> _shader) override;
 
   SPtr<Texture2D>
@@ -187,32 +208,51 @@ public:
 
   void
   clearDepthStencilView(WeakPtr<DepthStencilView> _depthStencil,
-                        DepthStencilView::ClearFlags _flag,
+                        ClearFlags::E _flag,
                           float _depth, uint8 _stencil) override;
 
 
-  virtual SPtr <SamplerState>
+  SPtr <SamplerState>
   createSamplerState() override;
 
-  virtual void
+  void
   setSamplerState(uint32 _slot, WeakPtr<SamplerState> _sampler) override;
 
-  virtual SPtr<DepthStencilView>
+  SPtr<DepthStencilView>
   createShadowMap(uint32 _width, uint32 _height) override;
 
-  virtual bool
+  bool
   readShadowMap(WeakPtr<DepthStencilView> _shadowDepth,
                 Vector<float>& outDepth) override;
 
-  virtual void
+  /*
+  * @brief
+  *  Sets the texture for the shadowmap.
+  * @param uint32 slot, WeaKptr mapTexture.
+  * @reutn none 
+  */
+  void
   setShadowMap(uint32 _slot, WeakPtr<Texture2D> _mapTexture) override;
 
-  virtual bool
+  /*
+  * @brief
+  *  Checks if a pixel is being occluded to decide to draw it or no.
+  * @param WeakPtr<DepthStencilView> shadowDepth, Vector3 worldPos,
+  *  Matrix4 shadowView, Matrix4 shadowProjection, float bias.
+  * @return bool
+  */
+  bool
   isOccluded(WeakPtr<DepthStencilView> _shadowDepth, const Vector3& worldPos,
              const Matrix4& _shadowView, const Matrix4 _shadowProjection,
              float bias) override;
 
-  virtual void
+  /*
+  * @brief
+  *  Reads the shadow map from a depth view.
+  * @param uint32 slot, WeakPtr<DepthStencil> shadowmap
+  * @return none
+  */
+  void
   setShadowMapFromDepthView(uint32 _slot,
                             WeakPtr<DepthStencilView> _shadowDepth) override;
 
@@ -272,14 +312,15 @@ public:
 
   ID3DBlob*
   compileShaderInternal(const String& _shaderCode, const String& _entryPoint,
-                        Vector<String> _defines, SHADER_TYPE::E _shaderType);
+                        Vector<String> _defines, SHADER_TYPE::E _shaderType,
+                        uint32 _shaderModel);
   
   /*
-* @brief
-*  Creates an input layout.
-* @param ID3D10ShaderReflection
-* @return   Vector<D3D11_INPUT_ELEMENT_DESC>
-*/
+  * @brief
+  *  Creates an input layout.
+  * @param ID3D10ShaderReflection
+  * @return   Vector<D3D11_INPUT_ELEMENT_DESC>
+  */
   Vector<D3D11_INPUT_ELEMENT_DESC>
   createInputLayoutInternal(ID3D11ShaderReflection* _reflection) const;
 
@@ -289,7 +330,7 @@ public:
   *   shader type and shader model.
   * @return const char*
   */
-  const char*
+  const ANISCHAR*
   getShaderModelInternal(SHADER_TYPE::E _shaderType, uint32 _shaderModel) const;
 
   /*

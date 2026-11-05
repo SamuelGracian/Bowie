@@ -5,17 +5,11 @@
 namespace bowEngineSDK
 {
 
-class DepthStencilView
-{
- public:
-  enum ClearFlags : uint8
+  class DepthStencilView
   {
-    Depth = 1,
-    Stencil = 2
+  public:
+    DepthStencilView() = default;
+    ~DepthStencilView() = default;
   };
-
-  DepthStencilView() = default;
-  ~DepthStencilView() = default;
-};
-
+  
 }/// namespace bowEngineSDK

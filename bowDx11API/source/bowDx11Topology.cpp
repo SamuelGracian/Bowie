@@ -6,19 +6,19 @@ Dx11Topology::Dx11Topology()
   : dx11Topology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST) {
   switch (m_type) {
 
-  case Topology::Type::TriangleList:
+  case TOPOLOGY_TYPE::TriangleList:
     dx11Topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
     break;
 
-  case Topology::Type::TriangleStrip:
+  case TOPOLOGY_TYPE::TriangleStrip:
     dx11Topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
     break;
 
-  case Topology::Type::LineList:
+  case TOPOLOGY_TYPE::LineList:
     dx11Topology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
     break;
 
-  case Topology::Type::PointList:
+  case TOPOLOGY_TYPE::PointList:
     dx11Topology = D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;
     break;
 

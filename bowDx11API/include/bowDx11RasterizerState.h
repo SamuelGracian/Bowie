@@ -7,6 +7,8 @@ namespace bowEngineSDK
 {
 class Dx11RasterizerState : public RasterizerState
 {
+  friend class Dx11GraphicsAPI;
+
  public:
   Dx11RasterizerState ()
     : rasterizer(nullptr),

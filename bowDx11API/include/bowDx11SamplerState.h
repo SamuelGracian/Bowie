@@ -11,7 +11,9 @@ class Dx11SamplerState : public SamplerState
 	Dx11SamplerState() : samplerState(nullptr) {}
 
 	~Dx11SamplerState() {
-		if (samplerState) safeRelease(samplerState);
+		if (samplerState) {
+			safeRelease(samplerState);
+		}
 	}
 
 	ID3D11SamplerState* samplerState;

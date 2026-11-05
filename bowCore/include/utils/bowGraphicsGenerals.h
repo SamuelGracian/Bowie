@@ -23,9 +23,10 @@ enum E
   R32G32B32A32_FLOAT,
   R32_UINT,
 };
+ using textureFormat = E;
 }/// namespace TEXTURE_FORMAT
 
-namespace GAPI_BIND_FLAGS //teture bind flags
+namespace GRAPHICS_API_BIND_FLAGS //teture bind flags
 {
 enum E
 {
@@ -36,7 +37,8 @@ enum E
   RENDER_TARGET = (1 << 4),
   DEPTH_STENCIL = (1 << 5)
 };
-}/// namespace GAPI_BIND_FLAGS
+ using gapiBindFlags = E;
+}/// namespace GRAPHICS_API_BIND_FLAGS
 
 namespace SHADER_TYPE
 {
@@ -85,7 +87,7 @@ namespace TEXTURE_CREATE_INFO
 struct E
 {
   TEXTURE_TYPE::E type = TEXTURE_TYPE::Texture2D;
-  TEXTURE_FORMAT::E format = TEXTURE_FORMAT::R8G8B8A8_UNORM;
+  TEXTURE_FORMAT::textureFormat format = TEXTURE_FORMAT::R8G8B8A8_UNORM;
   uint32 width;
   uint32 height;
   uint32 depth;
@@ -93,4 +95,26 @@ struct E
 };
 }///namespace TEXTURE_CREATE_INFO
 
+/*
+* @brief
+*  Depth Stencil View clear flags
+*/
+namespace ClearFlags
+{
+enum E : uint8
+{
+  Depth = 1,
+  Stencil = 2
+};
+}/// namespace DSV_FLAGS
+namespace TOPOLOGY_TYPE
+{
+enum E : uint32
+{
+  TriangleList = 0,
+  TriangleStrip,
+  LineList,
+  PointList
+};
+}/// namespate TOPOLOGY_TYPE
 }/// namespace bowEngineSDK

@@ -22,11 +22,11 @@ class BaseBuffer
 
   void 
   setByteWidth(const uint32 bytewidth = 0) {
-    assert(bytewidth != 0);
+    BOW_ASSERT(bytewidth != 0);
     m_byteWidth = bytewidth;
   }
 
-  FORCEINLINE uint32
+  FORCEINLINE NODISCARD uint32
   getByteWidth() const { return m_byteWidth; }
 
  protected:
