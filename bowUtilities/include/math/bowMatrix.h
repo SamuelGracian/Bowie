@@ -4,8 +4,8 @@
  * @author Samuel G
  * @date 24/09/2026
  *
- * Coordinates being X = front, Z = up, Y = right
- *
+ * Coordinates being X = right, Z = backward, Y = up
+ *  Right handed matrix
  */
  /************************************************************************/
 #pragma once
@@ -41,8 +41,6 @@ public:
           float M10, float M11, float M12, float M13,
           float M20, float M21, float M22, float M23,
           float M30, float M31, float M32, float M33);
-
-  Matrix4(Vector4 column0, Vector4 column1, Vector4 column2, Vector4 column3);
 
   /*
   * @brief
@@ -127,19 +125,17 @@ public:
   * @return
   */
   NODISCARD static Matrix4
-  lookAt(const Vector3& _at, const Vector3& _eye, const Vector3& _up,
-         float _handenes);
+  lookAt(const Vector3& _at, const Vector3& _eye, const Vector3& _up);
 
   /*
   * @brief
   *  Creates a 4x4 perspective matrix.
   * @param float field of view, float aspect ratio, float near plane location,
   * float far plane location, float handedness
-  * @return
+  * @return Matrix4
   */
   NODISCARD static Matrix4
-  persepctive(float _foV, float _aspect, float _zNear, float _zFar,
-              float _handedness);
+  perspective(float _foV, float _aspect, float _zNear, float _zFar);
 
   /********************************************/
   /*  OPERATORS  */

@@ -886,8 +886,6 @@ Dx11GraphicsAPI::createPixelShader(const String& _shaderCode,
     return nullptr;
   }
 
-  m_shaderModel = ps_5_0;
-
   binaryBlob = compileShaderInternal(_shaderCode, _entryPoint, _defines,
                                      SHADER_TYPE::PIXEL_SHADER);
 

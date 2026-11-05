@@ -68,7 +68,6 @@ int main() {
   //bowEngineSDK::DisplaySurface window;
 
   bool running = true;
-  float handenes = -1.0f; /// 1.0 for right handed, -1.0 left handed
   float width = 800;
   float height = 600;
 
@@ -78,10 +77,10 @@ int main() {
   Vector3 Up(0.0f, 1.0f, 0.0f);
 
 
-  Matrix4 view = Matrix4::lookAt(At, Eye, Up, handenes);
-  Matrix4 perspective = Matrix4::persepctive(Math::PI / 4.0f,
-                                             (float) width / (float)height,
-                                             0.01f,1000.0f, handenes);
+  Matrix4 view = Matrix4::lookAt(At, Eye, Up);
+  Matrix4 perspective = Matrix4::perspective(Math::PI / 4.0f,
+                                             width / height,
+                                             0.01f,1000.0f);
 
   auto window = std::make_shared<DisplaySurface>();
 
