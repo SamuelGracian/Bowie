@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <filesystem>
+#include <chrono>
 
 #include "bowDx11GraphicsAPI.h"
 #include "bowDx11RenderTargetView.h"
@@ -88,11 +89,19 @@ readFileToString(const std::wstring& _filePath) {
 }
 
 int main() {
-  //bowEngineSDK::DisplaySurface window;
-
+  
+  /// VARIABLES
   bool running = true;
+  /* WINDOW */
   float width = 800;
   float height = 600;
+  /* DELTA TIME */
+  auto pre = std::chrono::high_resolution_clock::now();
+  float time = 0.0f;
+  /* COLORS */
+  float clearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+  float normalClearColor[4] = {0.5f, 0.5f, 1.0f, 0.0f};
+  float specularClearColor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 
   /// Cameras
   Vector3 Eye(150.0f, 150.0f, 500.0f);
@@ -118,12 +127,14 @@ int main() {
 
   GraphicsAPI& grapi = GraphicsAPI::instance();
 
+  /// WINDOW
   if (!grapi.init(window)) {
     GraphicsAPI::shutDown();
     std::cout << "Failed to init grapi" << std::endl;
     return -1;
   }
 
+  /// SHADERS
   if (SPtr<PixelShader> p_pixelShader = grapi.createPixelShader(
     readFileToString(L"RawData/Shaders.fxh"), "PShader", defines, 4)) {
     std::cout << "Shader Created " << std::endl;
@@ -135,6 +146,7 @@ int main() {
   SPtr<VertexShader> p_vertexShader = grapi.createVertexShader(
     readFileToString(L"RawData/VertexShader.fxh"), "VShader", defines, 4);
 
+  /// SWAP CHAIN
   SPtr<SwapChain> swapChain = grapi.createSwapChain(window,
                                          TEXTURE_FORMAT::R8G8B8A8_UNORM);
 
@@ -146,22 +158,38 @@ int main() {
   }
 
   /// Render target view
-  SPtr<RenderTargetView> renderTV = swapChain->getRenderTargetView();
- 
-  if (!renderTV) {
-    std::cout << "Failed to create render target view " << std::endl;
-  }
+  Vector<SPtr<RenderTargetView>> gRenderTVS; /// Buffer to save render target views
+
+  auto normalRTV = grapi.createRenderTargetView(window->getClientWidth(),
+                                                window->getClientHeight(),
+                                                TEXTURE_FORMAT::R8G8B8A8_UNORM);
+
+  auto colorRTV = grapi.createRenderTargetView(window->getClientWidth(),
+                                               window->getClientHeight(),
+                                               TEXTURE_FORMAT::R8G8B8A8_UNORM);
+  
+  auto specularRTV = grapi.createRenderTargetView(window->getClientWidth(),
+                                                  window->getClientHeight(),
+                                                  TEXTURE_FORMAT::R8G8B8A8_UNORM);
+
+  gRenderTVS.push_back(normalRTV);
+  gRenderTVS.push_back(colorRTV);
+  gRenderTVS.push_back(specularRTV);
 
   ///const buffer for camera
-  //float amplitude = 0.0f;
-  //MoveVertex moveData = { 1.0, amplitude, 1.0f,1.0 };
-  //GeneralConstBuffer cameraData;
-  //cameraData.View = view
+  float amplitude = 0.0f;
+  MoveVertex moveData = { 1.0, amplitude, 1.0f,1.0 };
+  GeneralConstBuffer cameraData;
+  cameraData.View = view;
   GeneralConstBuffer cameraData;
   cameraData.View = view;
   cameraData.Perspective = perspective;
   cameraData.cameraPosition = Eye;
   cameraData.Shininess = 2;
+
+  SPtr<ConstBuffer> p_constBufferCamera = 
+    grapi.createConstBuffer(sizeof(GeneralConstBuffer),
+                            0);
 
   /// CUBE OBJECTS
   Vector<SimpleVertex> cubeVertices {
@@ -364,6 +392,21 @@ int main() {
 
   while (running) {
     window->processMessages();
+
+    /// DELTA TIME 
+    auto now = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<float> elapsed = now - pre;
+    pre = now;
+
+    float deltaTime = elapsed.count();
+    time += deltaTime;
+
+    ////////////////
+
+    grapi.updateConstBuffer(p_constBufferCamera, sizeof(GeneralConstBuffer), &cameraData);
+
+    grapi.setRenderTargetViews(gRenderTVS,);
+
   }
   grapi.cleanUpResources();
   GraphicsAPI::shutDown();
