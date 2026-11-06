@@ -204,7 +204,8 @@ public:
   /// texture
 
   virtual SPtr<Texture2D>
-  createTexture2DWithImageData(const Vector<uint8>& _imgData, int32 _witdh,
+  createTexture2DWithImageData(const Vector<uint8>& _imgData,
+                               int32 _witdh,
                                int32 _height) = 0;
 
   SPtr<Texture2D>
