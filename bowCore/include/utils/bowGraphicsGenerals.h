@@ -82,9 +82,7 @@ enum E
 }/// namespace TEXTURE_TYPE
 
 
-namespace TEXTURE_CREATE_INFO
-{
-struct E
+struct TEXTURE_CREATE_INFO
 {
   TEXTURE_TYPE::E type = TEXTURE_TYPE::Texture2D;
   TEXTURE_FORMAT::textureFormat format = TEXTURE_FORMAT::R8G8B8A8_UNORM;
@@ -92,8 +90,8 @@ struct E
   uint32 height;
   uint32 depth;
   uint32 mipLvl;
-};
-}///namespace TEXTURE_CREATE_INFO
+};///struct TEXTURE_CREATE_INFO
+
 
 /*
 * @brief

@@ -22,7 +22,10 @@ class ConstBuffer : public BaseBuffer
    * @brief
    *  Default constructor.
    */
-   ConstBuffer() = default;
+   ConstBuffer(uint32 _byteWidth, uint32 _slot)
+     : BaseBuffer(_byteWidth),
+       m_slot(_slot)
+   {}
 
    /*
    * @brief

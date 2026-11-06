@@ -451,19 +451,10 @@ Dx11GraphicsAPI::init(WeakPtr<DisplaySurface>windowHandler) {
   }
 
   IDXGIAdapter1* selectedAdapter = nullptr;
+  IDXGIAdapter1* adapter = nullptr;
+  SIZE_T bestDedicatedVideoMemory = 0;
 
-  for (uint32 i = 0; ; ++i) {
-    IDXGIAdapter1* adapter = nullptr;
-
-    hr = dxgiFactory->EnumAdapters1(i, &adapter);
-
-    if (hr == DXGI_ERROR_NOT_FOUND) {
-      break;
-    }
-
-    if (FAILED(hr)) {
-      continue;
-    }
+  for (uint32 i = 0; SUCCEEDED(dxgiFactory->EnumAdapters1(i, &adapter)); ++i) {
 
     DXGI_ADAPTER_DESC1 desc = {};
     adapter->GetDesc1(&desc);
@@ -473,17 +464,20 @@ Dx11GraphicsAPI::init(WeakPtr<DisplaySurface>windowHandler) {
       continue;
     }
 
-    std::wstring adapterName(desc.Description); /// STRING?
+    if (desc.DedicatedVideoMemory > bestDedicatedVideoMemory) {
+      bestDedicatedVideoMemory = desc.DedicatedVideoMemory;
 
-    if (adapterName.find(L"NVIDIA") != std::wstring::npos) {
+      if (nullptr != selectedAdapter) {
+        selectedAdapter->Release();
+      }
       selectedAdapter = adapter;
-
-      break;
     }
-
+    else {
+      adapter->Release();
+    }
+    
     adapter->Release();
   }
-
 
   D3D_FEATURE_LEVEL resultFeatureLevel = {};
 
@@ -604,7 +598,7 @@ Dx11GraphicsAPI::createSwapChain(WeakPtr<DisplaySurface>_windowHandler,
 
 SPtr<ConstBuffer>
 Dx11GraphicsAPI::createConstBuffer(const uint32 _byteWidth,
-                             const uint32 slot) {
+                             const uint32 _slot) {
   ID3D11Buffer* Rawbuffer = nullptr;
   D3D11_BUFFER_DESC bd = {};
   if (_byteWidth != 0) {
@@ -615,13 +609,9 @@ Dx11GraphicsAPI::createConstBuffer(const uint32 _byteWidth,
   }
 
   if (SUCCEEDED((m_device->CreateBuffer(&bd, nullptr, &Rawbuffer))))
-
   {
-    auto buffer = std::make_shared<Dx11ConstBuffer>();
+    SPtr<Dx11ConstBuffer> buffer = std::make_shared<Dx11ConstBuffer>(_byteWidth, _slot);
     buffer->m_buffer = Rawbuffer;
-    buffer->setByteWidth(_byteWidth);
-    buffer->setSlot(slot);
-
     //ASSIGN_DEBUG_NAME(buffer.get(), Rawbuffer);
     return buffer;
   }
@@ -728,7 +718,7 @@ Dx11GraphicsAPI::updateConstBuffer(WeakPtr<ConstBuffer>_buffer,
   if (pbuffer == nullptr || pbuffer->m_buffer == nullptr || pbuffer->getByteWidth() != _byteWidth) {
     return;
   }
-
+  /// To do: update const buffer bytewidth 
   m_immediateContext->UpdateSubresource(pbuffer->m_buffer, 0, nullptr, _data, 0, 0);
 }
 
@@ -877,31 +867,35 @@ Dx11GraphicsAPI::createVertexShader(const String& _shaderCode,
 
   SPtr<Dx11VertexShader>resultVShader = nullptr;
 
-  if (binaryBlob != nullptr && m_device != nullptr) {
-    if (SUCCEEDED(D3DReflect(binaryBlob->GetBufferPointer(),
-                             binaryBlob->GetBufferSize(),
-                             IID_ID3D11ShaderReflection,
-                             (void**)&shaderReflection))) {
-
-      const auto desc = createInputLayoutInternal(shaderReflection);
-
-      const uint32 numElements = static_cast<UINT>(desc.size());
-
-      if (desc.empty()) {
-        if (SUCCEEDED(m_device->CreateVertexShader(binaryBlob->GetBufferPointer(),
-                                                   binaryBlob->GetBufferSize(),
-                                                   nullptr, &resultShader)) &&
-            SUCCEEDED(m_device->CreateInputLayout(desc.data(), numElements,
-                                                  binaryBlob->GetBufferPointer(),
-                                                  binaryBlob->GetBufferSize(),
-                                                  &resultLayout))) {
-          resultVShader = std::make_shared<Dx11VertexShader>();
-          resultVShader->m_shader = resultShader;
-          resultVShader->m_InputLayout = resultLayout;
-        }
-      }
-    }
+  if (binaryBlob == nullptr && m_device == nullptr) {
+    return nullptr;
   }
+
+  if (!SUCCEEDED(D3DReflect(binaryBlob->GetBufferPointer(),
+                            binaryBlob->GetBufferSize(),
+                            IID_ID3D11ShaderReflection,
+                            (void**)&shaderReflection))) {
+    return nullptr;
+  }
+  const Vector<D3D11_INPUT_ELEMENT_DESC> desc = createInputLayoutInternal(shaderReflection);
+
+  const uint32 numElements = static_cast<UINT>(desc.size());
+
+  if (!desc.empty()) {
+    if (SUCCEEDED(m_device->CreateVertexShader(binaryBlob->GetBufferPointer(),
+                                               binaryBlob->GetBufferSize(),
+                                               nullptr, &resultShader)) &&
+        SUCCEEDED(m_device->CreateInputLayout(desc.data(), numElements,
+                                              binaryBlob->GetBufferPointer(),
+                                              binaryBlob->GetBufferSize(),
+                                              &resultLayout))) {
+      resultVShader = std::make_shared<Dx11VertexShader>();
+      resultVShader->m_shader = resultShader;
+      resultVShader->m_InputLayout = resultLayout;
+    }
+  
+  }
+  
   safeRelease(shaderReflection);
   safeRelease(binaryBlob);
   return resultVShader;

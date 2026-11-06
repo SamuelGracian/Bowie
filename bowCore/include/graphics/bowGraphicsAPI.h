@@ -205,7 +205,7 @@ public:
 
   virtual SPtr<Texture2D>
   createTexture2DWithImageData(const Vector<uint8>& _imgData, int32 _witdh,
-                  int32 _height) = 0;
+                               int32 _height) = 0;
 
   SPtr<Texture2D>
   createTexture2DFromFile(const String& _filePath);
@@ -215,8 +215,8 @@ public:
 
   /// rasterizer state
   virtual SPtr<RasterizerState>
-   createRasterizerState(CULL_MODE::E _cullMode, FILL_MODE::E _fillMode,
-                         bool _deathClip) = 0;
+  createRasterizerState(CULL_MODE::E _cullMode, FILL_MODE::E _fillMode,
+                        bool _deathClip) = 0;
 
   virtual void
   setRasterizerState(WeakPtr<RasterizerState> _rasterizer) = 0;
@@ -228,8 +228,8 @@ public:
                          TEXTURE_FORMAT::E _format) = 0;
 
   virtual void
-   setRenderTargetView(WeakPtr<RenderTargetView> _renderTarget,
-                       WeakPtr<DepthStencilView> _deptStencill) = 0;
+  setRenderTargetView(WeakPtr<RenderTargetView> _renderTarget,
+                      WeakPtr<DepthStencilView> _deptStencill) = 0;
 
   virtual void
   setRenderTargetViews(Vector<WeakPtr<RenderTargetView>>& _renderTargets,
