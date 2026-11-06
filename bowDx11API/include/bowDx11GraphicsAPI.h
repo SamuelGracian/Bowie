@@ -10,7 +10,7 @@ class Vector4;
 class DisplaySurface;
 class SwapChain;
 class ConstBuffer;
-class Indexbuffer;
+class IndexBuffer;
 class VertexBuffer;
 class Topology;
 class DepthStencilView;
@@ -112,7 +112,7 @@ public:
   * @return void
   */
   void
-  setIndexBuffer(WeakPtr<Indexbuffer> buffer) override;
+  setIndexBuffer(WeakPtr<IndexBuffer> buffer) override;
 
   /*
   * @brief

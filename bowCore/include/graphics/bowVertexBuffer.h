@@ -21,7 +21,11 @@ class VertexBuffer : public BaseBuffer
    * @brief
    *  Default constructor.
    */
-   VertexBuffer() = default;
+   VertexBuffer(uint32 _byteWidth)
+     : BaseBuffer(_byteWidth)
+   {
+     BOW_ASSERT(m_byteWidth != 0);
+   }
 
    /*
    * @brief

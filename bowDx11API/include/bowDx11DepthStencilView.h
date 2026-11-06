@@ -16,7 +16,6 @@ class Dx11DepthStencilView : public DepthStencilView
  
   ~Dx11DepthStencilView() = default;
 
-
   static uint32
   getClearFlagsDx11(const ClearFlags::E _flags);
 

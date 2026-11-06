@@ -624,7 +624,7 @@ Dx11GraphicsAPI::createIndexBuffer(const uint32 _byteWidth, void* _data) {
   D3D11_BUFFER_DESC bd = {};
   ID3D11Buffer* Rawbuffer = nullptr;
   D3D11_SUBRESOURCE_DATA InitData = {};
-  auto ResultBuffer = std::make_shared<Dx11IndexBuffer>();
+  SPtr<Dx11IndexBuffer> ResultBuffer = std::make_shared<Dx11IndexBuffer>();
 
   bd.Usage = D3D11_USAGE_DEFAULT;
   bd.ByteWidth = _byteWidth;
@@ -693,7 +693,7 @@ Dx11GraphicsAPI::setVertexBuffer(WeakPtr<VertexBuffer>_buffer, uint32 _stride,
 }
 
 void
-Dx11GraphicsAPI::setIndexBuffer(WeakPtr<Indexbuffer>buffer) {
+Dx11GraphicsAPI::setIndexBuffer(WeakPtr<IndexBuffer>buffer) {
   if (m_immediateContext == nullptr || buffer.expired()) {
     return;
   }

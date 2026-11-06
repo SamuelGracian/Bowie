@@ -25,7 +25,7 @@ class BaseBuffer
 
   ~BaseBuffer() = default;
 
-  FORCEINLINE NODISCARD uint32
+  NODISCARD FORCEINLINE uint32
   getByteWidth() const { return m_byteWidth; }
 
  protected:

@@ -22,7 +22,11 @@ class IndexBuffer :public BaseBuffer
    * @brief
    *  Default constructor
    */
-   IndexBuffer() = default;
+   IndexBuffer(uint32 _byteWidth)
+     : BaseBuffer(_byteWidth) 
+   {
+     BOW_ASSERT(m_byteWidth != 0);
+   }
 
    /*
    * @brief

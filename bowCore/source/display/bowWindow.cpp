@@ -3,7 +3,7 @@
 
 #if BOW_PLATFORM == BOW_PLATFORM_WIN32
 #include <iostream>
-#include <Windows.h>
+#include <windows.h>
 #endif
 
 namespace bowEngineSDK

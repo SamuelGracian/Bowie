@@ -186,11 +186,7 @@
  * For throw override (deprecated on c++ 11 bus vs does not have handle)
  */
 /************************************************************************/
-#if BOW_COMPILER == BOW_COMPILER_MSVC
-# define _NOEXCEPT noexcept
-#elif BOW_COMPILER == BOW_COMPILER_INTEL
-# define _NOEXCEPT noexcept
-#elif BOW_COMPILER == BOW_COMPILER_GNUC
+#if BOW_COMPILER == BOW_COMPILER_MSVC || BOW_COMPILER == BOW_COMPILER_GNUC || BOW_COMPILER == BOW_COMPILER_CLANG || BOW_COMPILER == BOW_COMPILER_INTEL
 # define _NOEXCEPT noexcept
 #else
 #define _NOEXCEPT

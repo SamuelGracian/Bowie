@@ -8,7 +8,7 @@ namespace bowEngineSDK
 class ConstBuffer;
 class DepthStencilView;
 class DisplaySurface;
-class Indexbuffer;
+class IndexBuffer;
 class Matrix4;
 class PixelShader;
 class RasterizerState;
@@ -176,14 +176,14 @@ public:
   /// Shaders
   virtual SPtr<VertexShader>
   createVertexShader(const String& _shaderCode, const String& _entryPoint,
-                     Vector<String>& _defines, uint32 _shaderModel) = 0;
+                     Vector<String>& _defines, uint32 _shaderModel = 5) = 0;
 
   virtual void
   setVertexShader(WeakPtr<VertexShader> _shader ) = 0;
 
   virtual SPtr<PixelShader>
   createPixelShader(const String& _shaderCode, const String& _entryPoint,
-                    Vector<String>& _defines, uint32 _shaderModel) = 0;
+                    Vector<String>& _defines, uint32 _shaderModel = 5) = 0;
 
   virtual void
   setPixelShader(WeakPtr<PixelShader> _shader) = 0;

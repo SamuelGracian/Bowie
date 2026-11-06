@@ -13,8 +13,9 @@ class Dx11VertexBuffer : public VertexBuffer
    * @brief
    *  Cosntructor, sets the buffer as nullptr.
    */
-  Dx11VertexBuffer ()
-    : m_buffer(nullptr)
+   Dx11VertexBuffer(uint32 _byteWidth)
+     : VertexBuffer(_byteWidth),
+       m_buffer(nullptr)
   {}
 
   /*

@@ -13,9 +13,10 @@ class Dx11IndexBuffer : public IndexBuffer
    * @brief
    *  Constructor, sets the buffer as nullptr.
    */
-   Dx11IndexBuffer()
-     : m_buffer (nullptr)
-   {}
+   Dx11IndexBuffer(uint32 _byteWidth)
+     : IndexBuffer(_byteWidth),
+       m_buffer (nullptr)
+    {}
 
    /*
    * @brief

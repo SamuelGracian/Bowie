@@ -1,14 +1,16 @@
-#include "bowWindow.h"
-#include "bowDx11GraphicsAPI.h"
-#include "bowMatrix.h"
-#include "bowVector4.h"
-#include "bowVector3.h"
-#include "bowMath.h"
-
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <filesystem>
+
+#include "bowDx11GraphicsAPI.h"
+#include "bowDx11RenderTargetView.h"
+#include "bowMath.h"
+#include "bowMatrix.h"
+#include "bowVector4.h"
+#include "bowVector3.h"
+#include "bowSwapChain.h"
+#include "bowWindow.h"
 
 using namespace bowEngineSDK;
 
@@ -39,17 +41,18 @@ struct SimpleVertex
   Vector4 normals;
   Vector4 tangent;
   Vector4 binormals;
-  Vector4 texture;
+  Vector2 texture;
 
   SimpleVertex(
-    Vector4& pos,
-    Vector4& normal,
-    Vector4& tan,
-    Vector4& binormal,
-    Vector4& tex)
+    const Vector4& pos,
+    const Vector4& normal,
+    const Vector4& tan,
+    const Vector4& binormal,
+    const Vector2& tex)
     : position(pos), normals(normal), tangent(tan), binormals(binormal),
     texture(tex) {}
 };/// Simple vertex struct
+
 String
 readFileToString(const std::wstring& _filePath) {
   const std::filesystem::path filePath(_filePath);
@@ -122,15 +125,15 @@ int main() {
   }
 
   SPtr<PixelShader> p_pixelShader = grapi.createPixelShader(
-    readFileToString(L"RawData/Shaders.fxh"),"PShader", defines);
+    readFileToString(L"RawData/Shaders.fxh"),"PShader", defines, 4);
 
   SPtr<PixelShader> p_pixelShader1 = grapi.createPixelShader(
-    readFileToString(L"RawData/PixelShader.fxh"),"PShader", defines);
+    readFileToString(L"RawData/PixelShader.fxh"),"PShader", defines, 4);
 
   SPtr<VertexShader> p_vertexShader = grapi.createVertexShader(
-    readFileToString(L"RawData/VertexShader.fxh"), "VShader", defines);
+    readFileToString(L"RawData/VertexShader.fxh"), "VShader", defines, 4);
 
-  auto swapChain = grapi.createSwapChain(window,
+  SPtr<SwapChain> swapChain = grapi.createSwapChain(window,
                                          TEXTURE_FORMAT::R8G8B8A8_UNORM);
 
   if (!swapChain) {
@@ -148,8 +151,8 @@ int main() {
   }
 
   ///const buffer for camera
-  float amplitude = 0.0f;
-  MoveVertex moveData = { 1.0, amplitude, 1.0f,1.0 };
+  //float amplitude = 0.0f;
+  //MoveVertex moveData = { 1.0, amplitude, 1.0f,1.0 };
   //GeneralConstBuffer cameraData;
   //cameraData.View = view
   GeneralConstBuffer cameraData;
