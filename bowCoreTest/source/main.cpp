@@ -99,9 +99,12 @@ int main() {
   auto pre = std::chrono::high_resolution_clock::now();
   float time = 0.0f;
   /* COLORS */
-  float clearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+  //float clearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
   float normalClearColor[4] = {0.5f, 0.5f, 1.0f, 0.0f};
-  float specularClearColor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+  float specularClearColor[4] = {0.0f, 0.0f, 0.0f, 0.0f}; 
+  float semiClearColor[4] = { 0.02f, 0.08f, 0.20f, 1.0f };
+  /* FLAG */
+  uint8 flag = ClearFlags::Depth | ClearFlags::Stencil;
 
   /// Cameras
   Vector3 Eye(150.0f, 150.0f, 500.0f);
@@ -140,13 +143,18 @@ int main() {
   }
 
   /// SHADERS
-  if (SPtr<PixelShader> p_pixelShader = grapi.createPixelShader(
-    readFileToString(L"RawData/Shaders.fxh"), "PShader", defines, 4)) {
-    std::cout << "Shader Created " << std::endl;
-  }
+  SPtr<PixelShader> p_pixelShader = grapi.createPixelShader(
+                                     readFileToString(L"RawData/Shaders.fxh"),
+                                     "PShader",
+                                     defines,
+                                     4);
+  
 
   SPtr<PixelShader> p_pixelShader1 = grapi.createPixelShader(
-    readFileToString(L"RawData/PixelShader.fxh"),"PShader", defines, 4);
+                                   readFileToString(L"RawData/PixelShader.fxh"),
+                                   "PShader",
+                                   defines,
+                                   4);
 
   SPtr<VertexShader> p_vertexShader = grapi.createVertexShader(
     readFileToString(L"RawData/VertexShader.fxh"), "VShader", defines, 4);
@@ -166,6 +174,9 @@ int main() {
     std::cout << "Failed to start swap chain" << std::endl;
     return -1;
   }
+
+  /// SAMPLER STATE
+  SPtr<SamplerState> p_sampler = grapi.createSamplerState();
 
   /// Render target view
   Vector<WeakPtr<RenderTargetView>> gRenderTVS; /// Buffer to save render target views
@@ -187,10 +198,6 @@ int main() {
   gRenderTVS.push_back(specularRTV);
 
   ///const buffer for camera
-  float amplitude = 0.0f;
-  MoveVertex moveData = { 1.0, amplitude, 1.0f,1.0 };
-  GeneralConstBuffer cameraData;
-  cameraData.View = view;
   GeneralConstBuffer cameraData;
   cameraData.View = view;
   cameraData.Perspective = perspective;
@@ -202,7 +209,7 @@ int main() {
                             0);
 
   /// CUBE OBJECTS
-  Vector<SimpleVertex> cubeVertices {
+  Vector<SimpleVertex> cubeVertex {
     // Front
     // Normal (0,0,1)
     SimpleVertex({-1.0f, 1.0f, 1.0f, 1.0f},
@@ -383,8 +390,8 @@ int main() {
                                           cubeIndices.data());
 
   p_vertexBuffer = grapi.createVertexBuffer(sizeof(SimpleVertex) *
-                                            static_cast<uint32>(cubeVertices.size()),
-                                            cubeVertices.data());
+                                            static_cast<uint32>(cubeVertex.size()),
+                                            cubeVertex.data());
 
   /// TOPOLOGY
   SPtr <Topology> p_topology = grapi.createTopology(TOPOLOGY_TYPE::TriangleList);
@@ -411,11 +418,62 @@ int main() {
     float deltaTime = elapsed.count();
     time += deltaTime;
 
+    float angle = time * 0.5f;
+    const float cosine = Math::cos(angle);
+    const float sine = Math::sin(angle);
+
+    
+    /// WORLD MATRIXES
+    Matrix4 modelWorldRotation = Matrix4::fromRotationMatrix(
+      1.0f, 0.0f, 0.0f,
+      0.0f, cosine, sine,
+      0.0f, -sine, cosine
+    );
+
+    Matrix4 modelWorld = Matrix4::fromScaleVector(modelWorldTranslation) * 
+                                       modelWorldRotation * modelWorldScale;
+
+    cameraData.worldMatrix = modelWorld;
     ////////////////
 
-    grapi.updateConstBuffer(p_constBufferCamera, sizeof(GeneralConstBuffer), &cameraData);
+    grapi.updateConstBuffer(p_constBufferCamera,
+                            sizeof(GeneralConstBuffer),
+                            &cameraData);
 
-    grapi.setRenderTargetViews(gRenderTVS,p_depthSV);
+    grapi.setRenderTargetViews(gRenderTVS,
+                               p_depthSV);
+
+    grapi.clearRenderTargetView(normalRTV,
+                                normalClearColor);
+
+    grapi.clearRenderTargetView(colorRTV,
+                                semiClearColor);
+
+    grapi.clearRenderTargetView(specularRTV,
+                                specularClearColor);
+
+
+    grapi.setRasterizerState(p_rasterizer);
+
+    grapi.clearDepthStencilView(p_depthSV,
+                                static_cast<ClearFlags::E>(flag),
+                                1.0f,
+                                0.0f);
+
+    grapi.setVertexShader(p_vertexShader);
+    grapi.setPixelShader(p_pixelShader1);
+    grapi.setPixelShader(p_pixelShader);
+    grapi.setTopology(p_topology);
+    grapi.setSamplerState(0, p_sampler);
+
+    grapi.setVertexBuffer(p_vertexBuffer,
+                          sizeof(SimpleVertex),
+                          0);
+    grapi.setIndexBuffer(p_indexBuffer);
+    grapi.setConstBuffer(p_constBufferCamera);
+
+    grapi.draw(sizeof(cubeVertex),
+               0);
 
   }
   grapi.cleanUpResources();

@@ -353,6 +353,29 @@ Matrix4::fromScaleVector(const Vector3 _scale) {
   return returnMatrix;
 }
 
+NODISCARD Matrix4
+Matrix4::fromRotationMatrix(float _m00, float _m01, float _m02,
+                            float _m10, float _m11, float _m12,
+                            float _m20, float _m21, float _m22) {
+  return Matrix4(
+    _m00, _m01, _m02, 0.0f,
+    _m10, _m11, _m12, 0.0f,
+    _m20, _m21, _m22, 0.0f,
+    0.0f, 0.0f, 0.0f, 1.0f
+  );
+}
+
+NODISCARD Matrix4
+Matrix4::fromTranslationVector(const Vector3& _translation) {
+
+  return Matrix4(
+    1.0f, 0.0f, 0.0f, 0.0f,
+    0.0f, 1.0f, 0.0f, 0.0f,
+    0.0f, 0.0f, 1.0f, 0.0f,
+    _translation.x, _translation.y, _translation.z, 1.0f
+  );
+}
+
 /*     OPERATORS     */
 
 Matrix4&

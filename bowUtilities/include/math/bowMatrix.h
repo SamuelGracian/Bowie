@@ -146,6 +146,14 @@ public:
   NODISCARD static Matrix4
   fromScaleVector(const Vector3 _scale); 
 
+  NODISCARD static Matrix4
+  fromRotationMatrix(float _m00, float _m01, float _m02,
+                     float _m10, float _m11, float _m12,
+                     float _m20, float _m21, float _m22);
+  
+  NODISCARD static Matrix4
+  fromTranslationVector(const Vector3& _translation);
+
   /********************************************/
   /*  OPERATORS  */
   /********************************************/
