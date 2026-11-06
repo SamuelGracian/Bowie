@@ -21,7 +21,9 @@ struct GeneralConstBuffer
   Matrix4 View;
   Matrix4 Perspective;
   Matrix4 worldMatrix;
-  Matrix4 ShadowView;
+  Matrix4 shadowView;
+  Matrix4 shadowProjection;
+
   Vector3 cameraPosition;
   float Shininess;
 };
@@ -201,6 +203,9 @@ int main() {
   GeneralConstBuffer cameraData;
   cameraData.View = view;
   cameraData.Perspective = perspective;
+  cameraData.worldMatrix = Matrix4::IDENTITY;
+  cameraData.shadowView = Matrix4::IDENTITY;
+  cameraData.shadowProjection = Matrix4::IDENTITY;
   cameraData.cameraPosition = Eye;
   cameraData.Shininess = 2;
 
