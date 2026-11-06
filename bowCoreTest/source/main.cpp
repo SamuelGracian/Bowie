@@ -91,6 +91,27 @@ readFileToString(const std::wstring& _filePath) {
 }
 
 int main() {
+  //bowEngineSDK::DisplaySurface window;
+
+    return {};
+  }
+
+  std::stringstream buffer;
+  buffer << file.rdbuf();
+
+  if (file.fail() && !file.eof()) {
+    std::wcerr
+      << L"Error while reading file: "
+      << absolutePath.wstring()
+      << L"\n";
+
+    return {};
+  }
+
+  return buffer.str();
+}
+
+int main() {
   
   /// VARIABLES
   bool running = true;
@@ -376,6 +397,8 @@ int main() {
                                           cubeIndices.data());
 
   p_vertexBuffer = grapi.createVertexBuffer(sizeof(SimpleVertex) *
+                                            static_cast<uint32>(cubeVertices.size()),
+                                            cubeVertices.data());
                                             static_cast<uint32>(cubeVertex.size()),
                                             cubeVertex.data());
 

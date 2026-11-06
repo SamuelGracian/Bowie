@@ -111,7 +111,7 @@ public:
   * @param weakPtr <IndexBuffer>
   * @return void
   */
-  void
+  virtual void
   setIndexBuffer(WeakPtr<IndexBuffer> buffer) override;
 
   /*

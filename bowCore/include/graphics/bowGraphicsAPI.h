@@ -5,6 +5,25 @@
 
 namespace bowEngineSDK
 {
+
+struct SimpleVertex
+{
+  Vector4 position;
+  Vector4 normals;
+  Vector4 tangent;
+  Vector4 binormals;
+  Vector2 texture;
+
+
+  SimpleVertex(
+    const Vector4& pos,
+    const Vector4& normal,
+    const Vector4& tan ,
+    const Vector4& binormal,
+    const Vector2& tex )
+    : position(pos), normals(normal), tangent(tan), binormals(binormal),
+    texture(tex) {}
+};/// Simple vertex struct
 class ConstBuffer;
 class DepthStencilView;
 class DisplaySurface;
