@@ -10,9 +10,72 @@
 #include "bowMatrix.h"
 #include "bowVector3.h"
 #include "bowVector4.h"
+#include "bowMath.h"
 
 namespace bowEngineSDK
 {
+namespace matrixHelpers
+{
+bool
+lookAtHelperCalculateAxes(const Vector3& _at,
+                          const Vector3& _eye,
+                          const Vector3& _up,
+                          Vector3* _axes) {
+
+  if (_axes == nullptr) {
+    return false;
+  }
+
+  Vector3 forward = _at - _eye;
+
+  if (forward.sqrMagnitude() <= PlatformMath::KINDA_SMALL_NUMBER) {
+    return false;
+  }
+
+  forward = forward.normalize();
+
+  Vector3 right = forward.cross(_up);
+
+  if (right.sqrMagnitude() <= PlatformMath::KINDA_SMALL_NUMBER) {
+    return false;
+  }
+
+  right = right.normalize();
+
+  Vector3 up = right.cross(forward);
+
+  _axes[0] = right;
+  _axes[1] = up;
+  _axes[2] = -forward;
+
+  _axes[3] = Vector3(
+    -right.dot(_eye),
+    -up.dot(_eye),
+    forward.dot(_eye)
+  );
+
+  return true;
+}
+
+Matrix4
+lookAtHelper(const Vector3& _at,
+             const Vector3& _eye,
+             const Vector3& _up) {
+
+  Vector3 axes[4];
+
+  if (!lookAtHelperCalculateAxes(_at, _eye, _up, axes)) {
+    return Matrix4::IDENTITY;
+  }
+
+  return Matrix4(
+    axes[0].x, axes[1].x, axes[2].x, 0.0f,
+    axes[0].y, axes[1].y, axes[2].y, 0.0f,
+    axes[0].z, axes[1].z, axes[2].z, 0.0f,
+    axes[3].x, axes[3].y, axes[3].z, 1.0f
+  );
+}
+}/// namespace Matrixhelpers
 
 const Matrix4
 Matrix4::IDENTITY(1.0f, 0.0f, 0.0f, 0.0f,
@@ -253,6 +316,31 @@ Matrix4::getInverse() const {
   }
 
   return result;
+}
+
+NODISCARD Matrix4 
+Matrix4::lookAt(const Vector3& _at, const Vector3& _eye, const Vector3& _up) {
+  return matrixHelpers ::lookAtHelper(_at, _eye, _up);
+}
+
+NODISCARD Matrix4
+Matrix4::perspective(float _foV, float _aspect, float _zNear, float _zFar) {
+  
+  if (_aspect == 0.0f || _zNear == _zFar || _zNear <= 0.0f || _zFar <= 0.0f) {
+    return Matrix4::ZERO;
+  }
+
+  const float y = 1.0f / Math::tan(_foV * 0.5f);
+  const float x = y / _aspect;
+
+  const float range = _zFar / (_zNear - _zFar);
+
+  return Matrix4(
+    x, 0.0f, 0.0f, 0.0f,
+    0.0f, y, 0.0f, 0.0f,
+    0.0f, 0.0f, range, -1.0f,
+    0.0f, 0.0f, _zNear * range, 0.0f
+  );
 }
 
 /*     OPERATORS     */

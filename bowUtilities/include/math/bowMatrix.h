@@ -4,8 +4,8 @@
  * @author Samuel G
  * @date 24/09/2026
  *
- * Coordinates being X = front, Z = up, Y = right
- *
+ * Coordinates being X = right, Z = backward, Y = up
+ *  Right handed matrix
  */
  /************************************************************************/
 #pragma once
@@ -118,6 +118,24 @@ public:
   */
   NODISCARD Matrix4
   getInverse() const;
+
+  /*
+  * @brief
+  * @param
+  * @return
+  */
+  NODISCARD static Matrix4
+  lookAt(const Vector3& _at, const Vector3& _eye, const Vector3& _up);
+
+  /*
+  * @brief
+  *  Creates a 4x4 perspective matrix.
+  * @param float field of view, float aspect ratio, float near plane location,
+  * float far plane location, float handedness
+  * @return Matrix4
+  */
+  NODISCARD static Matrix4
+  perspective(float _foV, float _aspect, float _zNear, float _zFar);
 
   /********************************************/
   /*  OPERATORS  */

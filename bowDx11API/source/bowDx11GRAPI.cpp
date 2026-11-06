@@ -618,7 +618,7 @@ Dx11GraphicsAPI::createConstBuffer(const uint32 _byteWidth,
   return nullptr;
 }
 
-SPtr<Indexbuffer>
+SPtr<IndexBuffer>
 Dx11GraphicsAPI::createIndexBuffer(const uint32 _byteWidth, void* _data) {
   BOW_ASSERT(_byteWidth != 0);
   D3D11_BUFFER_DESC bd = {};
@@ -924,12 +924,18 @@ Dx11GraphicsAPI::createPixelShader(const String& _shaderCode,
   ID3D11PixelShader* resultShader = nullptr;
   SPtr<Dx11PixelShader>shaderPtr = nullptr;
 
+  if (m_device == nullptr) {
+    std::cout << 
+      "createPixelShader function, error m_device = nullptr" << std::endl;
+    return nullptr;
+  }
+
   binaryBlob = compileShaderInternal(_shaderCode, _entryPoint, _defines,
                                      SHADER_TYPE::PIXEL_SHADER, _shaderModel);
 
-  if (binaryBlob == nullptr || m_device == nullptr) {
+  if (binaryBlob == nullptr) {
     std::cout <<
-      "createPixelShader function, binary blob = nullptr, or device = nullptr" <<
+      "createPixelShader function, binary blob = nullptr" <<
       std::endl;
     return nullptr;
   }

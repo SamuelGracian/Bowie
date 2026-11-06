@@ -14,7 +14,7 @@
 
 namespace bowEngineSDK
 {
-class Indexbuffer :public BaseBuffer
+class IndexBuffer :public BaseBuffer
 {
  public:
 
@@ -22,12 +22,12 @@ class Indexbuffer :public BaseBuffer
    * @brief
    *  Default constructor
    */
-   Indexbuffer() = default;
+   IndexBuffer() = default;
 
    /*
    * @brief
    *  Defualt destructor
    */
-   ~Indexbuffer() = default;
+   ~IndexBuffer() = default;
 };
 }/// namespace bowEngineSDK

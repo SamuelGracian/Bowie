@@ -73,7 +73,7 @@ public:
   * @param uint32 bytewidth, void* data
   * @return sharedPtr<IndexBuffer>.
   */
-  SPtr<Indexbuffer>
+   SPtr<IndexBuffer>
   createIndexBuffer(const uint32 _byteWidth, void* data) override;
 
   /*

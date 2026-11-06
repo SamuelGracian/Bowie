@@ -5,7 +5,7 @@
 
 namespace bowEngineSDK
 {
-class Dx11IndexBuffer : public Indexbuffer
+class Dx11IndexBuffer : public IndexBuffer
 {
  public:
 
