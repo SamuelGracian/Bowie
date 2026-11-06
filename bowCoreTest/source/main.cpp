@@ -101,9 +101,6 @@ int main() {
   auto pre = std::chrono::high_resolution_clock::now();
   float time = 0.0f;
   /* COLORS */
-  //float clearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-  float normalClearColor[4] = {0.5f, 0.5f, 1.0f, 0.0f};
-  float specularClearColor[4] = {0.0f, 0.0f, 0.0f, 0.0f}; 
   float semiClearColor[4] = { 0.02f, 0.08f, 0.20f, 1.0f };
   /* FLAG */
   uint8 flag = ClearFlags::Depth | ClearFlags::Stencil;
@@ -145,7 +142,7 @@ int main() {
   }
 
   /// SHADERS
-  SPtr<PixelShader> p_pixelShader = grapi.createPixelShader(
+  SPtr<PixelShader> p_ShaderShader = grapi.createPixelShader(
                                      readFileToString(L"RawData/Shaders.fxh"),
                                      "PShader",
                                      defines,
@@ -167,10 +164,10 @@ int main() {
                                                               TEXTURE_FORMAT::D24_UNORM_S8_UINT);
 
   /// SWAP CHAIN
-  SPtr<SwapChain> swapChain = grapi.createSwapChain(window,
+  SPtr<SwapChain> p_swapChain = grapi.createSwapChain(window,
                                          TEXTURE_FORMAT::R8G8B8A8_UNORM);
 
-  if (!swapChain) {
+  if (!p_swapChain) {
     grapi.cleanUpResources();
     GraphicsAPI::shutDown();
     std::cout << "Failed to start swap chain" << std::endl;
@@ -181,23 +178,7 @@ int main() {
   SPtr<SamplerState> p_sampler = grapi.createSamplerState();
 
   /// Render target view
-  Vector<WeakPtr<RenderTargetView>> gRenderTVS; /// Buffer to save render target views
-
-  SPtr<RenderTargetView>normalRTV = grapi.createRenderTargetView(window->getClientWidth(),
-                                                                 window->getClientHeight(),
-                                                                 TEXTURE_FORMAT::R8G8B8A8_UNORM);
-
-  SPtr<RenderTargetView>colorRTV = grapi.createRenderTargetView(window->getClientWidth(),
-                                                                window->getClientHeight(),
-                                                                TEXTURE_FORMAT::R8G8B8A8_UNORM);
-  
-  SPtr<RenderTargetView>specularRTV = grapi.createRenderTargetView(window->getClientWidth(),
-                                                                   window->getClientHeight(),
-                                                                   TEXTURE_FORMAT::R8G8B8A8_UNORM);
-
-  gRenderTVS.push_back(normalRTV);
-  gRenderTVS.push_back(colorRTV);
-  gRenderTVS.push_back(specularRTV);
+  Vector<WeakPtr<RenderTargetView>> gRenderTVS; /// Buffer to save render target view
 
   ///const buffer for camera
   GeneralConstBuffer cameraData;
@@ -415,31 +396,24 @@ int main() {
   while (running) {
     window->processMessages();
 
-    /// DELTA TIME 
     auto now = std::chrono::high_resolution_clock::now();
     std::chrono::duration<float> elapsed = now - pre;
     pre = now;
 
-    float deltaTime = elapsed.count();
-    time += deltaTime;
+    time += elapsed.count();
 
-    float angle = time * 0.5f;
+    const float angle = time * 0.5f;
     const float cosine = Math::cos(angle);
     const float sine = Math::sin(angle);
 
-    
-    /// WORLD MATRIXES
     Matrix4 modelWorldRotation = Matrix4::fromRotationMatrix(
       1.0f, 0.0f, 0.0f,
       0.0f, cosine, sine,
       0.0f, -sine, cosine
     );
 
-    Matrix4 modelWorld = Matrix4::fromScaleVector(modelWorldTranslation) * 
-                                       modelWorldRotation * modelWorldScale;
-
+    Matrix4 modelWorld = modelWorldRotation * modelWorldScale;
     cameraData.worldMatrix = modelWorld;
-    ////////////////
 
     grapi.updateConstBuffer(p_constBufferCamera,
                             sizeof(GeneralConstBuffer),
@@ -448,39 +422,36 @@ int main() {
     grapi.setRenderTargetViews(gRenderTVS,
                                p_depthSV);
 
-    grapi.clearRenderTargetView(normalRTV,
-                                normalClearColor);
-
-    grapi.clearRenderTargetView(colorRTV,
+    grapi.clearRenderTargetView(p_swapChain->getRenderTargetView(),
                                 semiClearColor);
-
-    grapi.clearRenderTargetView(specularRTV,
-                                specularClearColor);
-
-
-    grapi.setRasterizerState(p_rasterizer);
 
     grapi.clearDepthStencilView(p_depthSV,
                                 static_cast<ClearFlags::E>(flag),
                                 1.0f,
                                 0.0f);
 
+    grapi.setRasterizerState(p_rasterizer);
     grapi.setVertexShader(p_vertexShader);
-    grapi.setPixelShader(p_pixelShader1);
-    grapi.setPixelShader(p_pixelShader);
+    grapi.setPixelShader(p_ShaderShader);
     grapi.setTopology(p_topology);
-    grapi.setSamplerState(0, p_sampler);
 
-    grapi.setVertexBuffer(p_vertexBuffer,
-                          sizeof(SimpleVertex),
-                          0);
+    grapi.setVertexBuffer(
+      p_vertexBuffer,
+      sizeof(SimpleVertex),
+      0
+    );
+
     grapi.setIndexBuffer(p_indexBuffer);
     grapi.setConstBuffer(p_constBufferCamera);
 
-    grapi.draw(sizeof(cubeVertex),
-               0);
+    grapi.draw(
+      static_cast<uint32>(cubeIndices.size()),
+      0
+    );
 
+    p_swapChain->present(1, 0);
   }
+
   grapi.cleanUpResources();
   GraphicsAPI::shutDown();
   return 0;
