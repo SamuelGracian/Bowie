@@ -29,6 +29,8 @@ struct GeneralConstBuffer
 };
 
 Vector<String> defines { "#defines BOWIE_TEST" };
+std::vector<uint8_t> neutralNormal = { 127, 127, 255, 255 };
+std::vector<uint8_t> whitePixel = { 255, 255, 255, 255 };
 
 struct MoveVertex
 {
@@ -147,16 +149,27 @@ int main() {
                                      "PShader",
                                      defines,
                                      4);
-  
+  if (!p_ShaderShader)     {
+    std::cout << "Failed to create shader" << std::endl;
+    return-1;
+  }
 
   SPtr<PixelShader> p_pixelShader1 = grapi.createPixelShader(
                                    readFileToString(L"RawData/PixelShader.fxh"),
                                    "PShader",
                                    defines,
                                    4);
+  if (!p_pixelShader1) {
+    std::cout << "Failed to create pixel shader" << std::endl;
+    return-1;
+  }
 
   SPtr<VertexShader> p_vertexShader = grapi.createVertexShader(
     readFileToString(L"RawData/VertexShader.fxh"), "VShader", defines, 4);
+  if (!p_vertexShader) {
+    std::cout << "Failed to create vertex shader" << std::endl;
+    return-1;
+  }
 
   /// DEPTH STENCIL VIEW
   SPtr<DepthStencilView> p_depthSV = grapi.createDepthStencil(window->getClientWidth(),
@@ -174,11 +187,16 @@ int main() {
     return -1;
   }
 
+  /// RENDER TARGET VIEW
+  Vector<WeakPtr<RenderTargetView>> gRenderTVS;
+  gRenderTVS.push_back(p_swapChain->getRenderTargetView());
+
   /// SAMPLER STATE
   SPtr<SamplerState> p_sampler = grapi.createSamplerState();
-
-  /// Render target view
-  Vector<WeakPtr<RenderTargetView>> gRenderTVS; /// Buffer to save render target view
+  if (!p_sampler)     {
+    std::cout << "Failed to create sampler" << std::endl;
+    return -1;
+  }
 
   ///const buffer for camera
   GeneralConstBuffer cameraData;
@@ -391,6 +409,24 @@ int main() {
     return -1;
   }
 
+  /// TEXTURES
+  SPtr<Texture2D>defaultNormalTexture = grapi.createTexture2DWithImageData(neutralNormal,
+                                                                           1,
+                                                                           1);
+
+  SPtr<Texture2D>defaultSpecularTexture = grapi.createTexture2DWithImageData(whitePixel,
+                                                                             1,
+                                                                             1);
+
+  SPtr<Texture2D>defaultAlbedoTexture = grapi.createTexture2DWithImageData(whitePixel,
+                                                                           1,
+                                                                           1);
+
+  SPtr<Texture2D>cubeTexture = grapi.createTexture2DFromFile("RawData/Rocks.jpg");
+  if (!cubeTexture) {
+    std::cout << "Failed to load texture" << std::endl;
+    return -1;
+  }
 
 
   while (running) {
@@ -431,16 +467,27 @@ int main() {
                                 0.0f);
 
     grapi.setRasterizerState(p_rasterizer);
+
     grapi.setVertexShader(p_vertexShader);
     grapi.setPixelShader(p_ShaderShader);
+    grapi.setPixelShader(p_pixelShader1);
+
+    grapi.setSamplerState(0, p_sampler);
+
     grapi.setTopology(p_topology);
+
+    grapi.setTexture2D(2,
+                       defaultNormalTexture);
+    grapi.setTexture2D(3,
+                       cubeTexture ? cubeTexture : defaultAlbedoTexture);
+
+    grapi.setTexture2D(4, defaultSpecularTexture);
 
     grapi.setVertexBuffer(
       p_vertexBuffer,
       sizeof(SimpleVertex),
       0
     );
-
     grapi.setIndexBuffer(p_indexBuffer);
     grapi.setConstBuffer(p_constBufferCamera);
 
