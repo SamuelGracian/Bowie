@@ -124,8 +124,10 @@ int main() {
     return -1;
   }
 
-  SPtr<PixelShader> p_pixelShader = grapi.createPixelShader(
-    readFileToString(L"RawData/Shaders.fxh"),"PShader", defines, 4);
+  if (SPtr<PixelShader> p_pixelShader = grapi.createPixelShader(
+    readFileToString(L"RawData/Shaders.fxh"), "PShader", defines, 4)) {
+    std::cout << "Shader Created " << std::endl;
+  }
 
   SPtr<PixelShader> p_pixelShader1 = grapi.createPixelShader(
     readFileToString(L"RawData/PixelShader.fxh"),"PShader", defines, 4);
@@ -346,6 +348,9 @@ int main() {
                                             static_cast<uint32>(cubeVertices.size()),
                                             cubeVertices.data());
 
+  /// TOPOLOGY
+  SPtr <Topology> p_topology = grapi.createTopology(TOPOLOGY_TYPE::TriangleList);
+
   /// RASTERIZER STATE
   SPtr<RasterizerState> p_rasterizer = nullptr;
   p_rasterizer = grapi.createRasterizerState(CULL_MODE::CULL_BACK,
@@ -354,6 +359,8 @@ int main() {
     std::cout << "Failed to create rasterizer state" << std::endl;
     return -1;
   }
+
+
 
   while (running) {
     window->processMessages();

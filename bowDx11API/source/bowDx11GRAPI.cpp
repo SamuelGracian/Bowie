@@ -461,22 +461,24 @@ Dx11GraphicsAPI::init(WeakPtr<DisplaySurface>windowHandler) {
 
     if (desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) {
       adapter->Release();
+      adapter = nullptr;
       continue;
     }
 
     if (desc.DedicatedVideoMemory > bestDedicatedVideoMemory) {
-      bestDedicatedVideoMemory = desc.DedicatedVideoMemory;
 
       if (nullptr != selectedAdapter) {
         selectedAdapter->Release();
       }
+
+      bestDedicatedVideoMemory = desc.DedicatedVideoMemory;
       selectedAdapter = adapter;
     }
     else {
       adapter->Release();
     }
     
-    adapter->Release();
+    adapter = nullptr;
   }
 
   D3D_FEATURE_LEVEL resultFeatureLevel = {};
@@ -624,7 +626,7 @@ Dx11GraphicsAPI::createIndexBuffer(const uint32 _byteWidth, void* _data) {
   D3D11_BUFFER_DESC bd = {};
   ID3D11Buffer* Rawbuffer = nullptr;
   D3D11_SUBRESOURCE_DATA InitData = {};
-  SPtr<Dx11IndexBuffer> ResultBuffer = std::make_shared<Dx11IndexBuffer>();
+  SPtr<Dx11IndexBuffer> ResultBuffer = std::make_shared<Dx11IndexBuffer>(_byteWidth);
 
   bd.Usage = D3D11_USAGE_DEFAULT;
   bd.ByteWidth = _byteWidth;
@@ -656,7 +658,7 @@ Dx11GraphicsAPI::createVertexBuffer(const uint32 _byteWidth,
   InitData.pSysMem = _vertices;
 
   if (SUCCEEDED(m_device->CreateBuffer(&bd, &InitData, &Rawbuffer))) {
-    ResultBuffer = std::make_shared<Dx11VertexBuffer>();
+    ResultBuffer = std::make_shared<Dx11VertexBuffer>(_byteWidth);
     ResultBuffer->m_buffer = Rawbuffer;
   }
   return ResultBuffer;
