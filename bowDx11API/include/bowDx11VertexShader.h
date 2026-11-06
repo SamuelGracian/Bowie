@@ -13,11 +13,9 @@ public:
    m_shader(nullptr),
    m_InputLayout(nullptr)
   {}
-  
-  
+ 
   ~Dx11VertexShader() = default;
-  
-  
+ 
   ID3D11VertexShader* m_shader;
   ID3D11InputLayout* m_InputLayout;
 };

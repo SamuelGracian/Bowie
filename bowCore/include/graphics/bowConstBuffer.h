@@ -22,26 +22,18 @@ class ConstBuffer : public BaseBuffer
    * @brief
    *  Default constructor.
    */
-   ConstBuffer() = default;
+   ConstBuffer(uint32 _byteWidth, uint32 _slot)
+     : BaseBuffer(_byteWidth),
+       m_slot(_slot)
+   {
+     BOW_ASSERT(_slot < BUFFER_HIGHER_AVAILABLE_SLOT);
+   }
 
    /*
    * @brief
    *  Default destructor.
    */
    ~ConstBuffer() = default;
-
-   /*
-   * @brief
-   *  Set the slot of the buffer.
-   * @param UINT32
-   *  Slot where the buffer is going to be assign.
-   * @return NONE
-   */
-   FORCEINLINE void
-   setSlot(const uint32 _slot) {
-     BOW_ASSERT(_slot < BUFFER_HIGHER_AVAILABLE_SLOT);
-     m_slot = _slot;
-   }
 
    /*
    * @brief

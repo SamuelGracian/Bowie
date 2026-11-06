@@ -1,27 +1,27 @@
 #include "bowDx11GraphicsAPI.h"
 
+#include <d3dcompiler.h>
+#include <d3d11shader.h>
 #include <iostream>
 #include <windows.h>
-#include <d3dcompiler.h>
-#include <limits>
-#include <d3d11shader.h>
 
+#include "bowMath.h"
+#include "bowMatrix.h"
+#include "bowVector4.h"
+#include "bowWindow.h"
 #include "bowDx11ConstBuffer.h"
-#include "bowDx11IndexBuffer.h"
-#include "bowDx11VertexBuffer.h"
-#include "bowDx11SwapChain.h"
-#include "bowDx11Helpers.h"
-#include "bowDx11Topology.h"
 #include "bowDx11DepthStencilView.h"
-#include "bowDx11Helpers.h"
-#include "bowDx11VertexShader.h"
+#include "bowDx11IndexBuffer.h"
 #include "bowDx11PixelShader.h"
 #include "bowDx11RasterizerState.h"
-#include "bowDx11Texture2D.h"
 #include "bowDx11RenderTargetView.h"
-#include "bowWindow.h"
+#include "bowDx11Texture2D.h"
+#include "bowDx11Topology.h"
 #include "bowDx11SamplerState.h"
-#include "bowMath.h"
+#include "bowDx11SwapChain.h"
+#include "bowDx11VertexBuffer.h"
+#include "bowDx11VertexShader.h"
+#include "bowDx11ViewPort.h"
 
 
 namespace bowEngineSDK
@@ -97,27 +97,27 @@ uint32
 Dx11GraphicsAPI::getDx11BindFlagsInternal(const uint32 _bindFlag) const {
   uint32 ResultFlags = 0;
 
-  if ((_bindFlag & GAPI_BIND_FLAGS::BIND_CONSTANT_BUFFER) != 0) {
+  if ((_bindFlag & GRAPHICS_API_BIND_FLAGS::BIND_CONSTANT_BUFFER) != 0) {
     ResultFlags += D3D11_BIND_CONSTANT_BUFFER;
   }
 
-  if ((_bindFlag & GAPI_BIND_FLAGS::BIND_INDEX_BUFFER) != 0) {
+  if ((_bindFlag & GRAPHICS_API_BIND_FLAGS::BIND_INDEX_BUFFER) != 0) {
     ResultFlags += D3D11_BIND_INDEX_BUFFER;
   }
 
-  if ((_bindFlag & GAPI_BIND_FLAGS::BIND_VERTEX_BUFFER) != 0) {
+  if ((_bindFlag & GRAPHICS_API_BIND_FLAGS::BIND_VERTEX_BUFFER) != 0) {
     ResultFlags += D3D11_BIND_VERTEX_BUFFER;
   }
 
-  if ((_bindFlag & GAPI_BIND_FLAGS::DEPTH_STENCIL) != 0) {
+  if ((_bindFlag & GRAPHICS_API_BIND_FLAGS::DEPTH_STENCIL) != 0) {
     ResultFlags += D3D11_BIND_DEPTH_STENCIL;
   }
 
-  if ((_bindFlag & GAPI_BIND_FLAGS::RENDER_TARGET) != 0) {
+  if ((_bindFlag & GRAPHICS_API_BIND_FLAGS::RENDER_TARGET) != 0) {
     ResultFlags += D3D11_BIND_RENDER_TARGET;
   }
 
-  if ((_bindFlag & GAPI_BIND_FLAGS::SHADER_RESOURCE) != 0) {
+  if ((_bindFlag & GRAPHICS_API_BIND_FLAGS::SHADER_RESOURCE) != 0) {
     ResultFlags += D3D11_BIND_SHADER_RESOURCE;
   }
 
@@ -149,8 +149,8 @@ Dx11GraphicsAPI::getShaderModelInternal(SHADER_TYPE::E _shaderType,
 }
 
 IDXGISwapChain* 
-Dx11GraphicsAPI::createSwapChainInternal(HWND hwnd, uint32 width,
-                                         uint32 height, TEXTURE_FORMAT::E format) {
+Dx11GraphicsAPI::createSwapChainInternal(HWND hwnd, uint32 width,uint32 height,
+                                         TEXTURE_FORMAT::E format) {
   IDXGIFactory1* dxgiFactory1 = nullptr;
 
   IDXGIFactory2* dxgiFactory2 = nullptr;
@@ -281,8 +281,9 @@ Dx11GraphicsAPI::createTexture2DInternal(uint32 _width, uint32 _height,
 ID3DBlob*
 Dx11GraphicsAPI::compileShaderInternal(const String& _shaderCode,
                                        const String& _entryPoint,
-                                       Vector<String> _defines,
-                                       SHADER_TYPE::E _shaderType) {
+                                       Vector<String>_defines,
+                                       SHADER_TYPE::E _shaderType,
+                                       uint32 _shaderModel) {
   ID3DBlob* errorBlob = nullptr;
   ID3DBlob* binaryBlob = nullptr;
 
@@ -302,7 +303,7 @@ Dx11GraphicsAPI::compileShaderInternal(const String& _shaderCode,
     dwShaderFlag |= D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif // BOW_DEBUG_MODE
 
-    for (auto& macro : _defines) {
+    for (String& macro : _defines) {
       finalShaderCore += (macro = '\n');
     }
 
@@ -310,7 +311,7 @@ Dx11GraphicsAPI::compileShaderInternal(const String& _shaderCode,
 
     if (FAILED(D3DCompile(finalShaderCore.c_str(), finalShaderCore.length(),
                           nullptr, nullptr, nullptr,_entryPoint.c_str(),
-                          getShaderModelInternal(_shaderType, m_shaderModel), 
+                          getShaderModelInternal(_shaderType, _shaderModel), 
                           dwShaderFlag, 0, &binaryBlob, &errorBlob))) {
       if (errorBlob) {
         std::cout << "Shader compilation error" <<
@@ -327,7 +328,7 @@ Dx11GraphicsAPI::compileShaderInternal(const String& _shaderCode,
 Vector<D3D11_INPUT_ELEMENT_DESC>
 Dx11GraphicsAPI::createInputLayoutInternal(ID3D11ShaderReflection* _reflection) 
 const {
-  Vector<D3D11_INPUT_ELEMENT_DESC> inputLayoutDesc;
+  Vector<D3D11_INPUT_ELEMENT_DESC>inputLayoutDesc;
 
   if (_reflection) {
     D3D11_SHADER_DESC shaderDesc;
@@ -348,8 +349,13 @@ const {
       elementDesc.InstanceDataStepRate = 0;
 
       uint32 componentCount = 0;
-      if (paramDesc.Mask == 1) componentCount = 1;
-      else if (paramDesc.Mask <= 3) componentCount = 2;
+      if (paramDesc.Mask == 1) {
+        componentCount = 1;
+      }
+
+      else if (paramDesc.Mask <= 3) {
+        componentCount = 2;
+      }
       else if (paramDesc.Mask <= 7) componentCount = 3;
       else if (paramDesc.Mask <= 15) componentCount = 4;
 
@@ -411,12 +417,12 @@ Dx11GraphicsAPI::getCullModeInternal(CULL_MODE::E _cullMode) const {
 
 /*****************************************************/
 bool
-Dx11GraphicsAPI::init(WeakPtr<DisplaySurface> windowHandler) {
+Dx11GraphicsAPI::init(WeakPtr<DisplaySurface>windowHandler) {
   if (windowHandler.expired()) {
     return false;
   }
 
-  SPtr<DisplaySurface> window = windowHandler.lock();
+  SPtr<DisplaySurface>window = windowHandler.lock();
 
   UINT createDeviceFlags = 0;
 
@@ -428,7 +434,7 @@ Dx11GraphicsAPI::init(WeakPtr<DisplaySurface> windowHandler) {
   // Feature Levels
   // ---------------------------------------------------------
 
-  std::vector<D3D_FEATURE_LEVEL> featureLevels =
+  Vector<D3D_FEATURE_LEVEL>featureLevels =
   {
       D3D_FEATURE_LEVEL_11_0,
       D3D_FEATURE_LEVEL_10_1,
@@ -445,39 +451,35 @@ Dx11GraphicsAPI::init(WeakPtr<DisplaySurface> windowHandler) {
   }
 
   IDXGIAdapter1* selectedAdapter = nullptr;
+  IDXGIAdapter1* adapter = nullptr;
+  SIZE_T bestDedicatedVideoMemory = 0;
 
-  for (UINT i = 0; ; ++i) {
-    IDXGIAdapter1* adapter = nullptr;
-
-    hr = dxgiFactory->EnumAdapters1(i, &adapter);
-
-    if (hr == DXGI_ERROR_NOT_FOUND) {
-      break;
-    }
-
-    if (FAILED(hr)) {
-      continue;
-    }
+  for (uint32 i = 0; SUCCEEDED(dxgiFactory->EnumAdapters1(i, &adapter)); ++i) {
 
     DXGI_ADAPTER_DESC1 desc = {};
     adapter->GetDesc1(&desc);
 
     if (desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) {
       adapter->Release();
+      adapter = nullptr;
       continue;
     }
 
-    std::wstring adapterName(desc.Description); /// STRING?
+    if (desc.DedicatedVideoMemory > bestDedicatedVideoMemory) {
 
-    if (adapterName.find(L"NVIDIA") != std::wstring::npos) {
+      if (nullptr != selectedAdapter) {
+        selectedAdapter->Release();
+      }
+
+      bestDedicatedVideoMemory = desc.DedicatedVideoMemory;
       selectedAdapter = adapter;
-
-      break;
     }
-
-    adapter->Release();
+    else {
+      adapter->Release();
+    }
+    
+    adapter = nullptr;
   }
-
 
   D3D_FEATURE_LEVEL resultFeatureLevel = {};
 
@@ -569,17 +571,17 @@ void
 Dx11GraphicsAPI::cleanUpResources(){}
 
 SPtr<SwapChain>
-Dx11GraphicsAPI::createSwapChain(WeakPtr<DisplaySurface> _windowHandler,
+Dx11GraphicsAPI::createSwapChain(WeakPtr<DisplaySurface>_windowHandler,
                                  TEXTURE_FORMAT::E _format) {
-  SPtr<Dx11SwapChain> SChain = nullptr;
+  SPtr<Dx11SwapChain>SChain = nullptr;
 
   if (_windowHandler.expired()) {
     std::cout << "Handle window expired" << std::endl;
     return SChain;
   }
 
-  std::shared_ptr<DisplaySurface> tempSurface = _windowHandler.lock();
-  HWND tempHandler = reinterpret_cast<HWND> (tempSurface->getHandle());
+  SPtr<DisplaySurface>tempSurface = _windowHandler.lock();
+  HWND tempHandler = reinterpret_cast<HWND>(tempSurface->getHandle());
 
   if (auto* ResultSwapChain = createSwapChainInternal(tempHandler,
                                   tempSurface->getClientWidth(),
@@ -598,7 +600,7 @@ Dx11GraphicsAPI::createSwapChain(WeakPtr<DisplaySurface> _windowHandler,
 
 SPtr<ConstBuffer>
 Dx11GraphicsAPI::createConstBuffer(const uint32 _byteWidth,
-                             const uint32 slot) {
+                             const uint32 _slot) {
   ID3D11Buffer* Rawbuffer = nullptr;
   D3D11_BUFFER_DESC bd = {};
   if (_byteWidth != 0) {
@@ -609,13 +611,9 @@ Dx11GraphicsAPI::createConstBuffer(const uint32 _byteWidth,
   }
 
   if (SUCCEEDED((m_device->CreateBuffer(&bd, nullptr, &Rawbuffer))))
-
   {
-    auto buffer = std::make_shared<Dx11ConstBuffer>();
+    SPtr<Dx11ConstBuffer> buffer = std::make_shared<Dx11ConstBuffer>(_byteWidth, _slot);
     buffer->m_buffer = Rawbuffer;
-    buffer->setByteWidth(_byteWidth);
-    buffer->setSlot(slot);
-
     //ASSIGN_DEBUG_NAME(buffer.get(), Rawbuffer);
     return buffer;
   }
@@ -628,7 +626,7 @@ Dx11GraphicsAPI::createIndexBuffer(const uint32 _byteWidth, void* _data) {
   D3D11_BUFFER_DESC bd = {};
   ID3D11Buffer* Rawbuffer = nullptr;
   D3D11_SUBRESOURCE_DATA InitData = {};
-  auto ResultBuffer = std::make_shared<Dx11IndexBuffer>();
+  SPtr<Dx11IndexBuffer> ResultBuffer = std::make_shared<Dx11IndexBuffer>(_byteWidth);
 
   bd.Usage = D3D11_USAGE_DEFAULT;
   bd.ByteWidth = _byteWidth;
@@ -647,7 +645,7 @@ SPtr<VertexBuffer>
 Dx11GraphicsAPI::createVertexBuffer(const uint32 _byteWidth,
                                     const void* _vertices) {
   ID3D11Buffer* Rawbuffer = nullptr;
-  std::shared_ptr<Dx11VertexBuffer> ResultBuffer;
+  SPtr<Dx11VertexBuffer>ResultBuffer;
 
   D3D11_BUFFER_DESC bd = {};
   bd.Usage = D3D11_USAGE_DEFAULT;
@@ -660,18 +658,18 @@ Dx11GraphicsAPI::createVertexBuffer(const uint32 _byteWidth,
   InitData.pSysMem = _vertices;
 
   if (SUCCEEDED(m_device->CreateBuffer(&bd, &InitData, &Rawbuffer))) {
-    ResultBuffer = std::make_shared<Dx11VertexBuffer>();
+    ResultBuffer = std::make_shared<Dx11VertexBuffer>(_byteWidth);
     ResultBuffer->m_buffer = Rawbuffer;
   }
   return ResultBuffer;
 }
 
 void
-Dx11GraphicsAPI::setConstBuffer(WeakPtr<ConstBuffer> buffer, void* _data) {
+Dx11GraphicsAPI::setConstBuffer(WeakPtr<ConstBuffer>buffer) {
   if (m_immediateContext == nullptr || buffer.expired()) {
     return;
   }
-  auto pbuffer = std::static_pointer_cast<Dx11ConstBuffer>(buffer.lock());
+  SPtr<Dx11ConstBuffer>pbuffer = std::static_pointer_cast<Dx11ConstBuffer>(buffer.lock());
 
   if (pbuffer == nullptr || pbuffer->m_buffer == nullptr || pbuffer->getSlot() 
       >= BUFFER_HIGHER_AVAILABLE_SLOT) {
@@ -680,13 +678,10 @@ Dx11GraphicsAPI::setConstBuffer(WeakPtr<ConstBuffer> buffer, void* _data) {
 
   m_immediateContext->VSSetConstantBuffers(pbuffer->getSlot(), 1, &pbuffer->m_buffer);
   m_immediateContext->PSSetConstantBuffers(pbuffer->getSlot(), 1, &pbuffer->m_buffer);
-
-  //Sets the data on the buffer
-  m_immediateContext->UpdateSubresource(pbuffer->m_buffer, 0, nullptr, _data, 0, 0);
 }
 
 void
-Dx11GraphicsAPI::setVertexBuffer(WeakPtr<VertexBuffer> _buffer, uint32 _stride,
+Dx11GraphicsAPI::setVertexBuffer(WeakPtr<VertexBuffer>_buffer, uint32 _stride,
                                  uint32 _offset) {
   if (!_buffer.expired() || m_immediateContext != nullptr) {
     auto pBuffer = std::static_pointer_cast<Dx11VertexBuffer>(_buffer.lock());
@@ -700,12 +695,12 @@ Dx11GraphicsAPI::setVertexBuffer(WeakPtr<VertexBuffer> _buffer, uint32 _stride,
 }
 
 void
-Dx11GraphicsAPI::setIndexBuffer(WeakPtr<IndexBuffer> buffer) {
+Dx11GraphicsAPI::setIndexBuffer(WeakPtr<IndexBuffer>buffer) {
   if (m_immediateContext == nullptr || buffer.expired()) {
     return;
   }
 
-  auto pbuffer = std::static_pointer_cast<Dx11IndexBuffer> (buffer.lock());
+  auto pbuffer = std::static_pointer_cast<Dx11IndexBuffer>(buffer.lock());
 
   if (pbuffer == nullptr || pbuffer->m_buffer == nullptr) {
     return;
@@ -715,40 +710,40 @@ Dx11GraphicsAPI::setIndexBuffer(WeakPtr<IndexBuffer> buffer) {
 }
 
 void
-Dx11GraphicsAPI::updateConstBuffer(WeakPtr<ConstBuffer> _buffer,
+Dx11GraphicsAPI::updateConstBuffer(WeakPtr<ConstBuffer>_buffer,
                              const uint32 _byteWidth, void* _data) {
   if (m_immediateContext == nullptr || _buffer.expired() || _data == nullptr) {
     return;
   }
-  auto pbuffer = std::static_pointer_cast <Dx11ConstBuffer> (_buffer.lock());
+  auto pbuffer = std::static_pointer_cast <Dx11ConstBuffer>(_buffer.lock());
 
   if (pbuffer == nullptr || pbuffer->m_buffer == nullptr || pbuffer->getByteWidth() != _byteWidth) {
     return;
   }
-
+  /// To do: update const buffer bytewidth 
   m_immediateContext->UpdateSubresource(pbuffer->m_buffer, 0, nullptr, _data, 0, 0);
 }
 
 SPtr<Topology>
-Dx11GraphicsAPI::createTopology(Topology::Type _type) {
+Dx11GraphicsAPI::createTopology(TOPOLOGY_TYPE::E _type) {
   auto topo = std::make_shared<Dx11Topology>();
 
   topo->setType(_type);
 
   switch (_type) {
-  case bowEngineSDK::Topology::TriangleList:
+  case bowEngineSDK::TOPOLOGY_TYPE::TriangleList:
     topo->dx11Topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
     break;
 
-  case bowEngineSDK::Topology::TriangleStrip:
+  case bowEngineSDK::TOPOLOGY_TYPE::TriangleStrip:
     topo->dx11Topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
     break;
 
-  case bowEngineSDK::Topology::LineList:
+  case bowEngineSDK::TOPOLOGY_TYPE::LineList:
     topo->dx11Topology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
     break;
 
-  case bowEngineSDK::Topology::PointList:
+  case bowEngineSDK::TOPOLOGY_TYPE::PointList:
     topo->dx11Topology = D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;
     break;
 
@@ -761,7 +756,7 @@ Dx11GraphicsAPI::createTopology(Topology::Type _type) {
 }
 
 void
-Dx11GraphicsAPI::setTopology(WeakPtr<Topology> _topology){
+Dx11GraphicsAPI::setTopology(WeakPtr<Topology>_topology){
   if (m_immediateContext == nullptr || _topology.expired()){
     return;
    }
@@ -778,7 +773,7 @@ SPtr<DepthStencilView>
 Dx11GraphicsAPI::createDepthStencil(uint32 _width, uint32 _height,
                                     const TEXTURE_FORMAT::E _format) {
   
-  SPtr<Dx11DepthStencilView> resultDS = nullptr;
+  SPtr<Dx11DepthStencilView>resultDS = nullptr;
   ID3D11DepthStencilView* resultDepthStencilView = nullptr;
   ID3D11Texture2D* depthStencilTexture = nullptr;
 
@@ -788,7 +783,7 @@ Dx11GraphicsAPI::createDepthStencil(uint32 _width, uint32 _height,
     depthStencilTexture = createTexture2DInternal(_width,
                                                   _height,
                                                   _format,
-                                                  GAPI_BIND_FLAGS::DEPTH_STENCIL);
+                                                  GRAPHICS_API_BIND_FLAGS::DEPTH_STENCIL);
 
     if (depthStencilTexture != nullptr){
       D3D11_DEPTH_STENCIL_VIEW_DESC descDSV = {};
@@ -809,56 +804,107 @@ Dx11GraphicsAPI::createDepthStencil(uint32 _width, uint32 _height,
 }
 
 SPtr<ViewPort>
-Dx11GraphicsAPI::createViewPort() {
-  return SPtr<ViewPort> ();
+Dx11GraphicsAPI::createViewPort(float _width, float _height, float _minDepth,
+                                float _maxDepth, float _topLeftX, float _topLeftY) {
+
+
+  if (_width <= 0.0f || _height <= 0.0f || _minDepth < 0.0f || _maxDepth > 1.0f ||
+      _minDepth > _maxDepth) {
+    return nullptr;
+  }
+
+  D3D11_VIEWPORT dxViewport = {};
+  dxViewport.Width = _width;
+  dxViewport.Height = _height;
+  dxViewport.MinDepth = _minDepth;
+  dxViewport.MaxDepth = _maxDepth;
+  dxViewport.TopLeftX = _topLeftX;
+  dxViewport.TopLeftY = _topLeftY;
+
+  return std::make_shared<Dx11ViewPort>(_width, _height, _minDepth, _maxDepth,
+                                    _topLeftX, _topLeftY);
+}
+
+
+bool
+Dx11GraphicsAPI::setViewPort(WeakPtr<ViewPort>_viewPort) {
+  if ( m_immediateContext == nullptr) {
+    std::cout <<
+      "createViewPort fuction: m_immediatecontext = nullptr" << std::endl;
+    return false;
+  }
+
+  const auto viewport = _viewPort.lock();
+
+  if (viewport == nullptr) {
+    std::cout << "setViewPort: viewport is nullptr" << std::endl;
+    return false;
+  }
+  const auto dxViewport =
+    std::reinterpret_pointer_cast<Dx11ViewPort>(viewport);
+
+  if (dxViewport == nullptr) {
+    std::cout << "setViewPort: invalid viewport type"
+      << std::endl;
+    return false;
+  }
+
+  m_immediateContext->RSSetViewports(1,&dxViewport->m_viewPort);
+
+  return true;
 }
 
 SPtr<VertexShader>
-bowEngineSDK::Dx11GraphicsAPI::createVertexShader(const String& _shaderCode,
+Dx11GraphicsAPI::createVertexShader(const String& _shaderCode,
                                                   const String& _entryPoint,
-                                                  Vector<String> _defines) {
+                                                  Vector<String>& _defines,
+                                                  uint32 _shadermodel) {
   ID3DBlob* binaryBlob = nullptr;
   ID3D11ShaderReflection* shaderReflection = nullptr;
   ID3D11VertexShader* resultShader = nullptr;
   ID3D11InputLayout* resultLayout = nullptr;
 
   binaryBlob = compileShaderInternal(_shaderCode, _entryPoint, _defines,
-                                     SHADER_TYPE::VERTEX_SHADER);
+                                     SHADER_TYPE::VERTEX_SHADER,_shadermodel);
 
-  SPtr<Dx11VertexShader> resultVShader = nullptr;
+  SPtr<Dx11VertexShader>resultVShader = nullptr;
 
-  if (binaryBlob != nullptr && m_device != nullptr) {
-    if (SUCCEEDED(D3DReflect(binaryBlob->GetBufferPointer(),
-                             binaryBlob->GetBufferSize(),
-                             IID_ID3D11ShaderReflection,
-                             (void**)&shaderReflection))) {
-
-      const auto desc = createInputLayoutInternal(shaderReflection);
-
-      const UINT numElements = static_cast<UINT>(desc.size());
-
-      if (desc.empty()) {
-        if (SUCCEEDED(m_device->CreateVertexShader(binaryBlob->GetBufferPointer(),
-                                                   binaryBlob->GetBufferSize(),
-                                                   nullptr, &resultShader)) &&
-            SUCCEEDED(m_device->CreateInputLayout(desc.data(), numElements, ///  warning C4267: 'argument': conversion from 'size_t' to 'UINT', possible loss of data
-                                                  binaryBlob->GetBufferPointer(),
-                                                  binaryBlob->GetBufferSize(),
-                                                  &resultLayout))) {
-          resultVShader = std::make_shared<Dx11VertexShader>();
-          resultVShader->m_shader = resultShader;
-          resultVShader->m_InputLayout = resultLayout;
-        }
-      }
-    }
+  if (binaryBlob == nullptr && m_device == nullptr) {
+    return nullptr;
   }
+
+  if (!SUCCEEDED(D3DReflect(binaryBlob->GetBufferPointer(),
+                            binaryBlob->GetBufferSize(),
+                            IID_ID3D11ShaderReflection,
+                            (void**)&shaderReflection))) {
+    return nullptr;
+  }
+  const Vector<D3D11_INPUT_ELEMENT_DESC> desc = createInputLayoutInternal(shaderReflection);
+
+  const uint32 numElements = static_cast<UINT>(desc.size());
+
+  if (!desc.empty()) {
+    if (SUCCEEDED(m_device->CreateVertexShader(binaryBlob->GetBufferPointer(),
+                                               binaryBlob->GetBufferSize(),
+                                               nullptr, &resultShader)) &&
+        SUCCEEDED(m_device->CreateInputLayout(desc.data(), numElements,
+                                              binaryBlob->GetBufferPointer(),
+                                              binaryBlob->GetBufferSize(),
+                                              &resultLayout))) {
+      resultVShader = std::make_shared<Dx11VertexShader>();
+      resultVShader->m_shader = resultShader;
+      resultVShader->m_InputLayout = resultLayout;
+    }
+  
+  }
+  
   safeRelease(shaderReflection);
   safeRelease(binaryBlob);
   return resultVShader;
 }
 
 void
-Dx11GraphicsAPI::setVertexShader(WeakPtr<VertexShader> _shader) {
+Dx11GraphicsAPI::setVertexShader(WeakPtr<VertexShader>_shader) {
   if (_shader.expired()) {
     return;
   }
@@ -875,10 +921,16 @@ Dx11GraphicsAPI::setVertexShader(WeakPtr<VertexShader> _shader) {
 SPtr<PixelShader>
 Dx11GraphicsAPI::createPixelShader(const String& _shaderCode,
                                    const String& _entryPoint,
-                                   Vector<String> _defines) {
+                                   Vector<String>& _defines, uint32 _shaderModel) {
   ID3DBlob* binaryBlob = nullptr;
   ID3D11PixelShader* resultShader = nullptr;
-  SPtr<Dx11PixelShader> shaderPtr = nullptr;
+  SPtr<Dx11PixelShader>shaderPtr = nullptr;
+
+  if (m_device == nullptr) {
+    std::cout << 
+      "createPixelShader function, error m_device = nullptr" << std::endl;
+    return nullptr;
+  }
 
   if (m_device == nullptr) {
     std::cout << 
@@ -887,7 +939,7 @@ Dx11GraphicsAPI::createPixelShader(const String& _shaderCode,
   }
 
   binaryBlob = compileShaderInternal(_shaderCode, _entryPoint, _defines,
-                                     SHADER_TYPE::PIXEL_SHADER);
+                                     SHADER_TYPE::PIXEL_SHADER, _shaderModel);
 
   if (binaryBlob == nullptr) {
     std::cout <<
@@ -907,14 +959,14 @@ Dx11GraphicsAPI::createPixelShader(const String& _shaderCode,
   return shaderPtr;
 }
 
-void Dx11GraphicsAPI::setPixelShader(WeakPtr<PixelShader> _shader) {
+void Dx11GraphicsAPI::setPixelShader(WeakPtr<PixelShader>_shader) {
   if (_shader.expired() || m_immediateContext == nullptr) {
     std::cout <<
       "setPixelShader function" << "/n" << 
       "shader or immmediate contextex = nullptr" << 
       std::endl;
   }
-  auto p_Ps = std::reinterpret_pointer_cast<Dx11PixelShader> (_shader.lock());
+  auto p_Ps = std::reinterpret_pointer_cast<Dx11PixelShader>(_shader.lock());
   m_immediateContext->PSSetShader(p_Ps->pixShader, nullptr, 0);
 }
 
@@ -958,12 +1010,12 @@ Dx11GraphicsAPI::createRasterizerState(CULL_MODE::E _cullMode,
 }
 
 void
-Dx11GraphicsAPI::setRasterizerState(WeakPtr<RasterizerState> _rasterizer) {
+Dx11GraphicsAPI::setRasterizerState(WeakPtr<RasterizerState>_rasterizer) {
   if (m_device == nullptr || _rasterizer.expired()) {
     return;
   }
   auto dxrasterizer = 
-    std::reinterpret_pointer_cast <Dx11RasterizerState> (_rasterizer.lock());
+    std::reinterpret_pointer_cast <Dx11RasterizerState>(_rasterizer.lock());
 
   if (dxrasterizer && dxrasterizer->rasterizer) {
     m_immediateContext->RSSetState(dxrasterizer->rasterizer);
@@ -975,7 +1027,7 @@ Dx11GraphicsAPI::createRenderTargetView(uint32 _width,
                                         uint32 _height,
                                         TEXTURE_FORMAT::E _format) {
 
-  std::shared_ptr<Dx11RenderTargetView> resultRTV = nullptr;
+  SPtr<Dx11RenderTargetView>resultRTV = nullptr;
   ID3D11Texture2D* renderTargetTexture = nullptr;
   ID3D11RenderTargetView* resultView = nullptr;
   ID3D11ShaderResourceView* resourceView = nullptr;
@@ -987,7 +1039,7 @@ Dx11GraphicsAPI::createRenderTargetView(uint32 _width,
       _width,
       _height,
       _format,
-      GAPI_BIND_FLAGS::RENDER_TARGET | GAPI_BIND_FLAGS::SHADER_RESOURCE);
+      GRAPHICS_API_BIND_FLAGS::RENDER_TARGET | GRAPHICS_API_BIND_FLAGS::SHADER_RESOURCE);
 
     if (renderTargetTexture) {
       if (SUCCEEDED(m_device->CreateRenderTargetView(renderTargetTexture,
@@ -1015,8 +1067,8 @@ Dx11GraphicsAPI::createRenderTargetView(uint32 _width,
 }
 
 void
-Dx11GraphicsAPI::setRenderTargetView(WeakPtr<RenderTargetView> _renderTarget, 
-                                     WeakPtr<DepthStencilView> _deptStencil) {
+Dx11GraphicsAPI::setRenderTargetView(WeakPtr<RenderTargetView>_renderTarget, 
+                                     WeakPtr<DepthStencilView>_deptStencil) {
   if (m_immediateContext == nullptr) {
     std::cout << "Null immediate context" << std::endl;
     return;
@@ -1027,7 +1079,7 @@ Dx11GraphicsAPI::setRenderTargetView(WeakPtr<RenderTargetView> _renderTarget,
 
 
   if (!_renderTarget.expired()) {
-    std::shared_ptr<Dx11RenderTargetView> tempRTV =
+    SPtr<Dx11RenderTargetView>tempRTV =
       std::reinterpret_pointer_cast<Dx11RenderTargetView>(_renderTarget.lock());
 
     if (tempRTV && tempRTV->m_renderTargetView) {
@@ -1037,7 +1089,7 @@ Dx11GraphicsAPI::setRenderTargetView(WeakPtr<RenderTargetView> _renderTarget,
 
 
   if (!_deptStencil.expired()) {
-    std::shared_ptr<Dx11DepthStencilView> tempDSV =
+    SPtr<Dx11DepthStencilView>tempDSV =
       std::reinterpret_pointer_cast<Dx11DepthStencilView>(_deptStencil.lock());
 
     if (tempDSV && tempDSV->m_depthStencilView) {
@@ -1057,13 +1109,13 @@ Dx11GraphicsAPI::setRenderTargetView(WeakPtr<RenderTargetView> _renderTarget,
 
 void 
 Dx11GraphicsAPI::setRenderTargetViews( Vector<WeakPtr<RenderTargetView>>& _renderTargets, 
-                                      WeakPtr<DepthStencilView> _depthStencil) {
+                                      WeakPtr<DepthStencilView>_depthStencil) {
   if (m_immediateContext == nullptr) {
     std::cout << "Null immediate context" << std::endl;
     return;
   }
 
-  std::vector<ID3D11RenderTargetView*> rtvs;
+  std::vector<ID3D11RenderTargetView*>rtvs;
   rtvs.reserve(_renderTargets.size());
 
   for (const auto& weakRTV : _renderTargets) {
@@ -1095,7 +1147,7 @@ Dx11GraphicsAPI::setRenderTargetViews( Vector<WeakPtr<RenderTargetView>>& _rende
 }
 
 void
-Dx11GraphicsAPI::clearRenderTargetView(WeakPtr<RenderTargetView> _renderTarget,
+Dx11GraphicsAPI::clearRenderTargetView(WeakPtr<RenderTargetView>_renderTarget,
                                        float _color[4]) {
 
   if (_renderTarget.expired() || m_immediateContext == nullptr) {
@@ -1105,7 +1157,7 @@ Dx11GraphicsAPI::clearRenderTargetView(WeakPtr<RenderTargetView> _renderTarget,
 
 
 
-  std::shared_ptr<Dx11RenderTargetView> tempRTV = 
+  SPtr<Dx11RenderTargetView>tempRTV = 
     std::reinterpret_pointer_cast<Dx11RenderTargetView>(_renderTarget.lock());
 
   if (tempRTV && tempRTV->m_renderTargetView) {
@@ -1113,8 +1165,8 @@ Dx11GraphicsAPI::clearRenderTargetView(WeakPtr<RenderTargetView> _renderTarget,
   }
 }
 
-void Dx11GraphicsAPI::clearDepthStencilView(WeakPtr<DepthStencilView> _depthStencil,
-                                            DepthStencilView::ClearFlags _flag,
+void Dx11GraphicsAPI::clearDepthStencilView(WeakPtr<DepthStencilView>_depthStencil,
+                                            ClearFlags::E _flag,
                                             float _depth, uint8 _stencil) {
 
   if (_depthStencil.expired() || m_immediateContext == nullptr) {
@@ -1122,7 +1174,7 @@ void Dx11GraphicsAPI::clearDepthStencilView(WeakPtr<DepthStencilView> _depthSten
     return;
   }
 
-  std::shared_ptr<Dx11DepthStencilView> tempDS =
+  SPtr<Dx11DepthStencilView>tempDS =
     std::reinterpret_pointer_cast<Dx11DepthStencilView>(_depthStencil.lock());
 
   if (tempDS && m_immediateContext) {
@@ -1133,7 +1185,7 @@ void Dx11GraphicsAPI::clearDepthStencilView(WeakPtr<DepthStencilView> _depthSten
   }
 }
 
-SPtr<SamplerState> Dx11GraphicsAPI::createSamplerState() {
+SPtr<SamplerState>Dx11GraphicsAPI::createSamplerState() {
   if (m_device == nullptr) {
     return nullptr;
   }
@@ -1161,7 +1213,7 @@ SPtr<SamplerState> Dx11GraphicsAPI::createSamplerState() {
   return nullptr;
 }
 
-void Dx11GraphicsAPI::setSamplerState(uint32 _slot,WeakPtr<SamplerState> _sampler) {
+void Dx11GraphicsAPI::setSamplerState(uint32 _slot,WeakPtr<SamplerState>_sampler) {
   if (m_immediateContext == nullptr || _sampler.expired()) {
     return;
   }
@@ -1224,7 +1276,7 @@ Dx11GraphicsAPI::createShadowMap(uint32 _width, uint32 _height) {
   return nullptr;
 }
 
-bool Dx11GraphicsAPI::readShadowMap(WeakPtr<DepthStencilView> _shadowDepth, 
+bool Dx11GraphicsAPI::readShadowMap(WeakPtr<DepthStencilView>_shadowDepth, 
                                     Vector<float>& outDepth) {
 
   if (_shadowDepth.expired() || m_device == nullptr ||
@@ -1283,7 +1335,7 @@ bool Dx11GraphicsAPI::readShadowMap(WeakPtr<DepthStencilView> _shadowDepth,
 }
 
 void 
-Dx11GraphicsAPI::setShadowMap(uint32 _slot, WeakPtr<Texture2D> _mapTexture) {
+Dx11GraphicsAPI::setShadowMap(uint32 _slot, WeakPtr<Texture2D>_mapTexture) {
 
   if (m_immediateContext == nullptr) {
     return;
@@ -1302,7 +1354,7 @@ Dx11GraphicsAPI::setShadowMap(uint32 _slot, WeakPtr<Texture2D> _mapTexture) {
 }
 
 bool 
-Dx11GraphicsAPI::isOccluded(WeakPtr<DepthStencilView> _shadowDepth, 
+Dx11GraphicsAPI::isOccluded(WeakPtr<DepthStencilView>_shadowDepth, 
                             const Vector3& worldPos, const Matrix4& _shadowView, 
                             const Matrix4 _shadowProjection, float bias) {
   
@@ -1318,7 +1370,7 @@ Dx11GraphicsAPI::isOccluded(WeakPtr<DepthStencilView> _shadowDepth,
     return false;
   }
 
-  std::vector<float> depthData;
+  std::vector<float>depthData;
   if (!readShadowMap(_shadowDepth, depthData)) {
     return false;
   }
@@ -1365,14 +1417,14 @@ Dx11GraphicsAPI::isOccluded(WeakPtr<DepthStencilView> _shadowDepth,
 
 void 
 Dx11GraphicsAPI::setShadowMapFromDepthView(uint32 _slot,
-                                           WeakPtr<DepthStencilView> _shadowDepth) {
+                                           WeakPtr<DepthStencilView>_shadowDepth) {
 
   if (m_immediateContext == nullptr) {
     return;
   }
 
   if (_shadowDepth.expired()) {
-    setShadowMap(_slot, std::shared_ptr<Texture2D>());
+    setShadowMap(_slot, SPtr<Texture2D>());
     return;
   }
 
@@ -1380,7 +1432,7 @@ Dx11GraphicsAPI::setShadowMapFromDepthView(uint32 _slot,
     std::reinterpret_pointer_cast<Dx11DepthStencilView>(_shadowDepth.lock());
 
   if (!depthStencilView || depthStencilView->m_shadowSRV == nullptr) {
-    setShadowMap(_slot, std::shared_ptr<Texture2D>());
+    setShadowMap(_slot, SPtr<Texture2D>());
     return;
   }
 
@@ -1389,7 +1441,7 @@ Dx11GraphicsAPI::setShadowMapFromDepthView(uint32 _slot,
   wrapper->textureView = depthStencilView->m_shadowSRV;
   depthStencilView->m_shadowSRV->AddRef();
 
-  std::shared_ptr<Texture2D> tex = std::static_pointer_cast<Texture2D>(wrapper);
+  SPtr<Texture2D>tex = std::static_pointer_cast<Texture2D>(wrapper);
   setShadowMap(_slot, tex);
 }
 
@@ -1440,7 +1492,7 @@ Dx11GraphicsAPI::createTexture2DWithImageData(const Vector<uint8>& _imgData,
 
 
 void
-Dx11GraphicsAPI::setTexture2D(uint32 _slot, WeakPtr<Texture2D> _texture) {
+Dx11GraphicsAPI::setTexture2D(uint32 _slot, WeakPtr<Texture2D>_texture) {
   if (m_immediateContext == nullptr)
     return;
 

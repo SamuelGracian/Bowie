@@ -1,11 +1,17 @@
-#include "bowWindow.h"
-#include "bowDx11GraphicsAPI.h"
-#include "bowMath.h"
-
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <filesystem>
+#include <chrono>
+
+#include "bowDx11GraphicsAPI.h"
+#include "bowDx11RenderTargetView.h"
+#include "bowMath.h"
+#include "bowMatrix.h"
+#include "bowVector4.h"
+#include "bowVector3.h"
+#include "bowSwapChain.h"
+#include "bowWindow.h"
 
 using namespace bowEngineSDK;
 
@@ -15,7 +21,9 @@ struct GeneralConstBuffer
   Matrix4 View;
   Matrix4 Perspective;
   Matrix4 worldMatrix;
-  Matrix4 ShadowView;
+  Matrix4 shadowView;
+  Matrix4 shadowProjection;
+
   Vector3 cameraPosition;
   float Shininess;
 };
@@ -29,6 +37,24 @@ struct MoveVertex
   float c;
   float d;
 };
+
+struct SimpleVertex
+{
+  Vector4 position;
+  Vector4 normals;
+  Vector4 tangent;
+  Vector4 binormals;
+  Vector2 texture;
+
+  SimpleVertex(
+    const Vector4& pos,
+    const Vector4& normal,
+    const Vector4& tan,
+    const Vector4& binormal,
+    const Vector2& tex)
+    : position(pos), normals(normal), tangent(tan), binormals(binormal),
+    texture(tex) {}
+};/// Simple vertex struct
 
 String
 readFileToString(const std::wstring& _filePath) {
@@ -67,9 +93,38 @@ readFileToString(const std::wstring& _filePath) {
 int main() {
   //bowEngineSDK::DisplaySurface window;
 
+    return {};
+  }
+
+  std::stringstream buffer;
+  buffer << file.rdbuf();
+
+  if (file.fail() && !file.eof()) {
+    std::wcerr
+      << L"Error while reading file: "
+      << absolutePath.wstring()
+      << L"\n";
+
+    return {};
+  }
+
+  return buffer.str();
+}
+
+int main() {
+  
+  /// VARIABLES
   bool running = true;
+  /* WINDOW */
   float width = 800;
   float height = 600;
+  /* DELTA TIME */
+  auto pre = std::chrono::high_resolution_clock::now();
+  float time = 0.0f;
+  /* COLORS */
+  float semiClearColor[4] = { 0.02f, 0.08f, 0.20f, 1.0f };
+  /* FLAG */
+  uint8 flag = ClearFlags::Depth | ClearFlags::Stencil;
 
   /// Cameras
   Vector3 Eye(150.0f, 150.0f, 500.0f);
@@ -82,6 +137,11 @@ int main() {
                                              width / height,
                                              0.01f,1000.0f);
 
+  /// WORLD MATRIX AND TRANSLATIONS
+  Matrix4 modelWorldScale = Matrix4::fromScaleVector(Vector3(50, 50, 50));
+  Vector3 modelWorldTranslation(0.0f, 0.0f, 0.0f);
+
+  /// INIT WINDOW
   auto window = std::make_shared<DisplaySurface>();
 
   if (!window->init(static_cast<int32>(width),static_cast<int32>(height),
@@ -95,47 +155,68 @@ int main() {
 
   GraphicsAPI& grapi = GraphicsAPI::instance();
 
+  /// WINDOW
   if (!grapi.init(window)) {
     GraphicsAPI::shutDown();
     std::cout << "Failed to init grapi" << std::endl;
     return -1;
   }
 
-  SPtr<PixelShader> p_pixelShader = grapi.createPixelShader(
-    readFileToString(L"RawData/Shaders.fxh"),"PShader", defines);
+  /// SHADERS
+  SPtr<PixelShader> p_ShaderShader = grapi.createPixelShader(
+                                     readFileToString(L"RawData/Shaders.fxh"),
+                                     "PShader",
+                                     defines,
+                                     4);
+  
 
   SPtr<PixelShader> p_pixelShader1 = grapi.createPixelShader(
-    readFileToString(L"RawData/PixelShader.fxh"),"PShader", defines);
+                                   readFileToString(L"RawData/PixelShader.fxh"),
+                                   "PShader",
+                                   defines,
+                                   4);
 
   SPtr<VertexShader> p_vertexShader = grapi.createVertexShader(
-    readFileToString(L"RawData/VertexShader.fxh"), "VShader", defines);
+    readFileToString(L"RawData/VertexShader.fxh"), "VShader", defines, 4);
 
-  auto swapChain = grapi.createSwapChain(window,
+  /// DEPTH STENCIL VIEW
+  SPtr<DepthStencilView> p_depthSV = grapi.createDepthStencil(window->getClientWidth(),
+                                                              window->getClientHeight(),
+                                                              TEXTURE_FORMAT::D24_UNORM_S8_UINT);
+
+  /// SWAP CHAIN
+  SPtr<SwapChain> p_swapChain = grapi.createSwapChain(window,
                                          TEXTURE_FORMAT::R8G8B8A8_UNORM);
 
-  if (!swapChain) {
+  if (!p_swapChain) {
     grapi.cleanUpResources();
     GraphicsAPI::shutDown();
     std::cout << "Failed to start swap chain" << std::endl;
     return -1;
   }
 
+  /// SAMPLER STATE
+  SPtr<SamplerState> p_sampler = grapi.createSamplerState();
+
   /// Render target view
-  auto renderTV = swapChain->getRenderTargetView();
- 
-  if (!renderTV) {
-    std::cout << "Failed to create render target view " << std::endl;
-  }
+  Vector<WeakPtr<RenderTargetView>> gRenderTVS; /// Buffer to save render target view
 
   ///const buffer for camera
   GeneralConstBuffer cameraData;
   cameraData.View = view;
   cameraData.Perspective = perspective;
+  cameraData.worldMatrix = Matrix4::IDENTITY;
+  cameraData.shadowView = Matrix4::IDENTITY;
+  cameraData.shadowProjection = Matrix4::IDENTITY;
   cameraData.cameraPosition = Eye;
   cameraData.Shininess = 2;
 
+  SPtr<ConstBuffer> p_constBufferCamera = 
+    grapi.createConstBuffer(sizeof(GeneralConstBuffer),
+                            0);
+
   /// CUBE OBJECTS
-  Vector<SimpleVertex> cubeVertices {
+  Vector<SimpleVertex> cubeVertex {
     // Front
     // Normal (0,0,1)
     SimpleVertex({-1.0f, 1.0f, 1.0f, 1.0f},
@@ -318,6 +399,11 @@ int main() {
   p_vertexBuffer = grapi.createVertexBuffer(sizeof(SimpleVertex) *
                                             static_cast<uint32>(cubeVertices.size()),
                                             cubeVertices.data());
+                                            static_cast<uint32>(cubeVertex.size()),
+                                            cubeVertex.data());
+
+  /// TOPOLOGY
+  SPtr <Topology> p_topology = grapi.createTopology(TOPOLOGY_TYPE::TriangleList);
 
   /// RASTERIZER STATE
   SPtr<RasterizerState> p_rasterizer = nullptr;
@@ -328,9 +414,67 @@ int main() {
     return -1;
   }
 
+
+
   while (running) {
     window->processMessages();
+
+    auto now = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<float> elapsed = now - pre;
+    pre = now;
+
+    time += elapsed.count();
+
+    const float angle = time * 0.5f;
+    const float cosine = Math::cos(angle);
+    const float sine = Math::sin(angle);
+
+    Matrix4 modelWorldRotation = Matrix4::fromRotationMatrix(
+      1.0f, 0.0f, 0.0f,
+      0.0f, cosine, sine,
+      0.0f, -sine, cosine
+    );
+
+    Matrix4 modelWorld = modelWorldRotation * modelWorldScale;
+    cameraData.worldMatrix = modelWorld;
+
+    grapi.updateConstBuffer(p_constBufferCamera,
+                            sizeof(GeneralConstBuffer),
+                            &cameraData);
+
+    grapi.setRenderTargetViews(gRenderTVS,
+                               p_depthSV);
+
+    grapi.clearRenderTargetView(p_swapChain->getRenderTargetView(),
+                                semiClearColor);
+
+    grapi.clearDepthStencilView(p_depthSV,
+                                static_cast<ClearFlags::E>(flag),
+                                1.0f,
+                                0.0f);
+
+    grapi.setRasterizerState(p_rasterizer);
+    grapi.setVertexShader(p_vertexShader);
+    grapi.setPixelShader(p_ShaderShader);
+    grapi.setTopology(p_topology);
+
+    grapi.setVertexBuffer(
+      p_vertexBuffer,
+      sizeof(SimpleVertex),
+      0
+    );
+
+    grapi.setIndexBuffer(p_indexBuffer);
+    grapi.setConstBuffer(p_constBufferCamera);
+
+    grapi.draw(
+      static_cast<uint32>(cubeIndices.size()),
+      0
+    );
+
+    p_swapChain->present(1, 0);
   }
+
   grapi.cleanUpResources();
   GraphicsAPI::shutDown();
   return 0;

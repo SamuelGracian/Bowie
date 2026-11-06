@@ -17,16 +17,15 @@ namespace bowEngineSDK
 class BaseBuffer
 {
  public:
-  BaseBuffer() = default;
-  ~BaseBuffer() = default;
-
-  void 
-  setByteWidth(const uint32 bytewidth = 0) {
-    assert(bytewidth != 0);
-    m_byteWidth = bytewidth;
+  BaseBuffer(uint32 _byteWidth) 
+    : m_byteWidth(_byteWidth)
+  {
+    BOW_ASSERT(m_byteWidth != 0);
   }
 
-  FORCEINLINE uint32
+  ~BaseBuffer() = default;
+
+  NODISCARD FORCEINLINE uint32
   getByteWidth() const { return m_byteWidth; }
 
  protected:

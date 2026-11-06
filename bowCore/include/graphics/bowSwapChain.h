@@ -29,6 +29,7 @@ class SwapChain
 
  protected:
    SPtr<RenderTargetView> m_renderTargetView;
+   SPtr<RenderTargetView> m_renderTargetView1;
 
 };
 }/// namespace bowEngineSDK

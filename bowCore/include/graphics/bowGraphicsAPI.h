@@ -1,25 +1,7 @@
 #pragma once
 
-/// To do: alphabetical order, comments on functions
 #include "bowCoreRequisites.h"
-#include "bowMatrix.h"
-#include "bowVector3.h"
-#include "bowVector4.h"
-#include "bowWindow.h"
-#include "bowRenderTargetView.h"
-#include "bowConstBuffer.h"
-#include "bowIndexBuffer.h"
-#include "bowVertexBuffer.h"
-#include "bowGraphicsGenerals.h"
-#include "bowSwapChain.h"
-#include "bowTopology.h"
-#include "bowDepthStencilView.h"
-#include "bowViewPort.h"
-#include "bowVertexShader.h"
-#include "bowPixelShader.h"
 #include "bowModule.h"
-#include "bowRasterizerState.h"
-#include "bowSamplerState.h"
 
 namespace bowEngineSDK
 {
@@ -42,6 +24,23 @@ struct SimpleVertex
     : position(pos), normals(normal), tangent(tan), binormals(binormal),
     texture(tex) {}
 };/// Simple vertex struct
+class ConstBuffer;
+class DepthStencilView;
+class DisplaySurface;
+class IndexBuffer;
+class Matrix4;
+class PixelShader;
+class RasterizerState;
+class RenderTargetView;
+class Texture2D;
+class Topology;
+class SamplerState;
+class SwapChain;
+class Vector3;
+class Vector4;
+class VertexBuffer;
+class VertexShader;
+class ViewPort;
 
 class BOW_CORE_EXPORT GraphicsAPI : public Module <GraphicsAPI>
 {
@@ -52,9 +51,7 @@ public:
   *  Default constructor.
   *  Sets te shader model as 0.
   */
-  GraphicsAPI():
-   m_shaderModel(0)
-  {}
+  GraphicsAPI() = default;
   
   /*
   * @brief
@@ -132,7 +129,7 @@ public:
   * @retun none
   */
   virtual void
-  setConstBuffer(WeakPtr<ConstBuffer> buffer, void* _data = nullptr) = 0;
+  setConstBuffer(WeakPtr<ConstBuffer> buffer) = 0;
 
   /*
   * @brief
@@ -172,7 +169,7 @@ public:
   * @return SharedPtr<Topology>
   */
   virtual SPtr<Topology>
-  createTopology(Topology::Type _type = Topology::Type::TriangleList) = 0;
+  createTopology(TOPOLOGY_TYPE::E _type = TOPOLOGY_TYPE::TriangleList) = 0;
 
   /*
   * @brief
@@ -198,14 +195,14 @@ public:
   /// Shaders
   virtual SPtr<VertexShader>
   createVertexShader(const String& _shaderCode, const String& _entryPoint,
-                     Vector<String> _defines) = 0;
+                     Vector<String>& _defines, uint32 _shaderModel = 5) = 0;
 
   virtual void
   setVertexShader(WeakPtr<VertexShader> _shader ) = 0;
 
   virtual SPtr<PixelShader>
   createPixelShader(const String& _shaderCode, const String& _entryPoint,
-                    Vector<String> _defines) = 0;
+                    Vector<String>& _defines, uint32 _shaderModel = 5) = 0;
 
   virtual void
   setPixelShader(WeakPtr<PixelShader> _shader) = 0;
@@ -217,13 +214,18 @@ public:
   * @return SharedPtr<ViewPort>
   */
   virtual SPtr<ViewPort>
-  createViewPort() = 0;
+  createViewPort(float width, float height, float minDepth, float maxDepth,
+                 float topLeftX, float topLeftY) = 0;
+
+  virtual bool
+  setViewPort(WeakPtr<ViewPort> _viewPort) = 0;
 
   /// texture
 
   virtual SPtr<Texture2D>
-  createTexture2DWithImageData(const Vector<uint8>& _imgData, int32 _witdh,
-                  int32 _height) = 0;
+  createTexture2DWithImageData(const Vector<uint8>& _imgData,
+                               int32 _witdh,
+                               int32 _height) = 0;
 
   SPtr<Texture2D>
   createTexture2DFromFile(const String& _filePath);
@@ -233,8 +235,8 @@ public:
 
   /// rasterizer state
   virtual SPtr<RasterizerState>
-   createRasterizerState(CULL_MODE::E _cullMode, FILL_MODE::E _fillMode,
-                         bool _deathClip) = 0;
+  createRasterizerState(CULL_MODE::E _cullMode, FILL_MODE::E _fillMode,
+                        bool _deathClip) = 0;
 
   virtual void
   setRasterizerState(WeakPtr<RasterizerState> _rasterizer) = 0;
@@ -246,8 +248,8 @@ public:
                          TEXTURE_FORMAT::E _format) = 0;
 
   virtual void
-   setRenderTargetView(WeakPtr<RenderTargetView> _renderTarget,
-                       WeakPtr<DepthStencilView> _deptStencill) = 0;
+  setRenderTargetView(WeakPtr<RenderTargetView> _renderTarget,
+                      WeakPtr<DepthStencilView> _deptStencill) = 0;
 
   virtual void
   setRenderTargetViews(Vector<WeakPtr<RenderTargetView>>& _renderTargets,
@@ -259,10 +261,11 @@ public:
 
   virtual void
   clearDepthStencilView(WeakPtr<DepthStencilView> _depthStencil,
-                                   DepthStencilView::ClearFlags _flag,
+                                   ClearFlags::E _flag,
                                    float _depth, uint8 _stencil) = 0;
 
   /// sampler state
+
   virtual SPtr <SamplerState>
   createSamplerState() = 0;
 
@@ -270,6 +273,7 @@ public:
   setSamplerState(uint32 _slot, WeakPtr<SamplerState> _sampler) = 0;
 
   /// shadow map
+
   virtual SPtr<DepthStencilView>
   createShadowMap(uint32 _width, uint32 _height) = 0;
 
@@ -288,17 +292,5 @@ public:
   virtual void
   setShadowMapFromDepthView(uint32 _slot,
                             WeakPtr<DepthStencilView> _shadowDepth) = 0;
-
- protected:
-	 uint32 m_shaderModel;
-
-};// GraphicsAPI class
+};
 }/// namespace bowEngineSDK
-
-/*
-* rasterizer state and functions, // Dx11 file 
-* render target //
-* depth stencil //
-* create and set sampler /// 
-* Shadow functions///
-*/
