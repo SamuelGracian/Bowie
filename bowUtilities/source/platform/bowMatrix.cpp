@@ -343,6 +343,16 @@ Matrix4::perspective(float _foV, float _aspect, float _zNear, float _zFar) {
   );
 }
 
+NODISCARD Matrix4 
+Matrix4::fromScaleVector(const Vector3 _scale) {
+  Matrix4 returnMatrix = Matrix4::IDENTITY;
+  returnMatrix.data[0][0] = _scale.x;
+  returnMatrix.data[1][1] = _scale.y;
+  returnMatrix.data[2][2] = _scale.z;
+
+  return returnMatrix;
+}
+
 /*     OPERATORS     */
 
 Matrix4&

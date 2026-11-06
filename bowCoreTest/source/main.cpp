@@ -114,6 +114,11 @@ int main() {
                                              width / height,
                                              0.01f,1000.0f);
 
+  /// WORLD MATRIX AND TRANSLATIONS
+  Matrix4 modelWorldScale = Matrix4::fromScaleVector(Vector3(50, 50, 50));
+  Vector3 modelWorldTranslation(0.0f, 0.0f, 0.0f);
+
+  /// INIT WINDOW
   auto window = std::make_shared<DisplaySurface>();
 
   if (!window->init(static_cast<int32>(width),static_cast<int32>(height),
@@ -146,6 +151,11 @@ int main() {
   SPtr<VertexShader> p_vertexShader = grapi.createVertexShader(
     readFileToString(L"RawData/VertexShader.fxh"), "VShader", defines, 4);
 
+  /// DEPTH STENCIL VIEW
+  SPtr<DepthStencilView> p_depthSV = grapi.createDepthStencil(window->getClientWidth(),
+                                                              window->getClientHeight(),
+                                                              TEXTURE_FORMAT::D24_UNORM_S8_UINT);
+
   /// SWAP CHAIN
   SPtr<SwapChain> swapChain = grapi.createSwapChain(window,
                                          TEXTURE_FORMAT::R8G8B8A8_UNORM);
@@ -158,19 +168,19 @@ int main() {
   }
 
   /// Render target view
-  Vector<SPtr<RenderTargetView>> gRenderTVS; /// Buffer to save render target views
+  Vector<WeakPtr<RenderTargetView>> gRenderTVS; /// Buffer to save render target views
 
-  auto normalRTV = grapi.createRenderTargetView(window->getClientWidth(),
-                                                window->getClientHeight(),
-                                                TEXTURE_FORMAT::R8G8B8A8_UNORM);
+  SPtr<RenderTargetView>normalRTV = grapi.createRenderTargetView(window->getClientWidth(),
+                                                                 window->getClientHeight(),
+                                                                 TEXTURE_FORMAT::R8G8B8A8_UNORM);
 
-  auto colorRTV = grapi.createRenderTargetView(window->getClientWidth(),
-                                               window->getClientHeight(),
-                                               TEXTURE_FORMAT::R8G8B8A8_UNORM);
+  SPtr<RenderTargetView>colorRTV = grapi.createRenderTargetView(window->getClientWidth(),
+                                                                window->getClientHeight(),
+                                                                TEXTURE_FORMAT::R8G8B8A8_UNORM);
   
-  auto specularRTV = grapi.createRenderTargetView(window->getClientWidth(),
-                                                  window->getClientHeight(),
-                                                  TEXTURE_FORMAT::R8G8B8A8_UNORM);
+  SPtr<RenderTargetView>specularRTV = grapi.createRenderTargetView(window->getClientWidth(),
+                                                                   window->getClientHeight(),
+                                                                   TEXTURE_FORMAT::R8G8B8A8_UNORM);
 
   gRenderTVS.push_back(normalRTV);
   gRenderTVS.push_back(colorRTV);
@@ -405,7 +415,7 @@ int main() {
 
     grapi.updateConstBuffer(p_constBufferCamera, sizeof(GeneralConstBuffer), &cameraData);
 
-    grapi.setRenderTargetViews(gRenderTVS,);
+    grapi.setRenderTargetViews(gRenderTVS,p_depthSV);
 
   }
   grapi.cleanUpResources();

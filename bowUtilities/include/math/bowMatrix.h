@@ -137,6 +137,15 @@ public:
   NODISCARD static Matrix4
   perspective(float _foV, float _aspect, float _zNear, float _zFar);
 
+  /*
+  * @brief
+  *  Create a square matrix with the diagonal component set to _scale.
+  * @param Vector vector containing components for scaling.
+  * @return Matrix with V along the diagonal, and 1 in teh bottom right.
+  */
+  NODISCARD static Matrix4
+  fromScaleVector(const Vector3 _scale); 
+
   /********************************************/
   /*  OPERATORS  */
   /********************************************/
