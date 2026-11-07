@@ -428,6 +428,7 @@ int main() {
     return -1;
   }
 
+  SPtr<Texture2D>cubeTex2 = grapi.createTexture2DFromFile("RawData/12.jpg");
 
   while (running) {
     window->processMessages();
@@ -495,6 +496,19 @@ int main() {
       static_cast<uint32>(cubeIndices.size()),
       0
     );
+
+    Matrix4 translationMatrix = Matrix4::fromTranslationVector({ 75.f,75.f,75.f });
+    modelWorld *= translationMatrix;
+    cameraData.worldMatrix = modelWorld;
+
+    grapi.updateConstBuffer(p_constBufferCamera,
+                            sizeof(GeneralConstBuffer),
+                            &cameraData);
+
+    grapi.setTexture2D(1, cubeTex2);
+
+    grapi.draw(
+      static_cast<uint32>(cubeIndices.size()), 0);
 
     p_swapChain->present(1, 0);
   }
