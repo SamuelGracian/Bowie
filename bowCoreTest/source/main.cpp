@@ -470,18 +470,18 @@ int main() {
 
     grapi.setVertexShader(p_vertexShader);
     grapi.setPixelShader(p_ShaderShader);
-    grapi.setPixelShader(p_pixelShader1);
+    //grapi.setPixelShader(p_pixelShader1);
 
     grapi.setSamplerState(0, p_sampler);
 
     grapi.setTopology(p_topology);
 
-    grapi.setTexture2D(2,
+    grapi.setTexture2D(0,
                        defaultNormalTexture);
-    grapi.setTexture2D(3,
+    grapi.setTexture2D(1,
                        cubeTexture ? cubeTexture : defaultAlbedoTexture);
 
-    grapi.setTexture2D(4, defaultSpecularTexture);
+    grapi.setTexture2D(2, defaultSpecularTexture);
 
     grapi.setVertexBuffer(
       p_vertexBuffer,
