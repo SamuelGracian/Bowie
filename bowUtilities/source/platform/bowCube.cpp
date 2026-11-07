@@ -34,7 +34,4 @@ AAB::moveTo(const Vector3& destiny) {
   minPoint += offset;
   maxPoint += offset;
 }
-
-
-}
-
+}/// namespace bowEngineSDK

@@ -4,8 +4,8 @@
  * @author Samuel G
  * @date 24/09/2026
  *
- * Coordinates being X = front, Z = up, Y = right
- *
+ * Coordinates being X = right, Z = backward, Y = up
+ *  Right handed matrix
  */
  /************************************************************************/
 #pragma once
@@ -118,6 +118,41 @@ public:
   */
   NODISCARD Matrix4
   getInverse() const;
+
+  /*
+  * @brief
+  * @param
+  * @return
+  */
+  NODISCARD static Matrix4
+  lookAt(const Vector3& _at, const Vector3& _eye, const Vector3& _up);
+
+  /*
+  * @brief
+  *  Creates a 4x4 perspective matrix.
+  * @param float field of view, float aspect ratio, float near plane location,
+  * float far plane location, float handedness
+  * @return Matrix4
+  */
+  NODISCARD static Matrix4
+  perspective(float _foV, float _aspect, float _zNear, float _zFar);
+
+  /*
+  * @brief
+  *  Create a square matrix with the diagonal component set to _scale.
+  * @param Vector vector containing components for scaling.
+  * @return Matrix with V along the diagonal, and 1 in teh bottom right.
+  */
+  NODISCARD static Matrix4
+  fromScaleVector(const Vector3 _scale); 
+
+  NODISCARD static Matrix4
+  fromRotationMatrix(float _m00, float _m01, float _m02,
+                     float _m10, float _m11, float _m12,
+                     float _m20, float _m21, float _m22);
+  
+  NODISCARD static Matrix4
+  fromTranslationVector(const Vector3& _translation);
 
   /********************************************/
   /*  OPERATORS  */

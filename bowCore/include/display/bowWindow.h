@@ -4,7 +4,7 @@
  * @author Samuel G
  * @date 13/10/2026
  * @brief
- *
+ *  Base class to represent a window.
  */
 /*************************************************************************/
 
@@ -16,9 +16,9 @@ namespace bowEngineSDK
 {
 using DisplaySurfaceHandler = void*;
 
-class DisplaySurface
+class BOW_CORE_EXPORT DisplaySurface
 {
-public:
+ public:
 
   /*
   * @brief
@@ -32,7 +32,8 @@ public:
   */
   DisplaySurface(int32 _width, int32 _height)
     : m_width(_width),
-      m_height(_height)
+      m_height(_height),
+      m_handler(nullptr)
   {}
 
   /*
@@ -60,7 +61,7 @@ public:
   getClientHeight() const { return m_clientHeight; }
 
   FORCEINLINE DisplaySurfaceHandler
-  getHandle() const { return handler; }
+  getHandle() const { return m_handler; }
 
 
 private:
@@ -77,6 +78,6 @@ private:
   /*
   * Window handler
   */
-  DisplaySurfaceHandler handler;
+  DisplaySurfaceHandler m_handler;
 };
-}//bowEngineSDK
+}/// namespace bowEngineSDK

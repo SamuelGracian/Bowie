@@ -3,7 +3,7 @@
 
 #if BOW_PLATFORM == BOW_PLATFORM_WIN32
 #include <iostream>
-#include <Windows.h>
+#include <windows.h>
 #endif
 
 namespace bowEngineSDK
@@ -23,7 +23,7 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 
 DisplaySurface::~DisplaySurface() {
 #if BOW_PLATFORM == BOW_PLATFORM_WIN32
-  DestroyWindow(reinterpret_cast<HWND> (handler));
+  DestroyWindow(reinterpret_cast<HWND>(m_handler));
 #endif
 }
 
@@ -57,6 +57,9 @@ bool DisplaySurface::init(int32 _width, int32 _height, const String& windowName)
     std::cout << "Window could not be created" << std::endl;
     return false;
   }
+
+  /// Save the handler as hwnd
+  m_handler = reinterpret_cast<DisplaySurfaceHandler>(hwnd);
 
   RECT rc;
   GetClientRect(hwnd, &rc);
