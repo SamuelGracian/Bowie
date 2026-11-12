@@ -239,6 +239,8 @@
 #   define BOW_DLL_IMPORT
 #endif
 #define BOW_PLUGIN_EXPORT BOW_DLL_EXPORT
+#define BOW_EXTERN_C extern "C"
+#define BOW_PUGLIN_EXPORT_EXTERN BOW_EXTERN_C BOW_PLUGIN_EXPORT 
 
 /************************************************************************/
 /**

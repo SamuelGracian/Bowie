@@ -16,6 +16,11 @@ namespace bowEngineSDK
 {
 class BaseBuffer
 {
+  /*
+  * @brief
+  *  Default constructor.
+  * @param _byteWidth, byteWidth of the buffer.
+  */
  public:
   BaseBuffer(uint32 _byteWidth) 
     : m_byteWidth(_byteWidth)
@@ -23,12 +28,22 @@ class BaseBuffer
     BOW_ASSERT(m_byteWidth != 0);
   }
 
+  /*
+  * @brief
+  *  Default destructor.
+  */
   ~BaseBuffer() = default;
 
+  /*
+  * @brief
+  *  Gets the byteWidth of the buffer.
+  * @param none
+  * @return 
+  */
   NODISCARD FORCEINLINE uint32
   getByteWidth() const { return m_byteWidth; }
 
  protected:
   uint32 m_byteWidth;
 };
-}/// namespace bowEngineSDK
+}/// name space bowEngineSDK

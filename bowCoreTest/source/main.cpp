@@ -4,8 +4,8 @@
 #include <filesystem>
 #include <chrono>
 
-#include "bowDx11GraphicsAPI.h"
-#include "bowDx11RenderTargetView.h"
+#include "bowGraphicsAPI.h"
+#include "bowRenderTargetView.h"
 #include "bowMath.h"
 #include "bowMatrix.h"
 #include "bowVector4.h"
@@ -132,7 +132,7 @@ int main() {
     return -1;
   }
 
-  GraphicsAPI::startUp<Dx11GraphicsAPI>();
+  
 
   GraphicsAPI& grapi = GraphicsAPI::instance();
 
@@ -465,7 +465,7 @@ int main() {
     grapi.clearDepthStencilView(p_depthSV,
                                 static_cast<ClearFlags::E>(flag),
                                 1.0f,
-                                0.0f);
+                                0);
 
     grapi.setRasterizerState(p_rasterizer);
 

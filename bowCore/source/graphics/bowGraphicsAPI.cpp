@@ -27,7 +27,7 @@ loadImageFromFile(const String& filePath, int32* outWidth, int32* outHeight,
 
   return imageData;
 }
-}/// namespace imageLoader
+}/// name space imageLoader
 
 GraphicsAPI::~GraphicsAPI() {}
 

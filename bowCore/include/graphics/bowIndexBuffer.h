@@ -4,7 +4,7 @@
  * @author Samuel G
  * @date 16/10/2026
  * @brief
- *  Genereic class of a base buffer.
+ *  Generic class of a base buffer.
  */
  /*************************************************************************/
 
@@ -30,8 +30,8 @@ class IndexBuffer :public BaseBuffer
 
    /*
    * @brief
-   *  Defualt destructor
+   *  Default destructor
    */
    ~IndexBuffer() = default;
 };
-}/// namespace bowEngineSDK
+}/// name space bowEngineSDK

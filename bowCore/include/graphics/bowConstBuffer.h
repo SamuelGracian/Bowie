@@ -4,7 +4,7 @@
  * @author Samuel G
  * @date 16/10/2026
  * @brief
- *  Genereic class of a base buffer.
+ *  Generic class of a base buffer.
  */
  /*************************************************************************/
 #pragma once 
@@ -53,4 +53,4 @@ class ConstBuffer : public BaseBuffer
    void* m_rawData;
    bool m_isUpdatePending;
 };
-}/// namespace bowwEngineSDK
+}/// name space bowwEngineSDK

@@ -15,4 +15,6 @@ add_custom_command(TARGET bowCoreTest POST_BUILD
 
 SET_ENGINE_DEFAULTS(bowCoreTest)
 
-target_link_libraries(bowCoreTest PRIVATE bowDx11API)
+target_link_libraries(bowCoreTest PRIVATE bowCore)
+
+add_dependencies (bowCoreTest bowDx11API)
