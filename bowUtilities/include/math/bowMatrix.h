@@ -23,14 +23,14 @@ public:
   /*  CONSTRUCTORS, DESTRUCTORS  */
   /********************************************/
 
-  /*
+  /**
   * @brief
-  *  Defult constructor.
+  *  Default constructor.
   *  Row mayor matrix.
   */
   Matrix4() = default;
 
-  /*
+  /**
   * @brief
   *  Constructs a matrix from individual values.
   *  Row mayor matrix.
@@ -42,13 +42,14 @@ public:
           float M20, float M21, float M22, float M23,
           float M30, float M31, float M32, float M33);
 
-  /*
+  /**
   * @brief
   *  Copy constructor.
+  * @param copy: matrix to copy.
   */
   Matrix4(const Matrix4& copy) = default;
 
-  /*
+  /**
   * @brief
   *  Default destructor.
   */
@@ -58,99 +59,115 @@ public:
   /*  METHODS  */
   /********************************************/
 
-  /*
+  /**
   * @brief
   *  Set this matrix as an identity matrix.
   *  With the values in diagonal as 1, and the rest 0.
-  * @param NONE
-  * @return NONE
+  * @param none
+  * @return none
   */
   void
   setIdentity();
 
-  /*
+  /**
   * @brief
   *  Changes the order of the matrix from mxn to nxm. Changing it rows
   *  for its columns
-  * @param NONE
-  * @return MATRIX4
-  *  Rreturns the transposed matrix.
+  * @param none
+  * @return
+  *  Returns the transposed matrix.
   */
   NODISCARD Matrix4
   transposed() const;
 
-  /*
+  /**
   * @brief
-  * @param NONE
+  * @param none
   * @return
   */
   NODISCARD float
   getDeterminant() const;
 
-  /*
+  /**
   * @brief
   *  Transform a 3D position represented as a vector3
      and transform it to a vector4.
      To make the conversion this function reads the translation from the last row.
-  * @param VECTOR3&
-  * @return VECTOR4
+  * @param vector: vector to transform.
+  * @return
   *  Returns a vector4 with the translation from the matrix.
   */
   NODISCARD Vector4
   transformPosition(const Vector3& vector) const;
 
-  /*
+  /**
   * @brief
   *  Transform a vector3, ignoring the translation from the matrix. 
-  * @param VECTOR3&
-  * @return VECTOR4
-  *  Returns a transformed vector4 witout the translation from the matrix.
+  * @param vector: vector to be used to apply the transformation.
+  * @return 
+  *  Returns a transformed vector4 without the translation from the matrix.
   */
   NODISCARD Vector4
   transformVector(const Vector3& vector) const;
 
-  /*
+  /**
   * @brief
   *  Calculates the inverse matrix.
-  * @param NONE
+  * @param none
   * @return MATRIX4
-  *  Returns the inversed matrix as a vector4.
+  *  Returns the inverse matrix as a vector4.
   */
   NODISCARD Matrix4
   getInverse() const;
 
-  /*
+  /**
   * @brief
-  * @param
-  * @return
+  *  Creates a 3-dimensional camera matrix.
+  * @param at: the look at target of the camera.
+  *  eye: the position of the camera.
+  *  up: The up vector in the world
+  * @return 3 dimensional camera matrix.
   */
   NODISCARD static Matrix4
   lookAt(const Vector3& _at, const Vector3& _eye, const Vector3& _up);
 
-  /*
+  /**
   * @brief
   *  Creates a 4x4 perspective matrix.
-  * @param float field of view, float aspect ratio, float near plane location,
-  * float far plane location, float handedness
+  * @param foV: field of view, aspect: aspect ratio, zNear: near plane location,
+  * zFar far plane location.
   * @return Matrix4
   */
   NODISCARD static Matrix4
   perspective(float _foV, float _aspect, float _zNear, float _zFar);
 
-  /*
+  /**
   * @brief
   *  Create a square matrix with the diagonal component set to _scale.
-  * @param Vector vector containing components for scaling.
-  * @return Matrix with V along the diagonal, and 1 in teh bottom right.
+  * @param scale: vector containing components for scaling.
+  * @return Matrix with V along the diagonal, and 1 in the bottom right.
   */
   NODISCARD static Matrix4
   fromScaleVector(const Vector3 _scale); 
 
+  /**
+  * @brief
+  *  Create a 4x4 matrix from a 3x3 rotation matrix.
+  * @param rotation values.
+  * @return matrix containing the result.
+  */
   NODISCARD static Matrix4
   fromRotationMatrix(float _m00, float _m01, float _m02,
                      float _m10, float _m11, float _m12,
                      float _m20, float _m21, float _m22);
   
+  /**
+  * @brief
+  *  Creates a 4x4 translation matrix from a 3 dimensional vector.
+  *  This matrix will have an empty or zero rotation component.
+  * @param translation: vector for the translation.
+  * @return Matrix containing the result.
+  */
   NODISCARD static Matrix4
   fromTranslationVector(const Vector3& _translation);
 
@@ -158,17 +175,17 @@ public:
   /*  OPERATORS  */
   /********************************************/
 
-  /*
+  /**
   * @brief
-  *  Multplies this matrix by another matrix.
-  * @param BOWMATRIX&
+  *  Multiplies this matrix by another matrix.
+  * @param other: matrix to apply the operation with.
   * @return
   *  A reference to this matrix after the multiplication.
   */
   Matrix4&
   operator*=(const Matrix4& other);
 
-  /*
+  /**
   * @brief
   *  Multiplies this matrix by a given value.
   * @param FLOAT
@@ -178,7 +195,7 @@ public:
   Matrix4&
   operator*=(float value);
 
-  /*
+  /**
   * @brief
   *  Divides this matrix by another matrix.
   * @param BOWMATRIX&
@@ -188,7 +205,7 @@ public:
   NODISCARD Matrix4&
   operator/=(const Matrix4& other);
 
-  /*
+  /**
   * @brief
   *  Adds another matrix to this matrix
   * @param BOWMATRIX&
@@ -198,27 +215,27 @@ public:
   NODISCARD Matrix4&
   operator+=(const Matrix4& other);
 
-  /*
+  /**
   * @brief
-  *  Substracts another matrix to this matrix.
+  *  Subtracts another matrix to this matrix.
   * @param BOWMATRIX&
   * @return
-  *  A reference to this matrix after the substraction.
+  *  A reference to this matrix after the subtraction.
   */
   NODISCARD Matrix4&
   operator-=(const Matrix4& other);
 
-  /*
+  /**
   * @brief
-  *  Checks if the values between two matrix are diferent from each other.
+  *  Checks if the values between two matrix are different from each other.
   * @param BOWMATRIX&
   * @return BOOL
-  *  Returns true if the matrix are diferent in any of its values.
+  *  Returns true if the matrix are different in any of its values.
   */
   NODISCARD bool
   operator!=(const Matrix4& other) const;
 
-  /*
+  /**
   * @brief
   *  Checks if the values between two matrix are the same.
   * @param BOWMATRIX&
@@ -228,9 +245,9 @@ public:
   NODISCARD bool
   operator==(const Matrix4& other) const;
 
-  /*
+  /**
   * @brief
-  *  Substract this matrix by another matrix.
+  *  Subtract this matrix by another matrix.
   * @param BOWMATRIX&
   * @return BOWMATRIX
   *  Returns a new matrix 
@@ -238,7 +255,7 @@ public:
   NODISCARD Matrix4
   operator-(const Matrix4& other) const;
 
-  /*
+  /**
   * @brief
   *  Adds another matrix to this matrix.
   * @param BOWMATRIX&
@@ -248,7 +265,7 @@ public:
   NODISCARD Matrix4
   operator+(const Matrix4& other) const;
 
-  /*
+  /**
   * @brief
   *  Multiplies this matrix by another matrix.
   * @param BOWMATRIX&
@@ -258,7 +275,7 @@ public:
   Matrix4
   operator*(const Matrix4& other) const;
 
-  /*
+  /**
   * @brief
   *  Multiplies this matrix by an scalar.
   * @param FLOAT
@@ -268,7 +285,7 @@ public:
   Matrix4
   operator*(float value) const;
 
-  /*
+  /**
   * @brief
   *  Divides this matrix by another matrix.
   * @param BOWMATRIX
@@ -278,7 +295,7 @@ public:
   Matrix4
   operator/(const Matrix4& other) const;
 
-  /*
+  /**
   * @brief
   *  Divides this matrix by an scalar.
   * @param FLOAT
@@ -288,7 +305,7 @@ public:
   Matrix4
   operator/(float value) const;
 
-  /*
+  /**
   * @brief
   *  Copies the data from another matrix to this matrix.
   * @param MATRIX& 
@@ -309,4 +326,4 @@ public:
   /********************************************/
   float data[4][4];
 };
-}
+}/// name space bowEngineSDK

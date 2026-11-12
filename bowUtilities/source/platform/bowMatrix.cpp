@@ -75,7 +75,7 @@ lookAtHelper(const Vector3& _at,
     axes[3].x, axes[3].y, axes[3].z, 1.0f
   );
 }
-}/// namespace Matrixhelpers
+}/// name space Matrixhelpers
 
 const Matrix4
 Matrix4::IDENTITY(1.0f, 0.0f, 0.0f, 0.0f,

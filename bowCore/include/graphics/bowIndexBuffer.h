@@ -4,7 +4,7 @@
  * @author Samuel G
  * @date 16/10/2026
  * @brief
- *  Generic class of a base buffer.
+ *  Base class for a Index Buffer.
  */
  /*************************************************************************/
 

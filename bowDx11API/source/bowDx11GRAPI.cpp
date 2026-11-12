@@ -720,7 +720,7 @@ Dx11GraphicsAPI::updateConstBuffer(WeakPtr<ConstBuffer>_buffer,
   if (pbuffer == nullptr || pbuffer->m_buffer == nullptr || pbuffer->getByteWidth() != _byteWidth) {
     return;
   }
-  /// To do: update const buffer bytewidth 
+  /// To do: update const buffer byte width 
   m_immediateContext->UpdateSubresource(pbuffer->m_buffer, 0, nullptr, _data, 0, 0);
 }
 

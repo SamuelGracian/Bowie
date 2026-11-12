@@ -39,7 +39,6 @@ public:
   /**
   * @brief
   *  Default constructor.
-  *  Sets te shader model as 0.
   */
   GraphicsAPI() = default;
   
@@ -94,7 +93,8 @@ public:
   /**
   * @brief
   *  Creates a constant buffer
-  * @param byteWidth: byte width of the buffer, slot: slot to assign the buffer to.
+  * @param byteWidth: byte width of the buffer,
+     slot: slot to assign the buffer to.
   * @return Const buffer object.
   */
   virtual SPtr<ConstBuffer> 
@@ -104,7 +104,8 @@ public:
   /**
   * @brief
   *  Creates an indexBuffer.
-  * @param byteWidth: byte width of the buffer, data: pointer to the data to the buffer.
+  * @param byteWidth: byte width of the buffer,
+     data: pointer to the data to the buffer.
   * @return SharedPtr<IndeXBuffer>
   */
   virtual SPtr<IndexBuffer>
@@ -113,7 +114,7 @@ public:
   /**
   * @brief
   *  Creates a vertex buffer.
-  * @param const uint32, void*
+  * @param byteWidth: Buffer byte width, pointer to the vertices.
   * @return SharedPtr<VertexBuffer>
   */
   virtual SPtr<VertexBuffer>
@@ -121,8 +122,8 @@ public:
 
   /**
   * @brief
-  *  Sets the const buffer and its initial data.
-  * @param WeakPtr<ConstBuffer> void*
+  *  Sets the const buffer in the immediate context.
+  * @param buffer: const buffer to set.
   * @retun none
   */
   virtual void
@@ -130,8 +131,8 @@ public:
 
   /**
   * @brief
-  *  Sets an index buffer.
-  * @param WeakPtr<IndexBuffer>
+  *  Sets the index buffer in the immediate context.
+  * @param buffer: Index buffer to set.
   * @return none
   */
   virtual void
@@ -139,8 +140,11 @@ public:
 
   /**
   * @brief
-  *  Sets the vertex buffer.
-  * @param WeakPtr<vertexBuffer>
+  *  Sets the vertex buffer in the immediate context.
+  * @param buffer: buffer to set in the immediate context,
+     stride: size (in bytes) of the elements that are to be used from that vertex buffer,
+     offset: number of bytes between the first element of a vertex buffer and 
+     the first element to be used.
   * @return none
   */
   virtual void
@@ -149,8 +153,9 @@ public:
 
   /**
   * @brief
-  * Updates the Const buffer with new data.
-  * @param WeakPtr, const uint32, void*
+  * Updates the const buffer's data.
+  * @param buffer: buffer to update, byteWitdh: byteWidth of the buffer,
+     data: new data to update the buffer.
   * @return none
   */
   virtual void
@@ -161,18 +166,18 @@ public:
 
   /**
   * @brief
-  *  Creates a new topology.
-  * @param Topology::TYPE
-  * @return SharedPtr<Topology>
+  *  Creates a new topology object.
+  * @param type: type of the topology.
+  * @return Topology object.
   */
   virtual SPtr<Topology>
   createTopology(TOPOLOGY_TYPE::E _type = TOPOLOGY_TYPE::TriangleList) = 0;
 
   /**
   * @brief
-  *  Sets the topology.
-  * @param WeakPtr<topology>
-  * @reutn none
+  *  Sets the topology to the immediate context.
+  * @param topology: topology to set.
+  * @return none
   */
   virtual void
   setTopology(WeakPtr<Topology> _topology) = 0;
@@ -182,8 +187,8 @@ public:
   /**
   * @brief
   *  Creates a Depth Stencil view.
-  * @param uint32, uint32
-  * @re turn SharePtr<DepthStencilView>
+  * @param width: texture width, height: texture height, format: texture format.
+  * @return SharePtr<DepthStencilView>
   */
   virtual SPtr<DepthStencilView>
   createDepthStencil(uint32 _width = 0, uint32 _height = 0,
@@ -193,7 +198,9 @@ public:
 
   /**
   * @brief
-  * @param
+  *  Creates vertex shader object.
+  * @param shader code: shader code, entryPoint: entry point for the shader,
+  *  defines: shaderModel: model of the shader.
   * @return
   */
   virtual SPtr<VertexShader>
@@ -201,15 +208,17 @@ public:
                      Vector<String>& _defines, uint32 _shaderModel = 5) = 0;
   /**
   * @brief
-  * @param
-  * @return
+  *  Set the vertex shader in the immediate context.
+  * @param shader: shader to set
+  * @return none
   */
   virtual void
   setVertexShader(WeakPtr<VertexShader> _shader ) = 0;
 
   /**
  * @brief
- * @param
+ *  Create a pixel Shader object.
+ * @param shaderCode:
  * @return
  */
   virtual SPtr<PixelShader>
@@ -218,8 +227,9 @@ public:
 
   /**
   * @brief
-  * @param
-  * @return
+  *  Set the pixel shader in the immediate context.
+  * @param shader: shader to set.
+  * @return none.
   */
   virtual void
   setPixelShader(WeakPtr<PixelShader> _shader) = 0;
@@ -227,8 +237,10 @@ public:
   /**
   * @brief
   *  Creates a View Port.
-  * @param foat, float, const TEXTURE_FORMAT
-  * @return SharedPtr<ViewPort>
+  * @param width: window width, height: window height,
+     maxDepth: max depth of the view port, Ranges between 0 and 1.
+     minDepth: min depth of the view port, Ranges between 0 and 1.
+  * @return ViewPort object.
   */
   virtual SPtr<ViewPort>
   createViewPort(float width, float height, float minDepth, float maxDepth,
@@ -236,8 +248,9 @@ public:
 
   /**
   * @brief
-  * @param
-  * @return
+  *  Set the view Port in the immediate context.
+  * @param viewPort: view port to set.
+  * @return true if the  viewPort was set correctly.
   */
   virtual bool
   setViewPort(WeakPtr<ViewPort> _viewPort) = 0;
@@ -246,8 +259,10 @@ public:
 
   /**
   * @brief
-  * @param
-  * @return
+  *  Creates a 2D texture with the data from an image.
+  * @param imgData: data of the texture, width: texture Width,
+     height: texture height.
+  * @return 2D texture object.
   */
   virtual SPtr<Texture2D>
   createTexture2DWithImageData(const Vector<uint8>& _imgData,
@@ -256,16 +271,18 @@ public:
 
   /**
   * @brief
-  * @param
-  * @return
+  *  Create a texture from a file.
+  * @param filePath: path to the file.
+  * @return 2D texture object.
   */
   SPtr<Texture2D>
   createTexture2DFromFile(const String& _filePath);
 
   /**
   * @brief
-  * @param
-  * @return
+  *  Sets the texture in the immediate context.
+  * @param slot: slot to set the texture. texture: texture to set.
+  * @return none.
   */
   virtual void
   setTexture2D(uint32 _slot, WeakPtr<Texture2D> _texture) = 0;
@@ -274,7 +291,9 @@ public:
 
   /**
   * @brief
-  * @param
+  *  Creates a rasterizer state object.
+  * @param cullMode: cull mode, fillMode: fill mode,
+     dethpClip: depth Clip for the rasterizer.
   * @return
   */
   virtual SPtr<RasterizerState>
@@ -283,8 +302,9 @@ public:
 
   /**
   * @brief
-  * @param
-  * @return
+  *  Sets the rasterizer state in the immediate context.
+  * @param rasterizer: rasterizer to set.
+  * @return none.
   */
   virtual void
   setRasterizerState(WeakPtr<RasterizerState> _rasterizer) = 0;
@@ -293,7 +313,9 @@ public:
 
   /**
   * @brief
-  * @param
+  *  Creates a render target.
+  * @param width: render target width, height: render target height.
+     format: texture format.
   * @return
   */
   virtual SPtr<RenderTargetView>
@@ -301,8 +323,10 @@ public:
                          TEXTURE_FORMAT::E _format) = 0;
   /**
   * @brief
-  * @param
-  * @return
+  *  Sets the render target in the immediate context.
+  * @param renderTarget: render target to set. depthStencil: depth stencil for
+  *  the render target.
+  * @return none.
   */
   virtual void
   setRenderTargetView(WeakPtr<RenderTargetView> _renderTarget,
@@ -310,8 +334,10 @@ public:
 
   /**
   * @brief
-  * @param
-  * @return
+  *  Sets an array of render targets.
+  * @param renderTargets: array of render targets,
+     depthStencil: for the render targets.
+  * @return none
   */
   virtual void
   setRenderTargetViews(Vector<WeakPtr<RenderTargetView>>& _renderTargets,
@@ -319,8 +345,10 @@ public:
 
   /**
   * @brief
-  * @param
-  * @return
+  *  Sets all elements in the render target to one value.
+  * @param renderTarget: render target to clear, color: value to set the render
+  *  target.
+  * @return none.
   */
   virtual void
   clearRenderTargetView(WeakPtr<RenderTargetView> _renderTarget,
@@ -328,7 +356,10 @@ public:
 
   /**
   * @brief
-  * @param
+  *  Clears the depth stencil resource.
+  * @param depthStencil: depth stencil to clear, flag: new flag,
+     depth: value to clear the depth buffer with, this value will be clamped 
+     between 0 and 1. stencil: value to clear the stencil buffer with.
   * @return
   */
   virtual void
@@ -339,16 +370,18 @@ public:
   /// sampler state
   /**
   * @brief
-  * @param
-  * @return
+  *  Create sampler state.
+  * @param none
+  * @return sampler State.
   */
   virtual SPtr <SamplerState>
   createSamplerState() = 0;
 
   /**
   * @brief
-  * @param
-  * @return
+  *  Set the sampler state.
+  * @param slot: slot to assign the sampler. sampler: sampler to set.
+  * @return none.
   */
   virtual void
   setSamplerState(uint32 _slot, WeakPtr<SamplerState> _sampler) = 0;
@@ -357,16 +390,18 @@ public:
 
   /**
   * @brief
-  * @param
-  * @return
+  *  Creates a shadow map texture.
+  * @param width: texture width, height: texture height.
+  * @return DepthStencilView.
   */
   virtual SPtr<DepthStencilView>
   createShadowMap(uint32 _width, uint32 _height) = 0;
 
   /**
   * @brief
-  * @param
-  * @return
+  *  Reads a shadow map.
+  * @param shadowDepth: shadow map to read. outDepth: Vector to save the depth values.
+  * @return true if readied successfully.
   */
   virtual bool
   readShadowMap(WeakPtr<DepthStencilView> _shadowDepth,
@@ -374,16 +409,22 @@ public:
 
   /**
   * @brief
-  * @param
-  * @return
+  *  Set the shadow map.
+  * @param slot: slot to set the map texture. mapTexture: map texture to set.
+  * @return none
   */
   virtual void
   setShadowMap(uint32 _slot, WeakPtr<Texture2D> _mapTexture) = 0;
   
   /**
   * @brief
-  * @param
-  * @return
+     Checks if one pixel is occluded or not.
+  * @param shadowDepth: shadow map with the depth values,
+     wordlPos: position in the world to be checked.
+     shadowView: view matrix that generates the shadow map.
+     shadowProjection: projection matrix that generates the shadow map.
+     bias: depth value.
+  * @return true if the pixel is occluded
   */
   virtual bool
   isOccluded(WeakPtr<DepthStencilView> _shadowDepth, const Vector3& worldPos,
@@ -392,11 +433,12 @@ public:
 
   /**
   * @brief
-  * @param
-  * @return
+  *  Sets a shadow map.
+  * @param slot: slot to assign the shadow map. shadowMap: map to assign.
+  * @return none
   */
   virtual void
   setShadowMapFromDepthView(uint32 _slot,
                             WeakPtr<DepthStencilView> _shadowDepth) = 0;
 };
-}/// namespace bowEngineSDK
+}/// name space bowEngineSDK

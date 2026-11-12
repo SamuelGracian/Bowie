@@ -4,7 +4,7 @@
  * @author Samuel G
  * @date 16/10/2026
  * @brief
- *  Genereic class of a base buffer.
+ *  Base class for texture objects.
  */
  /*************************************************************************/
 
@@ -30,4 +30,4 @@ class Texture2D
    TEXTURE_FORMAT::E m_format = TEXTURE_FORMAT::FORMAT_UNKNOWN;
 
 };
-}/// namespace bowEngineSDK
+}/// name space bowEngineSDK
