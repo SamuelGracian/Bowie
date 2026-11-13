@@ -25,4 +25,4 @@ class Topology
   TOPOLOGY_TYPE::E m_type;
 
 };
-}/// namespace bowEngineSDKs
+}/// name space bowEngineSDKs

@@ -80,4 +80,4 @@ private:
   */
   DisplaySurfaceHandler m_handler;
 };
-}/// namespace bowEngineSDK
+}/// name space bowEngineSDK

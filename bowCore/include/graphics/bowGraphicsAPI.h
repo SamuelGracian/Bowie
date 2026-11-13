@@ -65,7 +65,7 @@ public:
   * @return
   */
   virtual void
-  draw(uint32 _vertexCount = 0, uint32 _startVertexLocation = 0) = 0;
+  draw(uint32 vertexCount = 0, uint32 startVertexLocation = 0) = 0;
 
   /**
   * @brief
@@ -99,7 +99,7 @@ public:
   */
   virtual SPtr<ConstBuffer> 
   createConstBuffer(const uint32 byteWitdh = 0,
-                    uint32 _slot = 0) = 0;
+                    uint32 slot = 0) = 0;
 
   /**
   * @brief
@@ -118,7 +118,7 @@ public:
   * @return SharedPtr<VertexBuffer>
   */
   virtual SPtr<VertexBuffer>
-  createVertexBuffer(const uint32 byteWidth = 0, const void* _vertices = nullptr) = 0;
+  createVertexBuffer(const uint32 byteWidth = 0, const void* vertices = nullptr) = 0;
 
   /**
   * @brief
@@ -180,7 +180,7 @@ public:
   * @return none
   */
   virtual void
-  setTopology(WeakPtr<Topology> _topology) = 0;
+  setTopology(WeakPtr<Topology> topology) = 0;
 
   /// Depth stencil
   
@@ -191,8 +191,8 @@ public:
   * @return SharePtr<DepthStencilView>
   */
   virtual SPtr<DepthStencilView>
-  createDepthStencil(uint32 _width = 0, uint32 _height = 0,
-                     const TEXTURE_FORMAT::E  _format = TEXTURE_FORMAT::FORMAT_UNKNOWN) = 0;
+  createDepthStencil(uint32 width = 0, uint32 height = 0,
+                     const TEXTURE_FORMAT::E  format = TEXTURE_FORMAT::FORMAT_UNKNOWN) = 0;
 
   /// Shaders
 
@@ -204,8 +204,8 @@ public:
   * @return
   */
   virtual SPtr<VertexShader>
-  createVertexShader(const String& _shaderCode, const String& _entryPoint,
-                     Vector<String>& _defines, uint32 _shaderModel = 5) = 0;
+  createVertexShader(const String& shaderCode, const String& entryPoint,
+                     Vector<String>& defines, uint32 shaderModel = 5) = 0;
   /**
   * @brief
   *  Set the vertex shader in the immediate context.
@@ -213,7 +213,7 @@ public:
   * @return none
   */
   virtual void
-  setVertexShader(WeakPtr<VertexShader> _shader ) = 0;
+  setVertexShader(WeakPtr<VertexShader> shader ) = 0;
 
   /**
  * @brief
@@ -222,8 +222,8 @@ public:
  * @return
  */
   virtual SPtr<PixelShader>
-  createPixelShader(const String& _shaderCode, const String& _entryPoint,
-                    Vector<String>& _defines, uint32 _shaderModel = 5) = 0;
+  createPixelShader(const String& shaderCode, const String& entryPoint,
+                    Vector<String>& defines, uint32 shaderModel = 5) = 0;
 
   /**
   * @brief
@@ -232,7 +232,7 @@ public:
   * @return none.
   */
   virtual void
-  setPixelShader(WeakPtr<PixelShader> _shader) = 0;
+  setPixelShader(WeakPtr<PixelShader> shader) = 0;
 
   /**
   * @brief
@@ -253,7 +253,7 @@ public:
   * @return true if the  viewPort was set correctly.
   */
   virtual bool
-  setViewPort(WeakPtr<ViewPort> _viewPort) = 0;
+  setViewPort(WeakPtr<ViewPort> viewPort) = 0;
 
   /// texture
 
@@ -265,9 +265,9 @@ public:
   * @return 2D texture object.
   */
   virtual SPtr<Texture2D>
-  createTexture2DWithImageData(const Vector<uint8>& _imgData,
-                               int32 _witdh,
-                               int32 _height) = 0;
+  createTexture2DWithImageData(const Vector<uint8>& imgData,
+                               int32 witdh,
+                               int32 height) = 0;
 
   /**
   * @brief
@@ -276,7 +276,7 @@ public:
   * @return 2D texture object.
   */
   SPtr<Texture2D>
-  createTexture2DFromFile(const String& _filePath);
+  createTexture2DFromFile(const String& filePath);
 
   /**
   * @brief
@@ -285,7 +285,7 @@ public:
   * @return none.
   */
   virtual void
-  setTexture2D(uint32 _slot, WeakPtr<Texture2D> _texture) = 0;
+  setTexture2D(uint32 slot, WeakPtr<Texture2D> texture) = 0;
 
   /// rasterizer state
 
@@ -297,8 +297,8 @@ public:
   * @return
   */
   virtual SPtr<RasterizerState>
-  createRasterizerState(CULL_MODE::E _cullMode, FILL_MODE::E _fillMode,
-                        bool _deathClip) = 0;
+  createRasterizerState(CULL_MODE::E cullMode, FILL_MODE::E fillMode,
+                        bool deathClip) = 0;
 
   /**
   * @brief
@@ -307,7 +307,7 @@ public:
   * @return none.
   */
   virtual void
-  setRasterizerState(WeakPtr<RasterizerState> _rasterizer) = 0;
+  setRasterizerState(WeakPtr<RasterizerState> rasterizer) = 0;
 
   /// render target view
 
@@ -319,8 +319,8 @@ public:
   * @return
   */
   virtual SPtr<RenderTargetView>
-  createRenderTargetView(uint32 _width, uint32 _height,
-                         TEXTURE_FORMAT::E _format) = 0;
+  createRenderTargetView(uint32 width, uint32 height,
+                         TEXTURE_FORMAT::E format) = 0;
   /**
   * @brief
   *  Sets the render target in the immediate context.
@@ -329,8 +329,8 @@ public:
   * @return none.
   */
   virtual void
-  setRenderTargetView(WeakPtr<RenderTargetView> _renderTarget,
-                      WeakPtr<DepthStencilView> _deptStencill) = 0;
+  setRenderTargetView(WeakPtr<RenderTargetView> renderTarget,
+                      WeakPtr<DepthStencilView> deptStencill) = 0;
 
   /**
   * @brief
@@ -340,8 +340,8 @@ public:
   * @return none
   */
   virtual void
-  setRenderTargetViews(Vector<WeakPtr<RenderTargetView>>& _renderTargets,
-                       WeakPtr<DepthStencilView> _depthStencil) = 0;
+  setRenderTargetViews(Vector<WeakPtr<RenderTargetView>>& renderTargets,
+                       WeakPtr<DepthStencilView> depthStencil) = 0;
 
   /**
   * @brief
@@ -351,8 +351,8 @@ public:
   * @return none.
   */
   virtual void
-  clearRenderTargetView(WeakPtr<RenderTargetView> _renderTarget,
-                        float _color[4]) = 0;
+  clearRenderTargetView(WeakPtr<RenderTargetView> renderTarget,
+                        float color[4]) = 0;
 
   /**
   * @brief
@@ -363,9 +363,9 @@ public:
   * @return
   */
   virtual void
-  clearDepthStencilView(WeakPtr<DepthStencilView> _depthStencil,
-                                   ClearFlags::E _flag,
-                                   float _depth, uint8 _stencil) = 0;
+  clearDepthStencilView(WeakPtr<DepthStencilView> depthStencil,
+                                   ClearFlags::E flag,
+                                   float depth, uint8 stencil) = 0;
 
   /// sampler state
   /**
@@ -384,7 +384,7 @@ public:
   * @return none.
   */
   virtual void
-  setSamplerState(uint32 _slot, WeakPtr<SamplerState> _sampler) = 0;
+  setSamplerState(uint32 slot, WeakPtr<SamplerState> sampler) = 0;
 
   /// shadow map
 
@@ -395,7 +395,7 @@ public:
   * @return DepthStencilView.
   */
   virtual SPtr<DepthStencilView>
-  createShadowMap(uint32 _width, uint32 _height) = 0;
+  createShadowMap(uint32 width, uint32 height) = 0;
 
   /**
   * @brief
@@ -404,7 +404,7 @@ public:
   * @return true if readied successfully.
   */
   virtual bool
-  readShadowMap(WeakPtr<DepthStencilView> _shadowDepth,
+  readShadowMap(WeakPtr<DepthStencilView> shadowDepth,
                 Vector<float>& outDepth) = 0;
 
   /**
@@ -414,7 +414,7 @@ public:
   * @return none
   */
   virtual void
-  setShadowMap(uint32 _slot, WeakPtr<Texture2D> _mapTexture) = 0;
+  setShadowMap(uint32 slot, WeakPtr<Texture2D> mapTexture) = 0;
   
   /**
   * @brief
@@ -427,8 +427,8 @@ public:
   * @return true if the pixel is occluded
   */
   virtual bool
-  isOccluded(WeakPtr<DepthStencilView> _shadowDepth, const Vector3& worldPos,
-             const Matrix4& _shadowView, const Matrix4 _shadowProjection,
+  isOccluded(WeakPtr<DepthStencilView> shadowDepth, const Vector3& worldPos,
+             const Matrix4& shadowView, const Matrix4 shadowProjection,
              float bias) = 0;
 
   /**
@@ -438,7 +438,7 @@ public:
   * @return none
   */
   virtual void
-  setShadowMapFromDepthView(uint32 _slot,
-                            WeakPtr<DepthStencilView> _shadowDepth) = 0;
+  setShadowMapFromDepthView(uint32 slot,
+                            WeakPtr<DepthStencilView> shadowDepth) = 0;
 };
 }/// name space bowEngineSDK

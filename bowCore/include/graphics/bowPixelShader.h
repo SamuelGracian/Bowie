@@ -4,7 +4,7 @@
  * @author Samuel G
  * @date 16/10/2026
  * @brief
- *  Genereic class for a pixel shader.
+ *  Base class for pixel shaders.
  */
  /*************************************************************************/
 
@@ -26,8 +26,8 @@ class PixelShader : public BaseShader
 
    /*
    * @brief
-   *  Defeault destructor.
+   *  Default destructor.
    */
    ~PixelShader() = default;
 };
-}/// namespace bowEngineSDK
+}/// name space bowEngineSDK

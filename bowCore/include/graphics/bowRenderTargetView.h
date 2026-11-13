@@ -1,3 +1,12 @@
+/************************************************************************/
+/**
+ * @file bowRasterizerState.h
+ * @author Samuel G
+ * @date 23/10/2026
+ * @brief
+ *  Base class for render target view , inherits from texture2D .
+ */
+ /*************************************************************************/
 #pragma once
 
 #include "bowTexture2D.h"
@@ -19,4 +28,4 @@ class RenderTargetView : public Texture2D
    */
    ~RenderTargetView() = default;
 };
-}/// namespace bowEngineSDK
+}/// name space bowEngineSDK

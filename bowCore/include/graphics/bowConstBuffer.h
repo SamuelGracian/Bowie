@@ -38,7 +38,7 @@ class ConstBuffer : public BaseBuffer
    /*
    * @brief
    *  Returns the slot of the buffer.
-   * @param NONE
+   * @param none
    * @return UINT32
    *  Assigned slot for the buffer.
    */
