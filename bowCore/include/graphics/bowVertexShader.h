@@ -17,16 +17,16 @@ class VertexShader : public BaseShader
 {
  public:
 
-   /*
+   /**
    * @brief
    *  Default constructor
    */
    VertexShader() = default;
 
-   /*
+   /**
    * @brief
    *  Default destructor.
    */
    ~VertexShader() = default;
 };
-}/// namespace bowEngineSDK
+}/// name space bowEngineSDK

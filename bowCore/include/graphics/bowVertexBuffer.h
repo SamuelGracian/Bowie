@@ -17,7 +17,7 @@ class VertexBuffer : public BaseBuffer
 {
  public:
 
-   /*
+   /**
    * @brief
    *  Default constructor.
    */
@@ -27,10 +27,10 @@ class VertexBuffer : public BaseBuffer
      BOW_ASSERT(m_byteWidth != 0);
    }
 
-   /*
+   /**
    * @brief
    *  Default destructor.
    */
    ~VertexBuffer() = default;
 };
-}/// namespace bowEngineSDK
+}/// name space bowEngineSDK

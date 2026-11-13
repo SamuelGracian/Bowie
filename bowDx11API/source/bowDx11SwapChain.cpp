@@ -23,4 +23,4 @@ Dx11SwapChain::getRenderTargetView() {
   return m_renderTargetView;
 }
 
-}/// namespace bowEngineSDK
+}/// name space bowEngineSDK

@@ -32,16 +32,20 @@ class SwapChain
 
    /**
    * @brief
-   * @param
-   * @return
+   *  Presents a rendered image to the user.
+   * @param syncInterval:int that specifies how to synchronize presentation
+      of a frame with the vertical blank.
+      flags: flags for the swap chain.
+   * @return none
    */
    virtual void
    present(uint32 syncInterval, uint32 flags) = 0;
 
    /**
    * @brief
-   * @param
-   * @return
+   *  Gets the render target from the swap chain.
+   * @param none
+   * @return none
    */
    virtual SPtr <RenderTargetView>
    getRenderTargetView() = 0;
