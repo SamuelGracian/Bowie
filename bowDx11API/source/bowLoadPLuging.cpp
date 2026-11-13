@@ -6,4 +6,4 @@
 using namespace bowEngineSDK;
 
 BOW_PUGLIN_EXPORT_EXTERN void
-loadPluging() { GraphicsAPI::startUp<Dx11GraphicsAPI>(); }
+loadPlugin() { GraphicsAPI::startUp<Dx11GraphicsAPI>(); }

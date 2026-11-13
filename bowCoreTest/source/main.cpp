@@ -13,6 +13,8 @@
 #include "bowSwapChain.h"
 #include "bowWindow.h"
 
+#include "bowDynamicLibrary.h"
+
 using namespace bowEngineSDK;
 
 
@@ -125,14 +127,29 @@ int main() {
   /// INIT WINDOW
   auto window = std::make_shared<DisplaySurface>();
 
-  if (!window->init(static_cast<int32>(width),static_cast<int32>(height),
+  if (!window->init(static_cast<int32>(width), static_cast<int32>(height),
                     "Bowie")) {
 
     std::cout << "Failed to start window" << std::endl;
     return -1;
   }
 
+  using LoadPluginFunction = void (*)();
+  DynamicLibrary plugin("bowDx11API.dll");
   
+  if (!plugin.load()) {
+    std::cout << "Failed to load library" << std::endl;
+    return -1;
+  }
+  
+  auto loadPlug = plugin.getSymbol<LoadPluginFunction>("loadPlugin");
+  
+  if (loadPlug == nullptr) {
+    std::cout << "Failed to find plugin" << std::endl;
+    return -1;
+  }
+
+  loadPlug();
 
   GraphicsAPI& grapi = GraphicsAPI::instance();
 
