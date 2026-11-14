@@ -2,7 +2,7 @@
 /**
  * @file bowIndexBuffer.h
  * @author Samuel G
- * @date 16/10/2026
+ * @date 18/10/2026
  * @brief
  *  Base class for a Index Buffer.
  */

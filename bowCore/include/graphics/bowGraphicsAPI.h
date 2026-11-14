@@ -295,7 +295,7 @@ public:
   *  Creates a rasterizer state object.
   * @param cullMode: cull mode, fillMode: fill mode,
      dethpClip: depth Clip for the rasterizer.
-  * @return
+  * @return rasterizer state 
   */
   virtual SPtr<RasterizerState>
   createRasterizerState(CULL_MODE::E cullMode, FILL_MODE::E fillMode,
