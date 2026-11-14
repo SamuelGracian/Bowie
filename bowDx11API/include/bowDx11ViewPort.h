@@ -25,4 +25,4 @@ class Dx11ViewPort :public ViewPort
   
   D3D11_VIEWPORT m_viewPort;
 };
-}/// namespace BowEngineSDK
+}/// name space BowEngineSDK

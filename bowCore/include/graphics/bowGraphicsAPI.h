@@ -216,11 +216,12 @@ public:
   setVertexShader(WeakPtr<VertexShader> shader ) = 0;
 
   /**
- * @brief
- *  Create a pixel Shader object.
- * @param shaderCode:
- * @return
- */
+  * @brief
+  *  Create a pixel Shader object.
+  * @param shaderCode:HLSL shader code, entryPoint: function name for the entry 
+  *  of the shader. defines: pre process macros, shader type, shader model.
+  * @return pixel shader 
+  */
   virtual SPtr<PixelShader>
   createPixelShader(const String& shaderCode, const String& entryPoint,
                     Vector<String>& defines, uint32 shaderModel = 5) = 0;

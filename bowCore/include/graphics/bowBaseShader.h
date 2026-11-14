@@ -2,7 +2,7 @@
 /**
  * @file bowBaseShader.h
  * @author Samuel G
- * @date 16/10/2026
+ * @date 23/10/2026
  * @brief
  *  Base class for shaders objects.
  */

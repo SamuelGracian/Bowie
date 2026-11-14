@@ -11,7 +11,7 @@ class Dx11VertexBuffer : public VertexBuffer
 
    /*
    * @brief
-   *  Cosntructor, sets the buffer as nullptr.
+   *  Constructor, sets the buffer as nullptr.
    */
    Dx11VertexBuffer(uint32 _byteWidth)
      : VertexBuffer(_byteWidth),
@@ -24,8 +24,7 @@ class Dx11VertexBuffer : public VertexBuffer
   */
   ~Dx11VertexBuffer() = default;
 
- //private:
    ID3D11Buffer* m_buffer;
 
 };
-}/// namespace bowEngineSDK
+}/// name space bowEngineSDK

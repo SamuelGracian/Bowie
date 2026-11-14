@@ -1,3 +1,12 @@
+/************************************************************************/
+/**
+ * @file bowDx11ConstBuffer.h
+ * @author Samuel G
+ * @date 23/10/2026
+ * @brief
+ * Dx11 implementation for pixel shader.
+ */
+ /*************************************************************************/
 #pragma once
 
 #include "bowPixelShader.h"
@@ -20,7 +29,7 @@ class Dx11PixelShader : public PixelShader
 
    /*
    * @brief
-   *  Defualt destructor
+   *  Default destructor
    */
    ~Dx11PixelShader() = default;
 
@@ -28,6 +37,5 @@ class Dx11PixelShader : public PixelShader
   /// Dx11 Pixel shader
   /// </summary>
   ID3D11PixelShader* pixShader;
-
 };
-}/// namespace bowEngineSDK
+}/// name space bowEngineSDK

@@ -44,14 +44,15 @@ public:
   /**
   * @brief
   *  Initialize function.
-  * @param WeakPtr<DisplaySurface> windowHandler
+  * @param handleWindow: handler for the window.
   * @return bool
   */
   bool
-  init(WeakPtr<DisplaySurface> handlewindow) override;
+  init(WeakPtr<DisplaySurface> handleWindow) override;
   
   /**
   * @brief
+  *  Clean up function, releases all the objects.
   * @param none
   * @return none
   */
@@ -60,27 +61,31 @@ public:
 
   /**
   * @brief
-  * @param
+  *  Draw indexed, non instanced primitives. Internally this function sets the 
+  *  Base Vertex Location as 0
+  * @param vertexCount: number of indices to draw.
+  *  startVertexLocation: location of the first index read by the GPU from 
+  the buffer.
   * @return none
   */
   void
-  draw(uint32 _vertexCount, uint32 _startVertexLocation) override;
+  draw(uint32 vertexCount, uint32 startVertexLocation) override;
 
   /**
   * @brief
   *  Create a swap chain.
-  * @param WeakPtr<DisplaySurface> windowHandler, TEXTURE_FORMAT format
+  * @param windowHandler: window handler, format: texture format.
   * @return SharedPtr<SwapChain>
   */
   SPtr<SwapChain>
-  createSwapChain(WeakPtr<DisplaySurface> _windowHandler,
-                  TEXTURE_FORMAT::E _format) override;
+  createSwapChain(WeakPtr<DisplaySurface> windowHandler,
+                  TEXTURE_FORMAT::E format) override;
 
   /**
   * @brief
   * Create an empty buffer. It saves info in the update function.
-  * @param const uint32 byteWith, const uint32 slot
-  * @return
+  * @param byteWidth: buffer byte Width, slot: slot so assign the buffer to.
+  * @return Const buffer object.
   */
   SPtr<ConstBuffer>
   createConstBuffer(const uint32 byteWitdh,
@@ -89,25 +94,25 @@ public:
   /**
   * @brief
   * Creates and index buffer and sets an initial data.
-  * @param uint32 byte width, void* data
+  * @param byteWisth: buffer byteWitdh, data: data to save in the indexbuffer.
   * @return sharedPtr<IndexBuffer>.
   */
    SPtr<IndexBuffer>
-  createIndexBuffer(const uint32 _byteWidth, void* data) override;
+  createIndexBuffer(const uint32 byteWidth, void* data) override;
 
   /**
   * @brief
   *  Creates a vertex buffer.
-  * @param uint32 byteWidth, const void* data
-  * @return shared ptr <VertexBuffer>
+  * @param byteWidtH: buffer byte width, vertices: model vertices.
+  * @return Vertex buffer object.
   */
   SPtr<VertexBuffer>
-  createVertexBuffer(const uint32 _byteWidth, const void* _vertices) override;
+  createVertexBuffer(const uint32 byteWidth, const void* vertices) override;
 
   /**
   * @brief
   *  Sets the constant buffer with a given data.
-  * @param weaKPtr<ConstBuffer>, void* data
+  * @param buffer: const buffer to be set.
   * @return void.
   */
   void
@@ -116,18 +121,20 @@ public:
 
   /**
   * @brief
-  *  Sets the vertex buffer
-  * @param WeakPtr<VertexBuffer>
+  *  bind an array of vertex buffer to the input assembler stage.
+  * @param buffer: vertex buffer to be set, stride: size of the elements that
+  *  are to be used from that vertex, buffer.
+  *  offset: one offset value for each buffer in the vertex buffer array.
   * @return none 
   */
   void
-  setVertexBuffer(WeakPtr<VertexBuffer> _buffer, uint32 _stride,
-                  uint32 _offset) override;
+  setVertexBuffer(WeakPtr<VertexBuffer> buffer, uint32 stride,
+                  uint32 offset) override;
 
   /**
   * @brief
   *  Gets a bowie index buffer, internally turns it into a Dx11 buffer and sets it.
-  * @param weakPtr <IndexBuffer>
+  * @param buffer: index buffer to be set.
   * @return void
   */
   void
@@ -136,7 +143,8 @@ public:
   /**
   * @brief
   *  Updates the info in the given const buffer.
-  * @param weakPtr <constBUffer>, const uint32 byteWidth.
+  * @param buffer: buffer object to update, byteWitdh: new byte width of the buffer.
+  *  data: data to update the const buffer with.
   * @return void
   */
   void
@@ -147,47 +155,56 @@ public:
   * @brief
   *  Creates a topology.
   *  Sets as default the topology as a Triangle list.
-  * @param TOPOLOGY::TYPE
+  * @param type: topology type.
   * @return SharedPtr Topology
   */
   SPtr<Topology>
-  createTopology(TOPOLOGY_TYPE::E _type) override;
+  createTopology(TOPOLOGY_TYPE::E type) override;
 
   /**
   * @brief
   *  Sets the topology.
-  * @param WeakPtr<Topology> topology.
+  * @param topology: topology to set.
   * @return none
   */
   void
-  setTopology(WeakPtr<Topology> _topology) override;
+  setTopology(WeakPtr<Topology> topology) override;
 
   /**
   * @brief
   *  Create a depth stencil.
-  * @param uint32 width, uint32 height, const TEXTURE_FORMAT format
+  * @param with: texture width, height: texture height, format: texture format.
   * @return SharedPtr<DepthStencilView>
   */
   SPtr<DepthStencilView>
-  createDepthStencil(uint32 _width, uint32 _height,
-                     const TEXTURE_FORMAT::E _format) override;
+  createDepthStencil(uint32 width, uint32 height,
+                     const TEXTURE_FORMAT::E format) override;
 
-
+  /**
+  * @brief
+  *  Creates a view port desc.
+  * @param width: window width, height: window height,
+     heightmaxDepth: max depth of the view port, Ranges between 0 and 1.
+     minDepth: min depth of the view port, Ranges between 0 and 1.
+  * @return
+  */
   SPtr <ViewPort>
   createViewPort(float width, float height, float minDepth, float maxDepth,
                  float topLeftX, float topLeftY)override;
   /**
   * @brief
-  * @param
-  * @return
+  *  Set the view Port in the immediate context.
+  * @param viewPort: view port to set.
+  * @return true if the  viewPort was set correctly.
   */
   bool
   setViewPort(WeakPtr<ViewPort> _viewPort) override;
 
   /**
   * @brief
-  * @param
-  * @return
+  *  Creates vertex shader object.
+  * @param shader code: shader code, entryPoint: entry point for the shader,
+  *  defines: shaderModel: model of the shader.
   */
   SPtr<VertexShader>
   createVertexShader(const String& _shaderCode, const String& _entryPoint,
@@ -195,7 +212,8 @@ public:
 
   /**
   * @brief
-  * @param
+  *  Set the vertex shader in the immediate context.
+  * @param shader: shader to set
   * @return
   */
   void
@@ -203,8 +221,9 @@ public:
 
   /**
   * @brief
-  * @param
-  * @return
+  * @param shaderCode:HLSL shader code, entryPoint: function name for the entry
+  *  of the shader. defines: pre process macros, shader type, shader model.
+  * @return pixel shader
   */
   SPtr<PixelShader>
   createPixelShader(const String& _shaderCode, const String& _entryPoint,
@@ -212,16 +231,19 @@ public:
 
   /**
   * @brief
-  * @param
-  * @return 
+  *  Sets the pixel shader in the immediate context.
+  * @param shader: shader to set.
+  * @return none
   */
   void
   setPixelShader(WeakPtr<PixelShader> _shader) override;
 
   /**
   * @brief
-  * @parm
-  * @retun
+  *  Creates a 2D texture with the data from an image.
+  * @param imgData: data of the texture, width: texture Width,
+     height: texture height.
+  * @return 2D texture object.
   */
   SPtr<Texture2D>
   createTexture2DWithImageData(const Vector<uint8>& _imgData, int32 _witdh,
@@ -229,16 +251,19 @@ public:
 
   /**
   * @brief
-  * @param
-  * @return
+  *  Sets the texture in the immediate context.
+  * @param slot: slot to set the texture. texture: texture to set.
+  * @return none.
   */
   void
   setTexture2D(uint32 _slot, WeakPtr<Texture2D> _texture) override;
 
   /**
   * @brief
-  * @param
-  * @return 
+  *  Creates a rasterizer state object.
+  * @param cullMode: cull mode, fillMode: fill mode,
+  * dethpClip: depth Clip for the rasterizer.
+  * @return rasterizer state
   */
   SPtr<RasterizerState>
   createRasterizerState(CULL_MODE::E _cullMode, FILL_MODE::E _fillMode,
@@ -246,7 +271,8 @@ public:
 
   /**
   * @brief
-  * @param
+  *  Sets the rasterizer state in the immediate context.
+  * @param rasterizer: rasterizer to set.
   * @return
   */
   void
@@ -254,7 +280,9 @@ public:
 
   /**
   * @brief
-  * @param
+  *  Creates a render target.
+  * @param width: render target width, height: render target height.
+     format: texture format.
   * @return
   */
   SPtr<RenderTargetView>
@@ -263,8 +291,10 @@ public:
 
   /**
   * @brief
-  * @param
-  * @return
+  *  Sets the render target in the immediate context.
+  * @param renderTarget: render target to set. depthStencil: depth stencil for
+  *  the render target.
+  * @return none.
   */
   void
   setRenderTargetView(WeakPtr<RenderTargetView> _renderTarget,
@@ -272,8 +302,10 @@ public:
 
   /**
   * @brief
-  * @param
-  * @return
+  *  Sets an array of render targets.
+  * @param renderTargets: array of render targets,
+     depthStencil: for the render targets.
+  * @return none
   */
   void
   setRenderTargetViews(Vector<WeakPtr<RenderTargetView>>& _renderTargets,
@@ -281,8 +313,10 @@ public:
 
   /**
   * @brief
-  * @param
-  * @return
+  *  Sets all elements in the render target to one value.
+  * @param renderTarget: render target to clear, color: value to set the render
+  *  target.
+  * @return none.
   */
   void
   clearRenderTargetView(WeakPtr<RenderTargetView> _renderTarget,
@@ -290,7 +324,10 @@ public:
 
   /**
   * @brief
-  * @param
+  *  Clears the depth stencil resource.
+  * @param depthStencil: depth stencil to clear, flag: new flag,
+     depth: value to clear the depth buffer with, this value will be clamped
+     between 0 and 1. stencil: value to clear the stencil buffer with.
   * @return
   */
   void
@@ -300,32 +337,36 @@ public:
 
   /**
   * @brief
-  * @param
-  * @return
+  *  Create sampler state.
+  * @param none
+  * @return sampler State.
   */
   SPtr <SamplerState>
   createSamplerState() override;
 
   /**
   * @brief
-  * @param
-  * @return
+  *  Set the sampler state.
+  * @param slot: slot to assign the sampler. sampler: sampler to set.
+  * @return none.
   */
   void
   setSamplerState(uint32 _slot, WeakPtr<SamplerState> _sampler) override;
 
   /**
   * @brief
-  * @param
-  * @return
+  *  Creates a shadow map texture.
+  * @param width: texture width, height: texture height.
+  * @return DepthStencilView.
   */
   SPtr<DepthStencilView>
   createShadowMap(uint32 _width, uint32 _height) override;
 
   /**
   * @brief
-  * @param
-  * @return
+  *  Reads a shadow map.
+  * @param shadowDepth: shadow map to read. outDepth: Vector to save the depth values.
+  * @return true if readied successfully.
   */
   bool
   readShadowMap(WeakPtr<DepthStencilView> _shadowDepth,

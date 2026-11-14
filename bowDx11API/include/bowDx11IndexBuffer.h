@@ -1,3 +1,12 @@
+/************************************************************************/
+/**
+ * @file bowDx11IndexBuffer.h
+ * @author Samuel G
+ * @date 18/10/2026
+ * @brief
+ * Dx11 implementation for index buffer.
+ */
+ /*************************************************************************/
 #pragma once 
 #include "bowDx11Requisites.h"
 
@@ -24,7 +33,6 @@ class Dx11IndexBuffer : public IndexBuffer
    */
    ~Dx11IndexBuffer() = default;
 
-
    ID3D11Buffer* m_buffer;
 };
-}/// namespace bowEngineSDK
+}/// name space bowEngineSDK

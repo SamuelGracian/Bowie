@@ -1,3 +1,12 @@
+/************************************************************************/
+/**
+ * @file bowDx11ConstBuffer.h
+ * @author Samuel G
+ * @date 16/10/2026
+ * @brief
+ * DX11 implementation for const buffer.
+ */
+ /*************************************************************************/
 #pragma once
 
 #include "bowDx11Requisites.h"
@@ -27,11 +36,11 @@ class Dx11ConstBuffer : public ConstBuffer
   /*
   * @brief
   *  Returns a pointer to the buffer.
-  * @param NONE
+  * @param none
   * @return ID3D11Buffer*
   */
   ID3D11Buffer* getBuffer();
   
   ID3D11Buffer* m_buffer;
 };
-}/// namespace bowEngineSDK
+}/// name space bowEngineSDK

@@ -1,3 +1,12 @@
+/************************************************************************/
+/**
+ * @file bowDx11ConstBuffer.h
+ * @author Samuel G
+ * @date 16/10/2026
+ * @brief
+ * Dx11 implementation for rasterizer state.
+ */
+ /*************************************************************************/
 #pragma once
 
 #include "bowDx11Requisites.h"
@@ -17,13 +26,8 @@ class Dx11RasterizerState : public RasterizerState
   
   ~Dx11RasterizerState() = default;
 
-  /// <summary>
-  /// rasterizer state member
-  /// </summary>
   ID3D11RasterizerState* rasterizer;
-  /// <summary>
-  /// Rasterizer state descriptor.
-  /// </summary>
+
   const D3D11_RASTERIZER_DESC* rasterizerDesc;
 };
-}/// namespace bowEngineSDK
+}/// name space bowEngineSDK
