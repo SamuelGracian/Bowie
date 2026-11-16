@@ -18,10 +18,10 @@ class ViewPort
 {
  public:
 
-   /**
-   * @brief
-   *  Default destructor.
-   */
+  /**
+  * @brief
+  *  Default destructor.
+  */
   ViewPort(float _width, float _height, float _minDepth,
            float _maxDepth, float _topLeftX, float _topLeftY)
     : width(_width), height(_height), minDepth(_minDepth),
@@ -32,6 +32,7 @@ class ViewPort
   * @brief
   *  Default destructor.
   */
+  virtual
   ~ViewPort() = default;
 
   float width;

@@ -35,7 +35,7 @@ cbuffer ViewProjection : register(b0)
     float4x4 Projection;
     matrix world;
     matrix ShadowView;
-    matrix ShadowProyection;
+    matrix ShadowProjection;
     float3 CameraPosition;
     float Shininess;
 }
@@ -52,7 +52,7 @@ PSIn VShader(VSIn input)
 
     output.WorldPosition = worldPosition.xyz;
 
-    output.ShadowPosition = mul(mul(ShadowProyection, ShadowView), worldPosition);
+    output.ShadowPosition = mul(mul(ShadowProjection, ShadowView), worldPosition);
     
     output.position = mul(viewProjection, float4(input.position.xyz, 1));
     

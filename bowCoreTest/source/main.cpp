@@ -31,8 +31,8 @@ struct GeneralConstBuffer
 };
 
 Vector<String> defines { "#defines BOWIE_TEST" };
-std::vector<uint8_t> neutralNormal = { 127, 127, 255, 255 };
-std::vector<uint8_t> whitePixel = { 255, 255, 255, 255 };
+Vector<uint8_t> neutralNormal = { 127, 127, 255, 255 };
+Vector<uint8_t> whitePixel = { 255, 255, 255, 255 };
 
 struct MoveVertex
 {
@@ -61,7 +61,7 @@ struct SimpleVertex
 };/// Simple vertex struct
 
 String
-readFileToString(const std::wstring& _filePath) {
+readFileToString(const WString& _filePath) {
   const std::filesystem::path filePath(_filePath);
   const std::filesystem::path absolutePath =
     std::filesystem::absolute(filePath);
@@ -107,7 +107,7 @@ int main() {
   /* COLORS */
   float semiClearColor[4] = { 0.02f, 0.08f, 0.20f, 1.0f };
   /* FLAG */
-  uint8 flag = ClearFlags::Depth | ClearFlags::Stencil;
+  uint8 flag = CLEAR_FLAGS::kDepth | CLEAR_FLAGS::kStencil;
 
   /// Cameras
   Vector3 Eye(150.0f, 150.0f, 500.0f);
@@ -161,7 +161,7 @@ int main() {
   }
 
   /// SHADERS
-  SPtr<PixelShader> p_ShaderShader = grapi.createPixelShader(
+  SPtr<PixelShader>p_ShaderShader = grapi.createPixelShader(
                                      readFileToString(L"RawData/Shaders.fxh"),
                                      "PShader",
                                      defines,
@@ -171,7 +171,7 @@ int main() {
     return-1;
   }
 
-  SPtr<PixelShader> p_pixelShader1 = grapi.createPixelShader(
+  SPtr<PixelShader>p_pixelShader1 = grapi.createPixelShader(
                                    readFileToString(L"RawData/PixelShader.fxh"),
                                    "PShader",
                                    defines,
@@ -191,11 +191,11 @@ int main() {
   /// DEPTH STENCIL VIEW
   SPtr<DepthStencilView> p_depthSV = grapi.createDepthStencil(window->getClientWidth(),
                                                               window->getClientHeight(),
-                                                              TEXTURE_FORMAT::D24_UNORM_S8_UINT);
+                                                              TEXTURE_FORMAT::kD24_UNORM_S8_UINT);
 
   /// SWAP CHAIN
   SPtr<SwapChain> p_swapChain = grapi.createSwapChain(window,
-                                         TEXTURE_FORMAT::R8G8B8A8_UNORM);
+                                         TEXTURE_FORMAT::kR8G8B8A8_UNORM);
 
   if (!p_swapChain) {
     grapi.cleanUpResources();
@@ -415,12 +415,12 @@ int main() {
                                             cubeVertex.data());
 
   /// TOPOLOGY
-  SPtr <Topology> p_topology = grapi.createTopology(TOPOLOGY_TYPE::TriangleList);
+  SPtr <Topology> p_topology = grapi.createTopology(TOPOLOGY_TYPE::kTriangleList);
 
   /// RASTERIZER STATE
   SPtr<RasterizerState> p_rasterizer = nullptr;
-  p_rasterizer = grapi.createRasterizerState(CULL_MODE::CULL_BACK,
-                                             FILL_MODE::FILL_SOLID, true);
+  p_rasterizer = grapi.createRasterizerState(CULL_MODE::kCULL_BACK,
+                                             FILL_MODE::kFILL_SOLID, true);
   if (!p_rasterizer)     {
     std::cout << "Failed to create rasterizer state" << std::endl;
     return -1;
@@ -480,7 +480,7 @@ int main() {
                                 semiClearColor);
 
     grapi.clearDepthStencilView(p_depthSV,
-                                static_cast<ClearFlags::E>(flag),
+                                static_cast<CLEAR_FLAGS::E>(flag),
                                 1.0f,
                                 0);
 

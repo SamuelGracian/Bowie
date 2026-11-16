@@ -53,4 +53,5 @@ class ConstBuffer : public BaseBuffer
    void* m_rawData;
    bool m_isUpdatePending;
 };
+
 }/// name space bowwEngineSDK

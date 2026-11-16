@@ -16,7 +16,17 @@ namespace bowEngineSDK
   class DepthStencilView
   {
   public:
+    /**
+    * @brief
+    *  Default constructor.
+    */
     DepthStencilView() = default;
+
+    /**
+    * @brief
+    *  Default destructor
+    */
+    virtual
     ~DepthStencilView() = default;
   };
   

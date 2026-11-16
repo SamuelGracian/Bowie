@@ -17,11 +17,11 @@ class Dx11DepthStencilView : public DepthStencilView
   ~Dx11DepthStencilView() = default;
 
   static uint32
-  getClearFlagsDx11(const ClearFlags::E _flags);
+  getClearFlagsDx11(const CLEAR_FLAGS::E _flags);
 
   static bool
-  hasFlag(ClearFlags::E _flag,
-          ClearFlags::E _flagToCheck);
+  hasFlag(CLEAR_FLAGS::E _flag,
+          CLEAR_FLAGS::E _flagToCheck);
 
   ID3D11DepthStencilView* m_depthStencilView;
   ID3D11ShaderResourceView* m_shadowSRV;

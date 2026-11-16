@@ -27,7 +27,7 @@ class Texture2D
  protected:
    uint32 m_width = 0;
    uint32 m_height = 0;
-   TEXTURE_FORMAT::E m_format = TEXTURE_FORMAT::FORMAT_UNKNOWN;
+   TEXTURE_FORMAT::E m_format = TEXTURE_FORMAT::kFORMAT_UNKNOWN;
 
 };
 }/// name space bowEngineSDK

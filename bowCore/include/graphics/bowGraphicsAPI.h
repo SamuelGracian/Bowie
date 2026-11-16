@@ -86,7 +86,7 @@ public:
   */
   virtual SPtr<SwapChain>
   createSwapChain(WeakPtr<DisplaySurface> handle,
-                  TEXTURE_FORMAT::E = TEXTURE_FORMAT::FORMAT_UNKNOWN) = 0;
+                  TEXTURE_FORMAT::E = TEXTURE_FORMAT::kFORMAT_UNKNOWN) = 0;
 
   /// Buffers
 
@@ -171,7 +171,7 @@ public:
   * @return Topology object.
   */
   virtual SPtr<Topology>
-  createTopology(TOPOLOGY_TYPE::E _type = TOPOLOGY_TYPE::TriangleList) = 0;
+  createTopology(TOPOLOGY_TYPE::E _type = TOPOLOGY_TYPE::kTriangleList) = 0;
 
   /**
   * @brief
@@ -192,7 +192,7 @@ public:
   */
   virtual SPtr<DepthStencilView>
   createDepthStencil(uint32 width = 0, uint32 height = 0,
-                     const TEXTURE_FORMAT::E  format = TEXTURE_FORMAT::FORMAT_UNKNOWN) = 0;
+                     const TEXTURE_FORMAT::E  format = TEXTURE_FORMAT::kFORMAT_UNKNOWN) = 0;
 
   /// Shaders
 
@@ -365,7 +365,7 @@ public:
   */
   virtual void
   clearDepthStencilView(WeakPtr<DepthStencilView> depthStencil,
-                                   ClearFlags::E flag,
+                                   CLEAR_FLAGS::E flag,
                                    float depth, uint8 stencil) = 0;
 
   /// sampler state

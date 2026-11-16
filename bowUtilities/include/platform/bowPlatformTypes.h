@@ -19,7 +19,7 @@ namespace bowEngineSDK
   using WCHAR32 = char32_t;
   using WCHAR16 = char16_t;
   using UNICHAR = WCHAR16;
-  using ANISCHAR = char;
+  using ANSICHAR = char;
 
   using TYPE_OF_NULL = int32;
   using SIZE_T = std::size_t;

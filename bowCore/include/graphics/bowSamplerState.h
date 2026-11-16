@@ -15,16 +15,18 @@ class SamplerState
 {
  public:
 
-   /**
-   * @brief
-   *  Default constructor.
-   */
+  /**
+  * @brief
+  *  Default constructor.
+  */
+  explicit
   SamplerState() = default;
 
   /**
   * @brief
   *  Default destructor.
   */
+  virtual
   ~SamplerState() = default;
 };
 }/// name space BowEngineSDK

@@ -9,12 +9,12 @@ namespace ImageLoader
 {
 Vector<uint8>
 loadImageFromFile(const String& filePath, int32* outWidth, int32* outHeight,
-                                           int32* outChanels) {
+                                           int32* outChanells) {
 
   Vector<uint8_t> imageData;
 
   uint8* data = stbi_load(filePath.c_str(),
-                          outWidth, outHeight, outChanels, STBI_rgb_alpha);
+                          outWidth, outHeight, outChanells, STBI_rgb_alpha);
 
   if (data) {
     imageData.resize((*outWidth) * (*outHeight) * STBI_rgb_alpha);

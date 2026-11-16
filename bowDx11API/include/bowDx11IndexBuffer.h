@@ -18,21 +18,22 @@ class Dx11IndexBuffer : public IndexBuffer
 {
  public:
 
-   /*
-   * @brief
-   *  Constructor, sets the buffer as nullptr.
-   */
-   Dx11IndexBuffer(uint32 _byteWidth)
-     : IndexBuffer(_byteWidth),
-       m_buffer (nullptr)
-    {}
+  /*
+  * @brief
+  *  Constructor, sets the buffer as nullptr.
+  */
+  explicit
+  Dx11IndexBuffer(uint32 _byteWidth)
+    : IndexBuffer(_byteWidth),
+      m_buffer (nullptr)
+   {}
 
-   /*
-   * @brief
-   *  Default destructor.
-   */
-   ~Dx11IndexBuffer() = default;
+  /*
+  * @brief
+  *  Default destructor.
+  */
+  ~Dx11IndexBuffer() = default;
 
-   ID3D11Buffer* m_buffer;
+  ID3D11Buffer* m_buffer;
 };
 }/// name space bowEngineSDK

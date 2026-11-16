@@ -18,20 +18,25 @@ class IndexBuffer :public BaseBuffer
 {
  public:
 
-   /*
-   * @brief
-   *  Default constructor
-   */
-   IndexBuffer(uint32 _byteWidth)
-     : BaseBuffer(_byteWidth) 
-   {
-     BOW_ASSERT(m_byteWidth != 0);
-   }
+  /*
+  * @brief
+  *  Default constructor
+  */
+  explicit
+  IndexBuffer(uint32 _byteWidth)
+    : BaseBuffer(_byteWidth) 
+  {
+    BOW_ASSERT(m_byteWidth != 0);
+  }
 
-   /*
-   * @brief
-   *  Default destructor
-   */
-   ~IndexBuffer() = default;
+  /*
+  * @brief
+  *  Default destructor
+  */
+  ~IndexBuffer();
 };
+
+IndexBuffer::~IndexBuffer() {
+  m_byteWidth = 0;
+}
 }/// name space bowEngineSDK

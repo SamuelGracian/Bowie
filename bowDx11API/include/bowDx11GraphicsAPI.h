@@ -14,26 +14,109 @@
 
 namespace bowEngineSDK
 {
-class Vector3;
-class Vector4;
-class DisplaySurface;
-class SwapChain;
-class ConstBuffer;
-class IndexBuffer;
-class VertexBuffer;
-class Topology;
-class DepthStencilView;
-class PixelShader;
-class VertexShader;
-class ViewPort;
-class Texture2D;
-class SamplerState;
-class Matrix4;
-class RenderTargetView;
-class RasterizerState;
 
 class BOW_PLUGIN_EXPORT Dx11GraphicsAPI final : public GraphicsAPI
 {
+  /*  INTERNAL FUNCTIONS  */
+private:
+  /**
+  * @brief
+  * @param HWND, uin32, uint32, TEXTURE_FORMAT, ID3D11Device
+  *  Window handler, uint32 width, uint32 height,
+  *  TEXTURE_FORMAT format
+  * @return IDXGISwapChain
+  *  Returns a pointer of type swap chain.
+  */
+  IDXGISwapChain*
+    createSwapChainInternal(HWND hwnd, uint32 width,
+                            uint32 height,
+                            TEXTURE_FORMAT::E format);
+
+  /**
+  * @brief
+  *  Gets the according DXGI format to the TEXTURE_FORMAT
+  * @param TEXTURE_FORMAT
+  * @return
+  *  DXGI_FORMAT
+  */
+  DXGI_FORMAT
+    getDx11FormatInternal(TEXTURE_FORMAT::E format) const;
+
+  /**
+  * @brief
+  * create back buffer for the render target.
+  * @param IDXGISwapChain*
+  * @return ID3D11RendertTargetView*
+  */
+  ID3D11RenderTargetView*
+    createBackBufferRTInternal(IDXGISwapChain* swapChain);
+
+  /**
+  * @brief
+  *  Creates a texture of Dx11 type.
+  * @param uint32 width, uint32 height, const TEXTURE_FORMAT, uint32 bind flag
+  * @return ID3D11Texture2D*
+  */
+  ID3D11Texture2D*
+    createTexture2DInternal(uint32 width, uint32 height,
+                            const TEXTURE_FORMAT::E format, uint32 bindFlags);
+
+  /**
+  * @brief
+  *  Getter for the dx11 bind flags.
+  * @param const uint32 bind flag
+  * @return uint32
+  *  Value of the bind flag.
+  */
+  uint32
+    getDx11BindFlagsInternal(const uint32 bindFlag) const;
+
+  /**
+  * @brief
+  * @param
+  * @return
+  */
+  ID3DBlob*
+    compileShaderInternal(const String& shaderCode, const String& entryPoint,
+                          Vector<String> defines, SHADER_TYPE::E shaderType,
+                          uint32 shaderModel) const;
+
+  /**
+  * @brief
+  *  Creates an input layout.
+  * @param ID3D10ShaderReflection
+  * @return   Vector<D3D11_INPUT_ELEMENT_DESC>
+  */
+  Vector<D3D11_INPUT_ELEMENT_DESC>
+    createInputLayoutInternal(ID3D11ShaderReflection* reflection) const;
+
+  /**
+  * @brief
+  * @param SHADER_TYPE, uint32
+  *   shader type and shader model.
+  * @return const char*
+  */
+  const ANSICHAR*
+    getShaderModelInternal(SHADER_TYPE::E shaderType, uint32 shaderModel) const;
+
+  /**
+  * @brief
+  *  Receives a fill mode of type bowie and returns the Dx11 version fo it.
+  * @param FILL_MODE
+  * @return D3D11_FILL_MODE
+  */
+  D3D11_FILL_MODE
+    getFillModeInternal(FILL_MODE::E fillMode) const;
+
+  /**
+  * @brief
+  *  receives a cull mode of type bowie and returns the Dx11 version of it.
+  * @param CULL_MODE
+  * @reutrn D3D11_CULL_MODE
+  */
+  D3D11_CULL_MODE
+    getCullModeInternal(CULL_MODE::E cullMode) const;
+
 public:
   /**
   * @brief
@@ -47,6 +130,7 @@ public:
   * @param handleWindow: handler for the window.
   * @return bool
   */
+  virtual
   bool
   init(WeakPtr<DisplaySurface> handleWindow) override;
   
@@ -56,6 +140,7 @@ public:
   * @param none
   * @return none
   */
+  virtual
   void
   cleanUpResources() override;
 
@@ -68,6 +153,7 @@ public:
   the buffer.
   * @return none
   */
+  virtual
   void
   draw(uint32 vertexCount, uint32 startVertexLocation) override;
 
@@ -77,6 +163,7 @@ public:
   * @param windowHandler: window handler, format: texture format.
   * @return SharedPtr<SwapChain>
   */
+  virtual
   SPtr<SwapChain>
   createSwapChain(WeakPtr<DisplaySurface> windowHandler,
                   TEXTURE_FORMAT::E format) override;
@@ -87,6 +174,7 @@ public:
   * @param byteWidth: buffer byte Width, slot: slot so assign the buffer to.
   * @return Const buffer object.
   */
+  virtual
   SPtr<ConstBuffer>
   createConstBuffer(const uint32 byteWitdh,
                     const uint32 slot) override;
@@ -94,9 +182,10 @@ public:
   /**
   * @brief
   * Creates and index buffer and sets an initial data.
-  * @param byteWisth: buffer byteWitdh, data: data to save in the indexbuffer.
+  * @param byteWisth: buffer byteWitdh, data: data to save in the index buffer.
   * @return sharedPtr<IndexBuffer>.
   */
+  virtual
    SPtr<IndexBuffer>
   createIndexBuffer(const uint32 byteWidth, void* data) override;
 
@@ -106,6 +195,7 @@ public:
   * @param byteWidtH: buffer byte width, vertices: model vertices.
   * @return Vertex buffer object.
   */
+  virtual
   SPtr<VertexBuffer>
   createVertexBuffer(const uint32 byteWidth, const void* vertices) override;
 
@@ -115,6 +205,7 @@ public:
   * @param buffer: const buffer to be set.
   * @return void.
   */
+  virtual
   void
   setConstBuffer(WeakPtr<ConstBuffer> buffer) override;
 
@@ -127,6 +218,7 @@ public:
   *  offset: one offset value for each buffer in the vertex buffer array.
   * @return none 
   */
+  virtual
   void
   setVertexBuffer(WeakPtr<VertexBuffer> buffer, uint32 stride,
                   uint32 offset) override;
@@ -137,6 +229,7 @@ public:
   * @param buffer: index buffer to be set.
   * @return void
   */
+  virtual
   void
   setIndexBuffer(WeakPtr<IndexBuffer> buffer) override;
 
@@ -147,6 +240,7 @@ public:
   *  data: data to update the const buffer with.
   * @return void
   */
+  virtual
   void
   updateConstBuffer(WeakPtr<ConstBuffer> buffer, const uint32 byteWitdth,
                     void* data = nullptr) override;
@@ -158,6 +252,7 @@ public:
   * @param type: topology type.
   * @return SharedPtr Topology
   */
+  virtual
   SPtr<Topology>
   createTopology(TOPOLOGY_TYPE::E type) override;
 
@@ -167,6 +262,7 @@ public:
   * @param topology: topology to set.
   * @return none
   */
+  virtual
   void
   setTopology(WeakPtr<Topology> topology) override;
 
@@ -176,6 +272,7 @@ public:
   * @param with: texture width, height: texture height, format: texture format.
   * @return SharedPtr<DepthStencilView>
   */
+  virtual
   SPtr<DepthStencilView>
   createDepthStencil(uint32 width, uint32 height,
                      const TEXTURE_FORMAT::E format) override;
@@ -188,6 +285,7 @@ public:
      minDepth: min depth of the view port, Ranges between 0 and 1.
   * @return
   */
+  virtual
   SPtr <ViewPort>
   createViewPort(float width, float height, float minDepth, float maxDepth,
                  float topLeftX, float topLeftY)override;
@@ -197,8 +295,9 @@ public:
   * @param viewPort: view port to set.
   * @return true if the  viewPort was set correctly.
   */
+  virtual
   bool
-  setViewPort(WeakPtr<ViewPort> _viewPort) override;
+  setViewPort(WeakPtr<ViewPort> viewPort) override;
 
   /**
   * @brief
@@ -206,9 +305,10 @@ public:
   * @param shader code: shader code, entryPoint: entry point for the shader,
   *  defines: shaderModel: model of the shader.
   */
+  virtual
   SPtr<VertexShader>
-  createVertexShader(const String& _shaderCode, const String& _entryPoint,
-                     Vector<String>& _defines, uint32 _shaderModel) override;
+  createVertexShader(const String& shaderCode, const String& entryPoint,
+                     Vector<String>& defines, uint32 shaderModel) override;
 
   /**
   * @brief
@@ -216,8 +316,9 @@ public:
   * @param shader: shader to set
   * @return
   */
+  virtual
   void
-  setVertexShader(WeakPtr<VertexShader> _shader) override;
+  setVertexShader(WeakPtr<VertexShader> shader) override;
 
   /**
   * @brief
@@ -225,9 +326,10 @@ public:
   *  of the shader. defines: pre process macros, shader type, shader model.
   * @return pixel shader
   */
+  virtual
   SPtr<PixelShader>
-  createPixelShader(const String& _shaderCode, const String& _entryPoint,
-                    Vector<String>& _defines, uint32 _shaderModel) override;
+  createPixelShader(const String& shaderCode, const String& entryPoint,
+                    Vector<String>& defines, uint32 shaderModel) override;
 
   /**
   * @brief
@@ -235,8 +337,9 @@ public:
   * @param shader: shader to set.
   * @return none
   */
+  virtual
   void
-  setPixelShader(WeakPtr<PixelShader> _shader) override;
+  setPixelShader(WeakPtr<PixelShader> shader) override;
 
   /**
   * @brief
@@ -245,9 +348,10 @@ public:
      height: texture height.
   * @return 2D texture object.
   */
+  virtual
   SPtr<Texture2D>
-  createTexture2DWithImageData(const Vector<uint8>& _imgData, int32 _witdh,
-                  int32 _height) override;
+  createTexture2DWithImageData(const Vector<uint8>& imgData, int32 witdh,
+                  int32 height) override;
 
   /**
   * @brief
@@ -255,8 +359,9 @@ public:
   * @param slot: slot to set the texture. texture: texture to set.
   * @return none.
   */
+  virtual
   void
-  setTexture2D(uint32 _slot, WeakPtr<Texture2D> _texture) override;
+  setTexture2D(uint32 slot, WeakPtr<Texture2D> texture) override;
 
   /**
   * @brief
@@ -265,9 +370,10 @@ public:
   * dethpClip: depth Clip for the rasterizer.
   * @return rasterizer state
   */
+  virtual
   SPtr<RasterizerState>
-  createRasterizerState(CULL_MODE::E _cullMode, FILL_MODE::E _fillMode,
-                        bool _deathClip) override;
+  createRasterizerState(CULL_MODE::E cullMode, FILL_MODE::E fillMode,
+                        bool depthClip) override;
 
   /**
   * @brief
@@ -275,8 +381,9 @@ public:
   * @param rasterizer: rasterizer to set.
   * @return
   */
+  virtual
   void
-  setRasterizerState(WeakPtr<RasterizerState> _rasterizer) override;
+  setRasterizerState(WeakPtr<RasterizerState> rasterizer) override;
 
   /**
   * @brief
@@ -285,9 +392,10 @@ public:
      format: texture format.
   * @return
   */
+  virtual
   SPtr<RenderTargetView>
-  createRenderTargetView(uint32 _width, uint32 _height,
-                         TEXTURE_FORMAT::E _format) override;
+  createRenderTargetView(uint32 width, uint32 height,
+                         TEXTURE_FORMAT::E format) override;
 
   /**
   * @brief
@@ -296,9 +404,10 @@ public:
   *  the render target.
   * @return none.
   */
+  virtual
   void
-  setRenderTargetView(WeakPtr<RenderTargetView> _renderTarget,
-                      WeakPtr<DepthStencilView> _deptStencill) override;
+  setRenderTargetView(WeakPtr<RenderTargetView> renderTarget,
+                      WeakPtr<DepthStencilView> deptStencill) override;
 
   /**
   * @brief
@@ -307,9 +416,10 @@ public:
      depthStencil: for the render targets.
   * @return none
   */
+  virtual
   void
-  setRenderTargetViews(Vector<WeakPtr<RenderTargetView>>& _renderTargets,
-                       WeakPtr<DepthStencilView> _depthStencil) override;
+  setRenderTargetViews(Vector<WeakPtr<RenderTargetView>>& renderTargets,
+                       WeakPtr<DepthStencilView> depthStencil) override;
 
   /**
   * @brief
@@ -318,9 +428,10 @@ public:
   *  target.
   * @return none.
   */
+  virtual
   void
-  clearRenderTargetView(WeakPtr<RenderTargetView> _renderTarget,
-                        float _color[4]) override;
+  clearRenderTargetView(WeakPtr<RenderTargetView> renderTarget,
+                        float color[4]) override;
 
   /**
   * @brief
@@ -330,10 +441,11 @@ public:
      between 0 and 1. stencil: value to clear the stencil buffer with.
   * @return
   */
+  virtual
   void
   clearDepthStencilView(WeakPtr<DepthStencilView> _depthStencil,
-                        ClearFlags::E _flag,
-                          float _depth, uint8 _stencil) override;
+                        CLEAR_FLAGS::E flag,
+                          float depth, uint8 stencil) override;
 
   /**
   * @brief
@@ -341,6 +453,7 @@ public:
   * @param none
   * @return sampler State.
   */
+  virtual
   SPtr <SamplerState>
   createSamplerState() override;
 
@@ -350,8 +463,9 @@ public:
   * @param slot: slot to assign the sampler. sampler: sampler to set.
   * @return none.
   */
+  virtual
   void
-  setSamplerState(uint32 _slot, WeakPtr<SamplerState> _sampler) override;
+  setSamplerState(uint32 slot, WeakPtr<SamplerState> sampler) override;
 
   /**
   * @brief
@@ -359,8 +473,9 @@ public:
   * @param width: texture width, height: texture height.
   * @return DepthStencilView.
   */
+  virtual
   SPtr<DepthStencilView>
-  createShadowMap(uint32 _width, uint32 _height) override;
+  createShadowMap(uint32 width, uint32 height) override;
 
   /**
   * @brief
@@ -368,8 +483,9 @@ public:
   * @param shadowDepth: shadow map to read. outDepth: Vector to save the depth values.
   * @return true if readied successfully.
   */
+  virtual
   bool
-  readShadowMap(WeakPtr<DepthStencilView> _shadowDepth,
+  readShadowMap(WeakPtr<DepthStencilView> shadowDepth,
                 Vector<float>& outDepth) override;
 
   /**
@@ -378,8 +494,9 @@ public:
   * @param uint32 slot, WeaKptr mapTexture.
   * @reutn none 
   */
+  virtual
   void
-  setShadowMap(uint32 _slot, WeakPtr<Texture2D> _mapTexture) override;
+  setShadowMap(uint32 slot, WeakPtr<Texture2D> mapTexture) override;
 
   /**
   * @brief
@@ -388,9 +505,10 @@ public:
   *  Matrix4 shadowView, Matrix4 shadowProjection, float bias.
   * @return bool
   */
+  virtual
   bool
-  isOccluded(WeakPtr<DepthStencilView> _shadowDepth, const Vector3& worldPos,
-             const Matrix4& _shadowView, const Matrix4 _shadowProjection,
+  isOccluded(WeakPtr<DepthStencilView> shadowDepth, const Vector3& worldPos,
+             const Matrix4& shadowView, const Matrix4 shadowProjection,
              float bias) override;
 
   /**
@@ -399,109 +517,12 @@ public:
   * @param uint32 slot, WeakPtr<DepthStencil> shadow map
   * @return none
   */
+  virtual
   void
-  setShadowMapFromDepthView(uint32 _slot,
-                            WeakPtr<DepthStencilView> _shadowDepth) override;
+  setShadowMapFromDepthView(uint32 slot,
+                            WeakPtr<DepthStencilView> shadowDepth) override;
 
-  /*  INTERNAL FUNCTIONS  */
-
-  /**
-  * @brief
-  * @param HWND, uin32, uint32, TEXTURE_FORMAT, ID3D11Device
-  *  Window handler, uint32 width, uint32 height,
-  *  TEXTURE_FORMAT format
-  * @return IDXGISwapChain
-  *  Returns a pointer of type swap chain.
-  */
-  IDXGISwapChain*
-  createSwapChainInternal(HWND hwnd, uint32 width,
-                          uint32 height,
-                          TEXTURE_FORMAT::E format);
-
-  /**
-  * @brief
-  *  Gets the according DXGI format to the TEXTURE_FORMAT
-  * @param TEXTURE_FORMAT
-  * @return
-  *  DXGI_FORMAT
-  */
-  DXGI_FORMAT
-  getDx11FormatInternal(TEXTURE_FORMAT::E _format) const;
-
-  /**
-  * @brief
-  * create back buffer for the render target.
-  * @param IDXGISwapChain*
-  * @return ID3D11RendertTargetView*
-  */
-  ID3D11RenderTargetView*
-  createBackBufferRTInternal(IDXGISwapChain* _swapChain);
-
-  /**
-  * @brief
-  *  Creates a texture of Dx11 type.
-  * @param uint32 width, uint32 height, const TEXTURE_FORMAT, uint32 bind flag
-  * @return ID3D11Texture2D*
-  */
-  ID3D11Texture2D*
-  createTexture2DInternal(uint32 _width, uint32 _height,
-                          const TEXTURE_FORMAT::E _format, uint32 _bindFlags);
-
-  /**
-  * @brief
-  *  Getter for the dx11 bind flags.
-  * @param const uint32 bind flag
-  * @return uint32
-  *  Value of the bind flag.
-  */
-  uint32
-  getDx11BindFlagsInternal(const uint32 _bindFlag) const;
-
-  /**
-  * @brief
-  * @param
-  * @return
-  */
-  ID3DBlob*
-  compileShaderInternal(const String& _shaderCode, const String& _entryPoint,
-                        Vector<String> _defines, SHADER_TYPE::E _shaderType,
-                        uint32 _shaderModel);
   
-  /**
-  * @brief
-  *  Creates an input layout.
-  * @param ID3D10ShaderReflection
-  * @return   Vector<D3D11_INPUT_ELEMENT_DESC>
-  */
-  Vector<D3D11_INPUT_ELEMENT_DESC>
-  createInputLayoutInternal(ID3D11ShaderReflection* _reflection) const;
-
-  /**
-  * @brief
-  * @param SHADER_TYPE, uint32
-  *   shader type and shader model.
-  * @return const char*
-  */
-  const ANISCHAR*
-  getShaderModelInternal(SHADER_TYPE::E _shaderType, uint32 _shaderModel) const;
-
-  /**
-  * @brief
-  *  Receives a fill mode of type bowie and returns the Dx11 version fo it.
-  * @param FILL_MODE
-  * @return D3D11_FILL_MODE
-  */
-  D3D11_FILL_MODE
-  getFillModeInternal(FILL_MODE::E _fillMode) const;
-
-  /**
-  * @brief
-  *  receives a cull mode of type bowie and returns the Dx11 version of it.
-  * @param CULL_MODE
-  * @reutrn D3D11_CULL_MODE
-  */
-  D3D11_CULL_MODE
-  getCullModeInternal(CULL_MODE::E _cullMode) const;
 
 private:
 

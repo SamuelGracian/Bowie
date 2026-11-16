@@ -25,6 +25,7 @@ class BaseShader
    * @brief
    * Default destructor.
    */
+   virtual
    ~BaseShader() = default;
 };
 }

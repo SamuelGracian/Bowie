@@ -22,6 +22,7 @@ class BaseBuffer
   * @param _byteWidth, byteWidth of the buffer.
   */
  public:
+  explicit
   BaseBuffer(uint32 _byteWidth) 
     : m_byteWidth(_byteWidth)
   {
@@ -32,6 +33,7 @@ class BaseBuffer
   * @brief
   *  Default destructor.
   */
+  virtual
   ~BaseBuffer() = default;
 
   /*

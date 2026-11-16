@@ -318,12 +318,12 @@ Matrix4::getInverse() const {
   return result;
 }
 
-NODISCARD Matrix4 
+Matrix4 
 Matrix4::lookAt(const Vector3& _at, const Vector3& _eye, const Vector3& _up) {
-  return matrixHelpers ::lookAtHelper(_at, _eye, _up);
+  return matrixHelpers::lookAtHelper(_at, _eye, _up);
 }
 
-NODISCARD Matrix4
+Matrix4
 Matrix4::perspective(float _foV, float _aspect, float _zNear, float _zFar) {
   
   if (_aspect == 0.0f || _zNear == _zFar || _zNear <= 0.0f || _zFar <= 0.0f) {
@@ -343,7 +343,7 @@ Matrix4::perspective(float _foV, float _aspect, float _zNear, float _zFar) {
   );
 }
 
-NODISCARD Matrix4 
+Matrix4 
 Matrix4::fromScaleVector(const Vector3 _scale) {
   Matrix4 returnMatrix = Matrix4::IDENTITY;
   returnMatrix.data[0][0] = _scale.x;
@@ -353,7 +353,7 @@ Matrix4::fromScaleVector(const Vector3 _scale) {
   return returnMatrix;
 }
 
-NODISCARD Matrix4
+Matrix4
 Matrix4::fromRotationMatrix(float _m00, float _m01, float _m02,
                             float _m10, float _m11, float _m12,
                             float _m20, float _m21, float _m22) {
@@ -365,7 +365,7 @@ Matrix4::fromRotationMatrix(float _m00, float _m01, float _m02,
   );
 }
 
-NODISCARD Matrix4
+Matrix4
 Matrix4::fromTranslationVector(const Vector3& _translation) {
 
   return Matrix4(
@@ -538,4 +538,4 @@ Matrix4::operator/(float scalar) const {
   return result;
 }
 
-} // namespace bowEngineSDK
+}/// name space bowEngineSDK

@@ -24,7 +24,7 @@ class Topology
    * Default constructor.
    */
   Topology() 
-    : m_type (TOPOLOGY_TYPE::TriangleList)
+    : m_type (TOPOLOGY_TYPE::kTriangleList)
   {}
 
   /**
