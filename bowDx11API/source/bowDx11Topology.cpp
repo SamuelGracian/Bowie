@@ -3,7 +3,7 @@
 namespace bowEngineSDK
 {
 Dx11Topology::Dx11Topology()
-  : dx11Topology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST) {
+  : dx11Topology() {
   switch (m_type) {
 
   case TOPOLOGY_TYPE::kTriangleList:

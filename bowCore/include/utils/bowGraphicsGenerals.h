@@ -22,6 +22,7 @@ enum E
   kR16G16_FLOAT,
   kR32G32B32A32_FLOAT,
   kR32_UINT,
+  kR16_UINT
 };
 }/// name space TEXTURE_FORMAT
 
@@ -107,10 +108,22 @@ namespace TOPOLOGY_TYPE
 {
 enum E : uint32
 {
-  kTriangleList = 0,
+  kNone = 0,
+  kTriangleList,
   kTriangleStrip,
   kLineList,
   kPointList
 };
 }/// name space TOPOLOGY_TYPE
+
+namespace SHADER_STAGE
+{
+enum E : uint32
+{
+  kVertex = 1 << 0,
+  kPixel = 1 << 1,
+  kAll = kVertex | kPixel
+};
+}/// name space SHADER_STAGE
+
 }/// name space bowEngineSDK

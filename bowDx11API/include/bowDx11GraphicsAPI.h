@@ -150,14 +150,14 @@ public:
   * @brief
   *  Draw indexed, non instanced primitives. Internally this function sets the 
   *  Base Vertex Location as 0
-  * @param vertexCount: number of indices to draw.
+  * @param indexCount: number of indices to draw.
   *  startVertexLocation: location of the first index read by the GPU from 
   the buffer.
   * @return none
   */
   virtual
   void
-  draw(uint32 vertexCount, uint32 startVertexLocation) override;
+  draw(uint32 indexCount, uint32 startVertexLocation) override;
 
   /**
   * @brief
@@ -178,8 +178,7 @@ public:
   */
   virtual
   SPtr<ConstBuffer>
-  createConstBuffer(const uint32 byteWitdh,
-                    const uint32 slot) override;
+  createConstBuffer(const uint32 byteWitdh) override;
 
   /**
   * @brief
@@ -205,11 +204,14 @@ public:
   * @brief
   *  Sets the constant buffer with a given data.
   * @param buffer: const buffer to be set.
+  *        slot: shader register slot/
+  *        stages: shader stages receiving the buffer.
   * @return void.
   */
   virtual
   void
-  setConstBuffer(WeakPtr<ConstBuffer> buffer) override;
+  setConstBuffer(WeakPtr<ConstBuffer> buffer,  uint32 slot,
+                 uint32 Stages ) override;
 
 
   /**
@@ -233,7 +235,7 @@ public:
   */
   virtual
   void
-  setIndexBuffer(WeakPtr<IndexBuffer> buffer) override;
+  setIndexBuffer(WeakPtr<IndexBuffer> buffer, TEXTURE_FORMAT::E format) override;
 
   /**
   * @brief

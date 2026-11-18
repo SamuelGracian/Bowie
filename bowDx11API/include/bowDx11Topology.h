@@ -3,11 +3,11 @@
 #include "bowDx11Requisites.h"
 #include "bowTopology.h"
 
-
 namespace bowEngineSDK
 {
 class Dx11Topology : public Topology
 {
+  friend class Dx11GraphicsAPI;
 
  public:
   Dx11Topology();
@@ -17,10 +17,13 @@ class Dx11Topology : public Topology
   FORCEINLINE D3D11_PRIMITIVE_TOPOLOGY
   getDx11Topology() { return dx11Topology; }
 
-   /// <summary>
-   /// Topology member
-   /// </summary>
-   D3D11_PRIMITIVE_TOPOLOGY dx11Topology;
+ protected:
+
+  /**
+  * @brief
+  *  Dx11 topology object.
+  */
+  D3D11_PRIMITIVE_TOPOLOGY dx11Topology;
 
 };
-}/// namespace bowEngineSDK
+}/// name space bowEngineSDK

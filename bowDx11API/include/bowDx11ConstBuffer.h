@@ -22,8 +22,8 @@ class Dx11ConstBuffer : public ConstBuffer
   * @brief
   *  Constructor, sets the buffer pointer as null.
   */
-   Dx11ConstBuffer(uint32 _byteWidth, uint32 _slot)
-     : ConstBuffer(_byteWidth, _slot),
+   Dx11ConstBuffer(uint32 _byteWidth)
+     : ConstBuffer(_byteWidth),
        m_buffer(nullptr)
    {}
   

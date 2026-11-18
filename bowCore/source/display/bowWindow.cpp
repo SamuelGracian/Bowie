@@ -43,7 +43,7 @@ bool DisplaySurface::init(int32 _width, int32 _height, const String& windowName)
   wc.hInstance = GetModuleHandle(nullptr);
   wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
   wc.lpszClassName = windowName.c_str();
-  RegisterClassEx(&wc);
+  RegisterClassExA(&wc);
 
   HWND hwnd = CreateWindowEx(
     0,

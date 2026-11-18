@@ -22,11 +22,9 @@ class ConstBuffer : public BaseBuffer
    * @brief
    *  Default constructor.
    */
-   ConstBuffer(uint32 _byteWidth, uint32 _slot)
-     : BaseBuffer(_byteWidth),
-       m_slot(_slot)
+   ConstBuffer(uint32 _byteWidth)
+     : BaseBuffer(_byteWidth)
    {
-     BOW_ASSERT(_slot < BUFFER_HIGHER_AVAILABLE_SLOT);
    }
 
    /*
@@ -35,23 +33,6 @@ class ConstBuffer : public BaseBuffer
    */
    ~ConstBuffer() = default;
 
-   /*
-   * @brief
-   *  Returns the slot of the buffer.
-   * @param none
-   * @return UINT32
-   *  Assigned slot for the buffer.
-   */
-   FORCEINLINE uint32
-   getSlot() const {
-     return m_slot;
-   }
-
- protected:
-
-   uint32 m_slot = 0;
-   void* m_rawData = nullptr;
-   bool m_isUpdatePending = true;
 };
 
 }/// name space bowwEngineSDK

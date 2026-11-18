@@ -98,8 +98,7 @@ public:
   * @return Const buffer object.
   */
   virtual SPtr<ConstBuffer> 
-  createConstBuffer(const uint32 byteWitdh = 0,
-                    uint32 slot = 0) = 0;
+  createConstBuffer(const uint32 byteWitdh = 0) = 0;
 
   /**
   * @brief
@@ -118,7 +117,8 @@ public:
   * @return SharedPtr<VertexBuffer>
   */
   virtual SPtr<VertexBuffer>
-  createVertexBuffer(const uint32 byteWidth = 0, const void* vertices = nullptr) = 0;
+  createVertexBuffer(const uint32 byteWidth = 0,
+                     const void* vertices = nullptr) = 0;
 
   /**
   * @brief
@@ -127,7 +127,8 @@ public:
   * @retun none
   */
   virtual void
-  setConstBuffer(WeakPtr<ConstBuffer> buffer) = 0;
+  setConstBuffer(WeakPtr<ConstBuffer> buffer, uint32 slot, 
+                 uint32 Stages = SHADER_STAGE::kAll) = 0;
 
   /**
   * @brief
@@ -136,7 +137,7 @@ public:
   * @return none
   */
   virtual void
-  setIndexBuffer(WeakPtr<IndexBuffer> buffer) = 0;
+  setIndexBuffer(WeakPtr<IndexBuffer> buffer, TEXTURE_FORMAT::E format) = 0;
 
   /**
   * @brief

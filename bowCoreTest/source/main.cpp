@@ -94,6 +94,58 @@ readFileToString(const WString& _filePath) {
   return buffer.str();
 }
 
+void updateCameraInput(float deltaTime,
+                       Vector3& eye,
+                       Vector3& at,
+                       const Vector3& up) {
+  constexpr float cameraSpeed = 150.0f;
+
+  Vector3 forward = at - eye;
+  forward.y = 0.0f;
+
+  if (forward.sqrMagnitude() <= PlatformMath::KINDA_SMALL_NUMBER) {
+    return;
+  }
+
+  forward = forward.normalize();
+
+  Vector3 right = forward.cross(up);
+
+  if (right.sqrMagnitude() <= PlatformMath::KINDA_SMALL_NUMBER) {
+    return;
+  }
+
+  right = right.normalize();
+
+  Vector3 movement(0.0f, 0.0f, 0.0f);
+
+  if ((GetAsyncKeyState('W') & 0x8000) != 0) {
+    movement = movement + forward;
+  }
+
+  if ((GetAsyncKeyState('S') & 0x8000) != 0) {
+    movement = movement - forward;
+  }
+
+  if ((GetAsyncKeyState('D') & 0x8000) != 0) {
+    movement = movement + right;
+  }
+
+  if ((GetAsyncKeyState('A') & 0x8000) != 0) {
+    movement = movement - right;
+  }
+
+  if (movement.sqrMagnitude() <= PlatformMath::KINDA_SMALL_NUMBER) {
+    return;
+  }
+
+  movement = movement.normalize();
+
+  eye = eye + movement * cameraSpeed * deltaTime;
+
+  at = eye + forward;
+}
+
 int main() {
   
   /// VARIABLES
@@ -115,7 +167,7 @@ int main() {
   Vector3 Up(0.0f, 1.0f, 0.0f);
 
 
-  Matrix4 view = Matrix4::lookAt(At, Eye, Up);
+  Matrix4 view = Matrix4::lookAt(Eye, At, Up);
   Matrix4 perspective = Matrix4::perspective(Math::PI / 4.0f,
                                              width / height,
                                              0.01f,1000.0f);
@@ -131,6 +183,7 @@ int main() {
                     "Bowie")) {
 
     std::cout << "Failed to start window" << std::endl;
+    GraphicsAPI::shutDown();
     return -1;
   }
 
@@ -139,6 +192,7 @@ int main() {
   
   if (!plugin.load()) {
     std::cout << "Failed to load library" << std::endl;
+    GraphicsAPI::shutDown();
     return -1;
   }
   
@@ -146,6 +200,7 @@ int main() {
   
   if (loadPlug == nullptr) {
     std::cout << "Failed to find plugin" << std::endl;
+    GraphicsAPI::shutDown();
     return -1;
   }
 
@@ -156,7 +211,8 @@ int main() {
   /// WINDOW
   if (!grapi.init(window)) {
     GraphicsAPI::shutDown();
-    std::cout << "Failed to init grapi" << std::endl;
+    std::cout << "Failed to init graphics api" << std::endl;
+    GraphicsAPI::shutDown();
     return -1;
   }
 
@@ -212,6 +268,7 @@ int main() {
   SPtr<SamplerState> p_sampler = grapi.createSamplerState();
   if (!p_sampler)     {
     std::cout << "Failed to create sampler" << std::endl;
+    GraphicsAPI::shutDown();
     return -1;
   }
 
@@ -226,8 +283,7 @@ int main() {
   cameraData.Shininess = 2;
 
   SPtr<ConstBuffer> p_constBufferCamera = 
-    grapi.createConstBuffer(sizeof(GeneralConstBuffer),
-                            0);
+    grapi.createConstBuffer(sizeof(GeneralConstBuffer));
 
   /// CUBE OBJECTS
   Vector<SimpleVertex> cubeVertex {
@@ -423,6 +479,7 @@ int main() {
                                              FILL_MODE::kFILL_SOLID, true);
   if (!p_rasterizer)     {
     std::cout << "Failed to create rasterizer state" << std::endl;
+    GraphicsAPI::shutDown();
     return -1;
   }
 
@@ -442,6 +499,7 @@ int main() {
   SPtr<Texture2D>cubeTexture = grapi.createTexture2DFromFile("RawData/Rocks.jpg");
   if (!cubeTexture) {
     std::cout << "Failed to load texture" << std::endl;
+    GraphicsAPI::shutDown();
     return -1;
   }
 
@@ -456,7 +514,14 @@ int main() {
     std::chrono::duration<float> elapsed = now - pre;
     pre = now;
 
+    const float deltaTime = elapsed.count();
     time += elapsed.count();
+
+    updateCameraInput(deltaTime, Eye, At, Up);
+
+    view = Matrix4::lookAt(Eye, At, Up);
+    cameraData.View = view;
+    cameraData.cameraPosition = Eye;
 
     const float angle = time * 0.5f;
     const float cosine = Math::cos(angle);
@@ -508,8 +573,8 @@ int main() {
       sizeof(SimpleVertex),
       0
     );
-    grapi.setIndexBuffer(p_indexBuffer);
-    grapi.setConstBuffer(p_constBufferCamera);
+    grapi.setIndexBuffer(p_indexBuffer, TEXTURE_FORMAT::kR16_UINT);
+    grapi.setConstBuffer(p_constBufferCamera, 0);
 
     grapi.draw(
       static_cast<uint32>(cubeIndices.size()),

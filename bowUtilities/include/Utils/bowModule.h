@@ -79,7 +79,7 @@ public:
   static void
   startUp(Args&& ...args) {
     static_assert(std::is_base_of<T, SubType>::value,
-                  "Provided type isn't delivered from type the module is initialized with");
+       "Provided type isn't delivered from type the module is initialized with");
   
     if (isStartedUp()) {
       BOW_LOG_ERROR("Trying to access an already started module" << std::endl);

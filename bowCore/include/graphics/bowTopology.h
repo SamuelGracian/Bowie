@@ -22,9 +22,10 @@ class Topology
    /**
    * @brief
    * Default constructor.
+   *  None topology type set as default.
    */
   Topology() 
-    : m_type (TOPOLOGY_TYPE::kTriangleList)
+    : m_type (TOPOLOGY_TYPE::kNone)
   {}
 
   /**

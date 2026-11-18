@@ -129,7 +129,7 @@ public:
   * @return 3 dimensional camera matrix.
   */
   NODISCARD static Matrix4
-  lookAt(const Vector3& _at, const Vector3& _eye, const Vector3& _up);
+  lookAt(const Vector3& eye, const Vector3& at, const Vector3& up);
 
   /**
   * @brief

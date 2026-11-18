@@ -86,6 +86,10 @@ Dx11GraphicsAPI::getDx11FormatInternal(TEXTURE_FORMAT::E _format) const {
     return DXGI_FORMAT_R32_UINT;
     break;
 
+  case bowEngineSDK::TEXTURE_FORMAT::kR16_UINT:
+    return DXGI_FORMAT_R16_UINT;
+    break;
+
   default:
     return DXGI_FORMAT_UNKNOWN;
     break;
@@ -610,10 +614,10 @@ Dx11GraphicsAPI::init(WeakPtr<DisplaySurface>windowHandler) {
 }
 
 void
-Dx11GraphicsAPI::draw(uint32 _vertexCount, uint32 _startVertexLocation) {
+Dx11GraphicsAPI::draw(uint32 indexCount, uint32 startVertexLocation) {
   if (m_immediateContext) {
-    m_immediateContext->DrawIndexed(_vertexCount,
-                                    _startVertexLocation,
+    m_immediateContext->DrawIndexed(indexCount,
+                                    startVertexLocation,
                                     0);
   }
 }
@@ -623,7 +627,6 @@ Dx11GraphicsAPI::cleanUpResources(){
   if (m_immediateContext != nullptr) {
     m_immediateContext->ClearState();
     m_immediateContext->Flush();
-    //safeRelease(m_immediateContext);
   }
   m_device->Release();
 }
@@ -663,17 +666,16 @@ Dx11GraphicsAPI::createSwapChain(WeakPtr<DisplaySurface> _windowHandler,
 }
 
 SPtr<ConstBuffer>
-Dx11GraphicsAPI::createConstBuffer(const uint32 _byteWidth,
-                                   const uint32 slot) {
+Dx11GraphicsAPI::createConstBuffer(const uint32 byteWidth) {
   if (m_device == nullptr) {
     BOW_LOG_ERROR("Create const buffer: device = nullptr");
     return nullptr;
   }
   ID3D11Buffer* Rawbuffer = nullptr;
   D3D11_BUFFER_DESC bd = {};
-  if (_byteWidth != 0) {
+  if (byteWidth != 0) {
     bd.Usage = D3D11_USAGE_DEFAULT;
-    bd.ByteWidth = _byteWidth;
+    bd.ByteWidth = byteWidth;
     bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
     bd.CPUAccessFlags = 0;
   }
@@ -681,34 +683,35 @@ Dx11GraphicsAPI::createConstBuffer(const uint32 _byteWidth,
   if (SUCCEEDED((m_device->CreateBuffer(&bd, nullptr, &Rawbuffer))))
   {
     SPtr<Dx11ConstBuffer> buffer =
-        MakeShared<Dx11ConstBuffer>(_byteWidth, slot);
+        MakeShared<Dx11ConstBuffer>(byteWidth);
     buffer->m_buffer = Rawbuffer;
+    BOW_ASSERT(byteWidth % 16 == 0);
     return buffer;
   }
   return nullptr;
 }
 
 SPtr<IndexBuffer>
-Dx11GraphicsAPI::createIndexBuffer(const uint32 _byteWidth, void* _data) {
+Dx11GraphicsAPI::createIndexBuffer(const uint32 byteWidth, void* data) {
   if (m_device == nullptr) {
     BOW_LOG_ERROR("Create index buffer: device = nullptr");
     return nullptr;
   }
 
-  BOW_ASSERT(_byteWidth != 0);
+  BOW_ASSERT(byteWidth != 0);
   D3D11_BUFFER_DESC bd = {};
   ID3D11Buffer* Rawbuffer = nullptr;
   D3D11_SUBRESOURCE_DATA InitData = {};
   SPtr<Dx11IndexBuffer> ResultBuffer =
-    MakeShared<Dx11IndexBuffer>(_byteWidth);
+    MakeShared<Dx11IndexBuffer>(byteWidth);
 
   bd.Usage = D3D11_USAGE_DEFAULT;
-  bd.ByteWidth = _byteWidth;
+  bd.ByteWidth = byteWidth;
   bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
   bd.CPUAccessFlags = 0;
-  InitData.pSysMem = _data;
+  InitData.pSysMem = data;
 
-  if (_data == nullptr) {
+  if (data == nullptr) {
     if (SUCCEEDED(m_device->CreateBuffer(&bd,
                                          nullptr,
                                          &Rawbuffer))) {
@@ -729,7 +732,7 @@ Dx11GraphicsAPI::createIndexBuffer(const uint32 _byteWidth, void* _data) {
 }
 
 SPtr<VertexBuffer>
-Dx11GraphicsAPI::createVertexBuffer(const uint32 _byteWidth,
+Dx11GraphicsAPI::createVertexBuffer(const uint32 byteWidth,
                                     const void* _vertices) {
   if (m_device == nullptr) {
     BOW_LOG_ERROR("Create vertex buffer: device = nullptr");
@@ -740,7 +743,7 @@ Dx11GraphicsAPI::createVertexBuffer(const uint32 _byteWidth,
 
   D3D11_BUFFER_DESC bd = {};
   bd.Usage = D3D11_USAGE_DEFAULT;
-  bd.ByteWidth = _byteWidth;
+  bd.ByteWidth = byteWidth;
   bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
   bd.CPUAccessFlags = 0;
   bd.StructureByteStride = 0;
@@ -751,32 +754,39 @@ Dx11GraphicsAPI::createVertexBuffer(const uint32 _byteWidth,
   if (SUCCEEDED(m_device->CreateBuffer(&bd,
                                        &InitData,
                                        &Rawbuffer))) {
-    ResultBuffer = MakeShared<Dx11VertexBuffer>(_byteWidth);
+    ResultBuffer = MakeShared<Dx11VertexBuffer>(byteWidth);
     ResultBuffer->m_buffer = Rawbuffer;
   }
   return ResultBuffer;
 }
 
 void
-Dx11GraphicsAPI::setConstBuffer(WeakPtr<ConstBuffer>buffer) {
+Dx11GraphicsAPI::setConstBuffer(WeakPtr<ConstBuffer>buffer,
+                                uint32 slot,
+                                uint32 stages) {
   if (m_immediateContext == nullptr || buffer.expired()) {
     return;
   }
+
   SPtr<Dx11ConstBuffer>pbuffer =
     StaticPointerCast<Dx11ConstBuffer>(buffer.lock());
 
-  if (pbuffer == nullptr || pbuffer->m_buffer == nullptr || pbuffer->getSlot() 
-      >= BUFFER_HIGHER_AVAILABLE_SLOT) {
+  if (pbuffer == nullptr || pbuffer->m_buffer == nullptr) {
     return;
   }
 
-  m_immediateContext->VSSetConstantBuffers(pbuffer->getSlot(),
-                                           1,
-                                           &pbuffer->m_buffer);
+  if ((stages & SHADER_STAGE::kVertex) != 0) {
 
-  m_immediateContext->PSSetConstantBuffers(pbuffer->getSlot(),
-                                           1,
-                                           &pbuffer->m_buffer);
+    m_immediateContext->VSSetConstantBuffers(slot,
+                                             1,
+                                             &pbuffer->m_buffer);
+  }
+
+  if ((stages & SHADER_STAGE::kPixel) != 0) {
+    m_immediateContext->PSSetConstantBuffers(slot,
+                                             1,
+                                             &pbuffer->m_buffer);
+  }
 }
 
 void
@@ -800,7 +810,8 @@ Dx11GraphicsAPI::setVertexBuffer(WeakPtr<VertexBuffer>_buffer, uint32 _stride,
 }
 
 void
-Dx11GraphicsAPI::setIndexBuffer(WeakPtr<IndexBuffer>buffer) {
+Dx11GraphicsAPI::setIndexBuffer(WeakPtr<IndexBuffer>buffer,
+                                TEXTURE_FORMAT::E format) {
   if (m_immediateContext == nullptr || buffer.expired()) {
     return;
   }
@@ -812,20 +823,20 @@ Dx11GraphicsAPI::setIndexBuffer(WeakPtr<IndexBuffer>buffer) {
   }
 
   m_immediateContext->IASetIndexBuffer(pbuffer->m_buffer,
-                                       DXGI_FORMAT_R16_UINT,
+                                       getDx11FormatInternal(format),
                                        0);
 }
 
 void
 Dx11GraphicsAPI::updateConstBuffer(WeakPtr<ConstBuffer>_buffer,
-                             const uint32 _byteWidth, void* _data) {
+                             const uint32 byteWidth, void* _data) {
   if (m_immediateContext == nullptr || _buffer.expired() || _data == nullptr) {
     return;
   }
   auto pbuffer = StaticPointerCast <Dx11ConstBuffer>(_buffer.lock());
 
   if (pbuffer == nullptr || pbuffer->m_buffer == nullptr ||
-      pbuffer->getByteWidth() != _byteWidth) {
+      pbuffer->getByteWidth() != byteWidth) {
     return;
   }
   /// To do: update const buffer byte width 
@@ -1500,67 +1511,89 @@ Dx11GraphicsAPI::setShadowMap(uint32 slot, WeakPtr<Texture2D>_mapTexture) {
   }
 }
 
-bool 
-Dx11GraphicsAPI::isOccluded(WeakPtr<DepthStencilView>shadowDepth, 
-                            const Vector3& worldPos, const Matrix4& shadowView, 
-                            const Matrix4 shadowProjection, float bias) {
-  
-  if (shadowDepth.expired() || m_device == nullptr ||
+
+bool
+Dx11GraphicsAPI::isOccluded(WeakPtr<DepthStencilView> shadowDepth,
+                            const Vector3& worldPos,
+                            const Matrix4& shadowView,
+                            const Matrix4 shadowProjection,
+                            float bias) {
+
+  if (shadowDepth.expired() ||
+      m_device == nullptr ||
       m_immediateContext == nullptr) {
     return false;
   }
 
-  auto dxDSV = 
-    std::static_pointer_cast<Dx11DepthStencilView>(shadowDepth.lock());
+  auto dxDSV =
+    std::static_pointer_cast<Dx11DepthStencilView>(
+      shadowDepth.lock());
 
   if (!dxDSV || dxDSV->m_depthTexture == nullptr) {
     return false;
   }
 
-  Vector<float>depthData;
+  Vector<float> depthData;
+
   if (!readShadowMap(shadowDepth, depthData)) {
     return false;
   }
 
   D3D11_TEXTURE2D_DESC desc = {};
   dxDSV->m_depthTexture->GetDesc(&desc);
+
   uint32 width = desc.Width;
   uint32 height = desc.Height;
-  if (width == 0 || height == 0 || depthData.size() < (SIZE_T)width * (SIZE_T)height) {
+
+  if (width == 0 || height == 0 ||
+      depthData.size() <
+      static_cast<SIZE_T>(width) * height) {
     return false;
   }
 
   Matrix4 vp = shadowProjection * shadowView;
   Vector4 clip = vp.transformPosition(worldPos);
 
-  if (clip.w == 0.0f) {
+  if (clip.w <= 0.0f) {
     return false;
   }
 
   float invW = 1.0f / clip.w;
+
   float ndcX = clip.x * invW;
   float ndcY = clip.y * invW;
   float ndcZ = clip.z * invW;
 
+  // NDC to texture coordinates.
   float u = ndcX * 0.5f + 0.5f;
-  float v = ndcY * 0.5f + 0.5f;
-  float depth = ndcZ * 0.5f + 0.5f;
+  float v = -ndcY * 0.5f + 0.5f;
 
+  // depth range: [0, 1].
+  float depth = ndcZ;
 
-  if (u < 0.0f || u > 1.0f || v < 0.0f || v > 1.0f) {
+  if (u < 0.0f || u > 1.0f ||
+      v < 0.0f || v > 1.0f ||
+      depth < 0.0f || depth > 1.0f) {
     return false;
   }
 
-  int tx = static_cast<int>(Math::clamp(u * static_cast<float>(width), 0.0f, 
-                             static_cast<float>(width - 1)));
+  int tx = static_cast<int>(
+    Math::clamp(
+      u * static_cast<float>(width),
+      0.0f,
+      static_cast<float>(width - 1)));
 
-  int ty = static_cast<int>(Math::clamp(v * static_cast<float>(height), 0.0f,
-                                       static_cast<float>(height - 1)));
+  int ty = static_cast<int>(
+    Math::clamp(
+      v * static_cast<float>(height),
+      0.0f,
+      static_cast<float>(height - 1)));
 
   float stored = depthData[ty * width + tx];
 
   return (depth - bias) > stored;
 }
+
 
 void 
 Dx11GraphicsAPI::setShadowMapFromDepthView(uint32 slot,

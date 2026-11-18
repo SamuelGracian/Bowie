@@ -17,16 +17,16 @@ namespace bowEngineSDK
 namespace matrixHelpers
 {
 bool
-lookAtHelperCalculateAxes(const Vector3& _at,
-                          const Vector3& _eye,
-                          const Vector3& _up,
+lookAtHelperCalculateAxes(const Vector3& eye,
+                          const Vector3& at,
+                          const Vector3& up,
                           Vector3* _axes) {
 
   if (_axes == nullptr) {
     return false;
   }
 
-  Vector3 forward = _at - _eye;
+  Vector3 forward = at - eye;
 
   if (forward.sqrMagnitude() <= PlatformMath::KINDA_SMALL_NUMBER) {
     return false;
@@ -34,7 +34,7 @@ lookAtHelperCalculateAxes(const Vector3& _at,
 
   forward = forward.normalize();
 
-  Vector3 right = forward.cross(_up);
+  Vector3 right = forward.cross(up);
 
   if (right.sqrMagnitude() <= PlatformMath::KINDA_SMALL_NUMBER) {
     return false;
@@ -42,29 +42,29 @@ lookAtHelperCalculateAxes(const Vector3& _at,
 
   right = right.normalize();
 
-  Vector3 up = right.cross(forward);
+  const Vector3 tempUp = right.cross(forward).normalize();
 
   _axes[0] = right;
-  _axes[1] = up;
+  _axes[1] = tempUp;
   _axes[2] = -forward;
 
   _axes[3] = Vector3(
-    -right.dot(_eye),
-    -up.dot(_eye),
-    forward.dot(_eye)
+    -right.dot(eye),
+    -tempUp.dot(eye),
+    forward.dot(eye)
   );
 
   return true;
 }
 
 Matrix4
-lookAtHelper(const Vector3& _at,
-             const Vector3& _eye,
-             const Vector3& _up) {
+lookAtHelper(const Vector3& eye,
+             const Vector3& at,
+             const Vector3& up) {
 
   Vector3 axes[4];
 
-  if (!lookAtHelperCalculateAxes(_at, _eye, _up, axes)) {
+  if (!lookAtHelperCalculateAxes(eye, at, up, axes)) {
     return Matrix4::IDENTITY;
   }
 
@@ -75,7 +75,7 @@ lookAtHelper(const Vector3& _at,
     axes[3].x, axes[3].y, axes[3].z, 1.0f
   );
 }
-}/// name space Matrixhelpers
+}/// name space Matrix helpers
 
 const Matrix4
 Matrix4::IDENTITY(1.0f, 0.0f, 0.0f, 0.0f,
@@ -319,8 +319,8 @@ Matrix4::getInverse() const {
 }
 
 Matrix4 
-Matrix4::lookAt(const Vector3& _at, const Vector3& _eye, const Vector3& _up) {
-  return matrixHelpers::lookAtHelper(_at, _eye, _up);
+Matrix4::lookAt(const Vector3& eye, const Vector3& at, const Vector3& up) {
+  return matrixHelpers::lookAtHelper(eye, at, up);
 }
 
 Matrix4
