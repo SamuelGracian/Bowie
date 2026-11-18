@@ -78,7 +78,7 @@ private:
   */
   ID3DBlob*
   compileShaderInternal(const String& shaderCode, const String& entryPoint,
-                        Vector<String> defines, SHADER_TYPE::E shaderType,
+                        Vector<String>& defines, SHADER_TYPE::E shaderType,
                           uint32 shaderModel) const;
 
   /**

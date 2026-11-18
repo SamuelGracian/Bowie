@@ -292,7 +292,7 @@ Dx11GraphicsAPI::createTexture2DInternal(uint32 _width,
 ID3DBlob*
 Dx11GraphicsAPI::compileShaderInternal(const String& _shaderCode,
                                        const String& _entryPoint,
-                                       Vector<String>_defines,
+                                       Vector<String>&_defines,
                                        SHADER_TYPE::E _shaderType,
                                        uint32 _shaderModel) const {
   ID3DBlob* errorBlob = nullptr;
@@ -315,7 +315,7 @@ Dx11GraphicsAPI::compileShaderInternal(const String& _shaderCode,
 #endif // BOW_DEBUG_MODE
 
     for (String& macro : _defines) {
-      finalShaderCore += (macro = '\n');
+      finalShaderCore += (macro + '\n');
     }
 
     finalShaderCore += _shaderCode;
@@ -475,7 +475,7 @@ Dx11GraphicsAPI::init(WeakPtr<DisplaySurface>windowHandler) {
 
   uint32 createDeviceFlags = 0;
 
-#ifdef _DEBUG
+#ifdef BOW_DEBUG_MODE
   createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
@@ -623,9 +623,9 @@ Dx11GraphicsAPI::cleanUpResources(){
   if (m_immediateContext != nullptr) {
     m_immediateContext->ClearState();
     m_immediateContext->Flush();
-    safeRelease(m_immediateContext);
+    //safeRelease(m_immediateContext);
   }
-  safeRelease(m_device);
+  m_device->Release();
 }
 
 SPtr<SwapChain>

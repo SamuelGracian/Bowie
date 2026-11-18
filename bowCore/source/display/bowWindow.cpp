@@ -10,7 +10,9 @@ namespace bowEngineSDK
 {
 
 #if BOW_PLATFORM == BOW_PLATFORM_WIN32
-static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+static 
+LRESULT CALLBACK 
+WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
   switch (message) {
   case WM_DESTROY:
     PostQuitMessage(0);
@@ -75,13 +77,18 @@ bool DisplaySurface::init(int32 _width, int32 _height, const String& windowName)
 #endif
 }
 
-void DisplaySurface::processMessages() {
+bool
+DisplaySurface::processMessages() {
 #if BOW_PLATFORM == BOW_PLATFORM_WIN32
   MSG msg {};
-  if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+  while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+    if (msg.message == WM_QUIT) {
+      return false;
+    }
     TranslateMessage(&msg);
     DispatchMessage(&msg);
   }
 #endif
+  return true;
 }
-}// namespace bowEngineSDK
+}/// name space bowEngineSDK

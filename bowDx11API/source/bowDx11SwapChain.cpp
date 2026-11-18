@@ -25,7 +25,12 @@ Dx11SwapChain::getRenderTargetView() {
     m_renderTargetView = std::make_shared<Dx11RenderTargetView>();
 
     auto p_renderTargetView = 
-      std::reinterpret_pointer_cast<Dx11RenderTargetView> (m_renderTargetView);
+      std::static_pointer_cast<Dx11RenderTargetView> (m_renderTargetView);
+
+    if (m_backBufferRT != nullptr) {
+      m_backBufferRT->AddRef();
+      p_renderTargetView->m_renderTargetView = m_backBufferRT;
+    }
 
     p_renderTargetView->m_renderTargetView = m_backBufferRT;
   }

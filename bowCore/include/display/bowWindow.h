@@ -10,6 +10,10 @@
 
 #pragma once
 
+#if BOW_PLATFORM ==  BOW_PLATFORM_WIN32
+#include <Windows.h>
+#endif
+
 #include "bowCoreRequisites.h"
 
 namespace bowEngineSDK
@@ -45,7 +49,7 @@ class BOW_CORE_EXPORT DisplaySurface
   bool
   init(int32 _width, int32 _height, const String& windowName);
 
-  void
+  bool
   processMessages();
 
   FORCEINLINE int32
@@ -62,7 +66,6 @@ class BOW_CORE_EXPORT DisplaySurface
 
   FORCEINLINE DisplaySurfaceHandler
   getHandle() const { return m_handler; }
-
 
 private:
   int32 m_width = 0;

@@ -30,7 +30,7 @@ struct GeneralConstBuffer
   float Shininess;
 };
 
-Vector<String> defines { "#defines BOWIE_TEST" };
+Vector<String> defines { "#define BOWIE_TEST" };
 Vector<uint8_t> neutralNormal = { 127, 127, 255, 255 };
 Vector<uint8_t> whitePixel = { 255, 255, 255, 255 };
 
@@ -447,8 +447,10 @@ int main() {
 
   SPtr<Texture2D>cubeTex2 = grapi.createTexture2DFromFile("RawData/12.jpg");
 
-  while (running) {
-    window->processMessages();
+  while (running == true ) {
+    if (!window->processMessages()) {
+      running = false;
+    }
 
     auto now = std::chrono::high_resolution_clock::now();
     std::chrono::duration<float> elapsed = now - pre;
@@ -531,10 +533,6 @@ int main() {
   }
 
   grapi.cleanUpResources();
-  p_vertexBuffer.reset();
-  p_indexBuffer.reset();
-  p_depthSV.reset();
-  p_swapChain.reset();
   GraphicsAPI::shutDown();
   return 0;
 }
