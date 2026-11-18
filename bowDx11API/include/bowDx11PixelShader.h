@@ -31,11 +31,15 @@ class Dx11PixelShader : public PixelShader
    * @brief
    *  Default destructor
    */
-   ~Dx11PixelShader() = default;
+   ~Dx11PixelShader();
 
   /// <summary>
   /// Dx11 Pixel shader
   /// </summary>
   ID3D11PixelShader* pixShader;
 };
+
+Dx11PixelShader::~Dx11PixelShader() {
+  safeRelease(pixShader);
+}
 }/// name space bowEngineSDK

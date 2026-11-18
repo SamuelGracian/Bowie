@@ -49,9 +49,9 @@ class ConstBuffer : public BaseBuffer
 
  protected:
 
-   uint32 m_slot;
-   void* m_rawData;
-   bool m_isUpdatePending;
+   uint32 m_slot = 0;
+   void* m_rawData = nullptr;
+   bool m_isUpdatePending = true;
 };
 
 }/// name space bowwEngineSDK

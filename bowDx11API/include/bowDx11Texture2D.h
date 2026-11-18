@@ -29,7 +29,7 @@ class Dx11Texture2D : public Texture2D
 
   /*
   * @brief
-  *  Get the witdh of the texture.
+  *  Get the width of the texture.
   * @param none
   * @return uint32
   */
@@ -55,4 +55,4 @@ class Dx11Texture2D : public Texture2D
   /// </summary>
   ID3D11ShaderResourceView* textureView;
 };
-}/// namespace bowEngineSDK
+}/// name space bowEngineSDK

@@ -26,6 +26,7 @@ class RenderTargetView : public Texture2D
    * @brief
    *  Default destructor.
    */
+   virtual
    ~RenderTargetView() = default;
 };
 }/// name space bowEngineSDK

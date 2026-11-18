@@ -21,11 +21,10 @@ public:
   * @brief
   *  Default destructor
   */
-  ~Dx11RenderTargetView() = default;
+  ~Dx11RenderTargetView();
 
    ID3D11RenderTargetView* m_renderTargetView;
    ID3D11ShaderResourceView* m_resourceView;
 
 };
-
 }/// name space bowEngineSDK

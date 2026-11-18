@@ -32,8 +32,12 @@ class Dx11IndexBuffer : public IndexBuffer
   * @brief
   *  Default destructor.
   */
-  ~Dx11IndexBuffer() = default;
+  ~Dx11IndexBuffer();
 
   ID3D11Buffer* m_buffer;
 };
+
+Dx11IndexBuffer::~Dx11IndexBuffer(){
+  safeRelease(m_buffer);
+}
 }/// name space bowEngineSDK

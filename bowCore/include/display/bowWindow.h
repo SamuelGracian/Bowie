@@ -65,19 +65,19 @@ class BOW_CORE_EXPORT DisplaySurface
 
 
 private:
-  int32 m_width;
-  int32 m_height;
+  int32 m_width = 0;
+  int32 m_height = 0;
 
   /*
   * Client sizes
   * *To do* Changed them to be calculated, instead of saved
   */
-  int32 m_clientWidth;
-  int32 m_clientHeight;
+  int32 m_clientWidth = 0;
+  int32 m_clientHeight = 0;
   
   /*
   * Window handler
   */
-  DisplaySurfaceHandler m_handler;
+  DisplaySurfaceHandler m_handler = nullptr;
 };
 }/// name space bowEngineSDK

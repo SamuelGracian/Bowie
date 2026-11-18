@@ -22,9 +22,13 @@ class Dx11VertexBuffer : public VertexBuffer
   * @brief
   *  Default destructor.
   */
-  ~Dx11VertexBuffer() = default;
+  ~Dx11VertexBuffer();
 
    ID3D11Buffer* m_buffer;
 
 };
+
+Dx11VertexBuffer::~Dx11VertexBuffer() {
+  safeRelease(m_buffer);
+}
 }/// name space bowEngineSDK

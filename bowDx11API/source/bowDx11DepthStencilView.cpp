@@ -1,10 +1,16 @@
 #include "bowDx11DepthStencilView.h"
 
 namespace bowEngineSDK {
-  
-UINT
+
+Dx11DepthStencilView::~Dx11DepthStencilView() {
+  safeRelease(m_depthStencilView);
+  safeRelease(m_shadowSRV);
+  safeRelease(m_depthTexture);
+}
+
+uint32
 Dx11DepthStencilView::getClearFlagsDx11(const CLEAR_FLAGS::E flags) {
-  UINT resultFlag = 0;
+  uint32 resultFlag = 0;
   if (hasFlag(flags, CLEAR_FLAGS::kDepth)) {
     resultFlag |= D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH;
   }

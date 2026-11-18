@@ -28,9 +28,9 @@ private:
   *  Returns a pointer of type swap chain.
   */
   IDXGISwapChain*
-    createSwapChainInternal(HWND hwnd, uint32 width,
-                            uint32 height,
-                            TEXTURE_FORMAT::E format);
+  createSwapChainInternal(HWND hwnd, uint32 width,
+                          uint32 height,
+                          TEXTURE_FORMAT::E format);
 
   /**
   * @brief
@@ -40,7 +40,7 @@ private:
   *  DXGI_FORMAT
   */
   DXGI_FORMAT
-    getDx11FormatInternal(TEXTURE_FORMAT::E format) const;
+  getDx11FormatInternal(TEXTURE_FORMAT::E format) const;
 
   /**
   * @brief
@@ -49,7 +49,7 @@ private:
   * @return ID3D11RendertTargetView*
   */
   ID3D11RenderTargetView*
-    createBackBufferRTInternal(IDXGISwapChain* swapChain);
+  createBackBufferRTInternal(IDXGISwapChain* swapChain);
 
   /**
   * @brief
@@ -58,8 +58,8 @@ private:
   * @return ID3D11Texture2D*
   */
   ID3D11Texture2D*
-    createTexture2DInternal(uint32 width, uint32 height,
-                            const TEXTURE_FORMAT::E format, uint32 bindFlags);
+  createTexture2DInternal(uint32 width, uint32 height,
+                          const TEXTURE_FORMAT::E format, uint32 bindFlags);
 
   /**
   * @brief
@@ -69,7 +69,7 @@ private:
   *  Value of the bind flag.
   */
   uint32
-    getDx11BindFlagsInternal(const uint32 bindFlag) const;
+  getDx11BindFlagsInternal(const uint32 bindFlag) const;
 
   /**
   * @brief
@@ -77,8 +77,8 @@ private:
   * @return
   */
   ID3DBlob*
-    compileShaderInternal(const String& shaderCode, const String& entryPoint,
-                          Vector<String> defines, SHADER_TYPE::E shaderType,
+  compileShaderInternal(const String& shaderCode, const String& entryPoint,
+                        Vector<String> defines, SHADER_TYPE::E shaderType,
                           uint32 shaderModel) const;
 
   /**
@@ -88,7 +88,7 @@ private:
   * @return   Vector<D3D11_INPUT_ELEMENT_DESC>
   */
   Vector<D3D11_INPUT_ELEMENT_DESC>
-    createInputLayoutInternal(ID3D11ShaderReflection* reflection) const;
+  createInputLayoutInternal(ID3D11ShaderReflection* reflection) const;
 
   /**
   * @brief
@@ -96,8 +96,8 @@ private:
   *   shader type and shader model.
   * @return const char*
   */
-  const ANSICHAR*
-    getShaderModelInternal(SHADER_TYPE::E shaderType, uint32 shaderModel) const;
+  const char*
+  getShaderModelInternal(SHADER_TYPE::E shaderType, uint32 shaderModel) const;
 
   /**
   * @brief
@@ -106,7 +106,7 @@ private:
   * @return D3D11_FILL_MODE
   */
   D3D11_FILL_MODE
-    getFillModeInternal(FILL_MODE::E fillMode) const;
+  getFillModeInternal(FILL_MODE::E fillMode) const;
 
   /**
   * @brief
@@ -115,7 +115,7 @@ private:
   * @reutrn D3D11_CULL_MODE
   */
   D3D11_CULL_MODE
-    getCullModeInternal(CULL_MODE::E cullMode) const;
+  getCullModeInternal(CULL_MODE::E cullMode) const;
 
 public:
   /**
@@ -123,6 +123,8 @@ public:
   *  Default constructor.
   */
   Dx11GraphicsAPI() = default;
+
+  ~Dx11GraphicsAPI();
 
   /**
   * @brief

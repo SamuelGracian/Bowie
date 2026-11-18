@@ -24,10 +24,16 @@ class Dx11RasterizerState : public RasterizerState
       rasterizerDesc(nullptr)
   {}
   
-  ~Dx11RasterizerState() = default;
+  ~Dx11RasterizerState();
 
   ID3D11RasterizerState* rasterizer;
 
   const D3D11_RASTERIZER_DESC* rasterizerDesc;
 };
+
+Dx11RasterizerState::~Dx11RasterizerState() {
+  rasterizer = nullptr;
+  rasterizerDesc = nullptr;
+}
+
 }/// name space bowEngineSDK

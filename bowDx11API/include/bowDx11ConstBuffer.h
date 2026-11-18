@@ -31,7 +31,7 @@ class Dx11ConstBuffer : public ConstBuffer
   * @brief
   *  Default destructor.
   */
-  ~Dx11ConstBuffer() = default;
+  ~Dx11ConstBuffer();
   
   /*
   * @brief

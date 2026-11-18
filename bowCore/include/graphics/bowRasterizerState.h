@@ -19,6 +19,8 @@ class RasterizerState
    /**
    * @brief
    *  Default constructor.
+   *  Fill mode set as fill solid by default.
+   *  Cull mode set as cull none by default.
    */
    RasterizerState() = default;
 
@@ -29,8 +31,8 @@ class RasterizerState
    ~RasterizerState() = default;
 
  protected:
-   FILL_MODE::E fillMode;
-   CULL_MODE::E cullMode;
-   bool depthClipEnable;
+   FILL_MODE::E fillMode = FILL_MODE::kFILL_SOLID;
+   CULL_MODE::E cullMode = CULL_MODE::kCULL_NONE;
+   bool depthClipEnable = true;
 };
 }/// name space bowEngineSDK

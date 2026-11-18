@@ -3,12 +3,21 @@
 
 namespace bowEngineSDK
 {
+Dx11SwapChain::~Dx11SwapChain() {
+  safeRelease(m_swapChain);
+  safeRelease(m_backBufferRT);
+}
 
 void
 Dx11SwapChain::present(uint32 syncIterval, uint32 flags) {
-  m_swapChain->Present(syncIterval, flags);
-}
+  if (m_swapChain == nullptr) {
+    return;
+  }
 
+  if (!m_swapChain->Present(syncIterval, flags)) {
+    return;
+  }
+}
 
 SPtr<RenderTargetView>
 Dx11SwapChain::getRenderTargetView() {

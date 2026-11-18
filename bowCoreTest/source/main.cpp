@@ -531,6 +531,10 @@ int main() {
   }
 
   grapi.cleanUpResources();
+  p_vertexBuffer.reset();
+  p_indexBuffer.reset();
+  p_depthSV.reset();
+  p_swapChain.reset();
   GraphicsAPI::shutDown();
   return 0;
 }

@@ -11,7 +11,7 @@ class Dx11SwapChain : public SwapChain
 
    /*
    * @brief
-   *  Default constructor, sets swap chain and backbuffer as nullptr.
+   *  Default constructor, sets swap chain and back buffer as nullptr.
    */
    Dx11SwapChain()
      : m_swapChain(nullptr) , m_backBufferRT(nullptr)
@@ -19,9 +19,9 @@ class Dx11SwapChain : public SwapChain
 
    /*
    * @brief
-   *  Defualt destructor
+   *  Default destructor
    */
-   ~Dx11SwapChain() = default;
+   ~Dx11SwapChain();
 
    void
    present(uint32 syncInterval, uint32 flags) override;
@@ -33,4 +33,4 @@ class Dx11SwapChain : public SwapChain
    IDXGISwapChain* m_swapChain;
    ID3D11RenderTargetView* m_backBufferRT;
 };
-}/// namespace bowEngineSDK
+}/// name space bowEngineSDK
