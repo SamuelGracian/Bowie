@@ -170,7 +170,7 @@ public:
   *  Returns the
   */
   FORCEINLINE Vector3
-  operator+(Vector3& value) const noexcept;
+  operator+(const Vector3& value) const noexcept;
 
   /*
   * @brief
@@ -180,7 +180,10 @@ public:
   *  Returns a pointer to a substracted vector.
   */
   FORCEINLINE Vector3
-  operator-(Vector3& value) const noexcept;
+  operator-(const Vector3& value) const noexcept;
+
+  FORCEINLINE Vector3
+  operator- () const noexcept;
 
   /*
   * @brief
@@ -271,13 +274,18 @@ Vector3::operator* (float scalar) const noexcept {
 }
 
 FORCEINLINE Vector3
-Vector3::operator+(Vector3& vector) const noexcept {
+Vector3::operator+(const Vector3& vector) const noexcept {
   return Vector3(x + vector.x, y + vector.y, z + vector.z);
 }
 
 FORCEINLINE Vector3
-Vector3::operator-(Vector3& vector)const noexcept {
+Vector3::operator-(const Vector3& vector)const noexcept {
   return Vector3(x - vector.x, y - vector.y, z - vector.z);
+}
+
+FORCEINLINE Vector3
+Vector3::operator-()const noexcept {
+  return Vector3(-x, -y, -z);
 }
 
 FORCEINLINE Vector3

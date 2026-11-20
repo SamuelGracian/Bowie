@@ -4,11 +4,15 @@
  * @author Samuel G
  * @date 13/10/2026
  * @brief
- *
+ *  Base class to represent a window.
  */
 /*************************************************************************/
 
 #pragma once
+
+#if BOW_PLATFORM ==  BOW_PLATFORM_WIN32
+#include <Windows.h>
+#endif
 
 #include "bowCoreRequisites.h"
 
@@ -16,9 +20,9 @@ namespace bowEngineSDK
 {
 using DisplaySurfaceHandler = void*;
 
-class DisplaySurface
+class BOW_CORE_EXPORT DisplaySurface
 {
-public:
+ public:
 
   /*
   * @brief
@@ -26,13 +30,19 @@ public:
   */
   DisplaySurface() = default;
 
+  DisplaySurface(const DisplaySurface&) = delete;
+
+  DisplaySurface
+  operator=(const DisplaySurface&) = delete;
+
   /*
   * @brief
   * Constructor from given values
   */
   DisplaySurface(int32 _width, int32 _height)
     : m_width(_width),
-      m_height(_height)
+      m_height(_height),
+      m_handler(nullptr)
   {}
 
   /*
@@ -44,7 +54,7 @@ public:
   bool
   init(int32 _width, int32 _height, const String& windowName);
 
-  void
+  bool
   processMessages();
 
   FORCEINLINE int32
@@ -60,23 +70,22 @@ public:
   getClientHeight() const { return m_clientHeight; }
 
   FORCEINLINE DisplaySurfaceHandler
-  getHandle() const { return handler; }
-
+  getHandle() const { return m_handler; }
 
 private:
-  int32 m_width;
-  int32 m_height;
+  int32 m_width = 0;
+  int32 m_height = 0;
 
   /*
   * Client sizes
   * *To do* Changed them to be calculated, instead of saved
   */
-  int32 m_clientWidth;
-  int32 m_clientHeight;
+  int32 m_clientWidth = 0;
+  int32 m_clientHeight = 0;
   
   /*
   * Window handler
   */
-  DisplaySurfaceHandler handler;
+  DisplaySurfaceHandler m_handler = nullptr;
 };
-}//bowEngineSDK
+}/// name space bowEngineSDK

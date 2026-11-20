@@ -29,18 +29,13 @@ public:
 
   /*
   * @brief
-  *  Returns a reference to the module isntance. Module needs to be started up 
+  *  Returns a reference to the module instance. Module needs to be started up 
   *  first otherwise an error will be thrown.
   */
   static T&
   instance() {
-    if (!isStartedUp()) {
-      std::cerr << "Trying to acces a non started module." << std::endl;
-    }
 
-    if (isDestroyed()) {
-      std::cerr << "Trying to acces a destroyed module" << std::endl;
-    }
+    BOW_ASSERT(isStarted());
 
     return *_instance();
   }
@@ -52,11 +47,12 @@ public:
   static T*
   instancePtr() {
     if (!isStartedUp()) {
-      std::cerr << "Trying to acces a module that hasnt been started yet." << std::endl;
+      BOW_LOG_ERROR("Trying to access a module that hasn't been started yet."
+                    << std::endl);
     }
 
     if (isDestroyed()) {
-      std::cerr << "Trying to acces a destroyed module" << std::endl;
+      BOW_LOG_ERROR("Trying to access a destroyed module" << std::endl);
     }
 
     return _instance();
@@ -70,7 +66,7 @@ public:
   static void
   startUp(Args&& ...args) {
     if (isStartedUp()) {
-      std::cerr << "Trying to start an already started module" << std::endl;
+      BOW_LOG_ERROR("Trying to start an already started module" << std::endl);
     }
 
     _instance() = new T(std::forward<Args>(args)...);
@@ -83,10 +79,10 @@ public:
   static void
   startUp(Args&& ...args) {
     static_assert(std::is_base_of<T, SubType>::value,
-                  "Provided type isnt derivered from type the module is initialized with");
+       "Provided type isn't delivered from type the module is initialized with");
   
     if (isStartedUp()) {
-      std::cerr << "Trying to acces an already started module" << std::endl;
+      BOW_LOG_ERROR("Trying to access an already started module" << std::endl);
     }
   
     _instance() = new SubType(std::forward<Args>(args)...);
@@ -104,16 +100,22 @@ public:
   static void
   shutDown() {
     if (isDestroyed()) {
-      std::cerr << "trying to shut down an already shut down module" << std::endl;
+      BOW_LOG_ERROR("trying to shut down an already shut down module"
+                    << std::endl);
+      return;
     }
   
     if (!isStartedUp()) {
-      std::cerr << "Trying to shut down a module that was never started" << std::endl;
+      BOW_LOG_ERROR("Trying to shut down a module that was never started"
+                    << std::endl);
+      return;
     }
   
     static_cast<Module*>(_instance())->onShutDown();
   
     delete(_instance());
+    _instance() = nullptr;
+    isStartedUp() = false;
     isDestroyed() = true;
   }
 

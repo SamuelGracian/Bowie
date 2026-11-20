@@ -3,14 +3,16 @@
 
 #if BOW_PLATFORM == BOW_PLATFORM_WIN32
 #include <iostream>
-#include <Windows.h>
+#include <windows.h>
 #endif
 
 namespace bowEngineSDK
 {
 
 #if BOW_PLATFORM == BOW_PLATFORM_WIN32
-static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+static 
+LRESULT CALLBACK 
+WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
   switch (message) {
   case WM_DESTROY:
     PostQuitMessage(0);
@@ -23,7 +25,7 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 
 DisplaySurface::~DisplaySurface() {
 #if BOW_PLATFORM == BOW_PLATFORM_WIN32
-  DestroyWindow(reinterpret_cast<HWND> (handler));
+  DestroyWindow(reinterpret_cast<HWND>(m_handler));
 #endif
 }
 
@@ -41,7 +43,7 @@ bool DisplaySurface::init(int32 _width, int32 _height, const String& windowName)
   wc.hInstance = GetModuleHandle(nullptr);
   wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
   wc.lpszClassName = windowName.c_str();
-  RegisterClassEx(&wc);
+  RegisterClassExA(&wc);
 
   HWND hwnd = CreateWindowEx(
     0,
@@ -54,9 +56,12 @@ bool DisplaySurface::init(int32 _width, int32 _height, const String& windowName)
     nullptr, nullptr, GetModuleHandle(nullptr), nullptr);
 
   if (!hwnd) {
-    std::cout << "Window could not be created" << std::endl;
+    BOW_LOG_ERROR("Window could not be created" << std::endl);
     return false;
   }
+
+  /// Save the handler as hwnd
+  m_handler = reinterpret_cast<DisplaySurfaceHandler>(hwnd);
 
   RECT rc;
   GetClientRect(hwnd, &rc);
@@ -72,13 +77,18 @@ bool DisplaySurface::init(int32 _width, int32 _height, const String& windowName)
 #endif
 }
 
-void DisplaySurface::processMessages() {
+bool
+DisplaySurface::processMessages() {
 #if BOW_PLATFORM == BOW_PLATFORM_WIN32
   MSG msg {};
-  if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+  while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+    if (msg.message == WM_QUIT) {
+      return false;
+    }
     TranslateMessage(&msg);
     DispatchMessage(&msg);
   }
 #endif
+  return true;
 }
-}// namespace bowEngineSDK
+}/// name space bowEngineSDK
