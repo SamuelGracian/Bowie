@@ -4,19 +4,25 @@
 
 namespace bowEngineSDK
 {
-class BOW_CORE_EXPORT DynamicLibrary
+class DynamicLibrary
 {
 public:
+  BOW_CORE_EXPORT
   DynamicLibrary(const String& _libraryName);
-  ~DynamicLibrary() = default;
 
+  BOW_CORE_EXPORT
+  ~DynamicLibrary() = default;
+  
+  BOW_CORE_EXPORT
   NODISCARD bool
   load();
 
+  
   template<typename T>
   T
   getSymbol(const String& symbolName);
 
+  BOW_CORE_EXPORT
   void*
   getSymbol(const String& symbolName);
 

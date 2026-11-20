@@ -17,7 +17,7 @@ DynamicLibrary::load() {
 #endif 
   if (m_handle == nullptr) {
 #if BOW_PLATFORM_WIN32
-    std::cout << "Failed to load library" << std::endl;
+    BOW_LOG_ERROR("Failed to load library" << std::endl);
     return false;
 #endif
   }
@@ -28,17 +28,17 @@ void*
 DynamicLibrary::getSymbol(const String& symbolName) {
 
   if (m_handle == nullptr) {
-    std::cout << "The dynamic library is not loaded." << std::endl;
+    BOW_LOG_ERROR("The dynamic library is not loaded." << std::endl);
+    return nullptr;
   }
 
-#if defined(BOW_PLATFORM_WIN32)
   void* symbol = reinterpret_cast<void*>(
     GetProcAddress(
       static_cast<HMODULE>(m_handle),
       symbolName.c_str()));
-#endif 
+
   if (symbol == nullptr) {
-   std::cout << "Unable to find symbol: " << std::endl;
+   BOW_LOG_ERROR("Unable to find symbol: " << std::endl);
   }
 
   return symbol;

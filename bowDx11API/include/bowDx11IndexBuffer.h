@@ -32,6 +32,7 @@ class Dx11IndexBuffer : public IndexBuffer
   * @brief
   *  Default destructor.
   */
+  FORCEINLINE
   ~Dx11IndexBuffer();
 
   ID3D11Buffer* m_buffer;

@@ -7,6 +7,7 @@ namespace bowEngineSDK
 {
 class Dx11VertexBuffer : public VertexBuffer
 {
+  friend class Dx11GraphicsAPI;
  public:
 
    /*
@@ -22,9 +23,11 @@ class Dx11VertexBuffer : public VertexBuffer
   * @brief
   *  Default destructor.
   */
+   FORCEINLINE
   ~Dx11VertexBuffer();
 
-   ID3D11Buffer* m_buffer;
+ protected:
+  ID3D11Buffer* m_buffer;
 
 };
 

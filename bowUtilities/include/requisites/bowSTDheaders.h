@@ -36,13 +36,13 @@ namespace bowEngineSDK
   
   template <typename T, typename... Args>
   [[nodiscard]]
-  SPtr<T> MakeShared(Args&&... args) {
+  SPtr<T> makeShared(Args&&... args) {
     return std::make_shared<T>(std::forward<Args>(args)...);
   }
   
   template <typename T, typename U>
   [[nodiscard]]
-  SPtr<T> StaticPointerCast(const SPtr<U>& pointer) noexcept {
+  SPtr<T> staticPointerCast(const SPtr<U>& pointer) noexcept {
     return std::static_pointer_cast<T>(pointer);
   }
   

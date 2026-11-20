@@ -30,6 +30,11 @@ class BOW_CORE_EXPORT DisplaySurface
   */
   DisplaySurface() = default;
 
+  DisplaySurface(const DisplaySurface&) = delete;
+
+  DisplaySurface
+  operator=(const DisplaySurface&) = delete;
+
   /*
   * @brief
   * Constructor from given values

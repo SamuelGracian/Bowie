@@ -61,11 +61,11 @@ public:
   * @brief
   *  Renders an indexed geometry.
   * @param vertex Count, number of vertex to render,
-     startVertexLocation start of the indexes to draw.
+     startVertexLocation start of the indexes to drawIndexed.
   * @return
   */
   virtual void
-  draw(uint32 vertexCount = 0, uint32 startVertexLocation = 0) = 0;
+  drawIndexed(uint32 vertexCount = 0, uint32 startVertexLocation = 0) = 0;
 
   /**
   * @brief
@@ -181,7 +181,7 @@ public:
   * @return none
   */
   virtual void
-  setTopology(WeakPtr<Topology> topology) = 0;
+  setTopology(TOPOLOGY_TYPE::E _type = TOPOLOGY_TYPE::kNone) = 0;
 
   /// Depth stencil
   

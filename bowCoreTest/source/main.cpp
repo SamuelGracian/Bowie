@@ -177,7 +177,7 @@ int main() {
   Vector3 modelWorldTranslation(0.0f, 0.0f, 0.0f);
 
   /// INIT WINDOW
-  auto window = std::make_shared<DisplaySurface>();
+  auto window = makeShared<DisplaySurface>();
 
   if (!window->init(static_cast<int32>(width), static_cast<int32>(height),
                     "Bowie")) {
@@ -210,7 +210,6 @@ int main() {
 
   /// WINDOW
   if (!grapi.init(window)) {
-    GraphicsAPI::shutDown();
     std::cout << "Failed to init graphics api" << std::endl;
     GraphicsAPI::shutDown();
     return -1;
@@ -224,6 +223,7 @@ int main() {
                                      4);
   if (!p_ShaderShader)     {
     std::cout << "Failed to create shader" << std::endl;
+    GraphicsAPI::shutDown();
     return-1;
   }
 
@@ -234,6 +234,7 @@ int main() {
                                    4);
   if (!p_pixelShader1) {
     std::cout << "Failed to create pixel shader" << std::endl;
+    GraphicsAPI::shutDown();
     return-1;
   }
 
@@ -241,6 +242,7 @@ int main() {
     readFileToString(L"RawData/VertexShader.fxh"), "VShader", defines, 4);
   if (!p_vertexShader) {
     std::cout << "Failed to create vertex shader" << std::endl;
+    GraphicsAPI::shutDown();
     return-1;
   }
 
@@ -254,7 +256,6 @@ int main() {
                                          TEXTURE_FORMAT::kR8G8B8A8_UNORM);
 
   if (!p_swapChain) {
-    grapi.cleanUpResources();
     GraphicsAPI::shutDown();
     std::cout << "Failed to start swap chain" << std::endl;
     return -1;
@@ -559,7 +560,7 @@ int main() {
 
     grapi.setSamplerState(0, p_sampler);
 
-    grapi.setTopology(p_topology);
+    grapi.setTopology(TOPOLOGY_TYPE::kTriangleList);
 
     grapi.setTexture2D(0,
                        defaultNormalTexture);
@@ -576,7 +577,7 @@ int main() {
     grapi.setIndexBuffer(p_indexBuffer, TEXTURE_FORMAT::kR16_UINT);
     grapi.setConstBuffer(p_constBufferCamera, 0);
 
-    grapi.draw(
+    grapi.drawIndexed(
       static_cast<uint32>(cubeIndices.size()),
       0
     );
@@ -591,13 +592,12 @@ int main() {
 
     grapi.setTexture2D(1, cubeTex2);
 
-    grapi.draw(
+    grapi.drawIndexed(
       static_cast<uint32>(cubeIndices.size()), 0);
 
     p_swapChain->present(1, 0);
   }
 
-  grapi.cleanUpResources();
   GraphicsAPI::shutDown();
   return 0;
 }

@@ -14,7 +14,7 @@ Dx11SwapChain::present(uint32 syncIterval, uint32 flags) {
     return;
   }
 
-  if (!m_swapChain->Present(syncIterval, flags)) {
+  if (FAILED( m_swapChain->Present(syncIterval, flags))) {
     return;
   }
 }
@@ -22,10 +22,10 @@ Dx11SwapChain::present(uint32 syncIterval, uint32 flags) {
 SPtr<RenderTargetView>
 Dx11SwapChain::getRenderTargetView() {
   if (m_renderTargetView == nullptr) {
-    m_renderTargetView = std::make_shared<Dx11RenderTargetView>();
+    m_renderTargetView = makeShared<Dx11RenderTargetView>();
 
     auto p_renderTargetView = 
-      std::static_pointer_cast<Dx11RenderTargetView> (m_renderTargetView);
+      staticPointerCast<Dx11RenderTargetView> (m_renderTargetView);
 
     if (m_backBufferRT != nullptr) {
       m_backBufferRT->AddRef();

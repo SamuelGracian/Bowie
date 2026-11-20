@@ -102,11 +102,13 @@ public:
     if (isDestroyed()) {
       BOW_LOG_ERROR("trying to shut down an already shut down module"
                     << std::endl);
+      return;
     }
   
     if (!isStartedUp()) {
       BOW_LOG_ERROR("Trying to shut down a module that was never started"
                     << std::endl);
+      return;
     }
   
     static_cast<Module*>(_instance())->onShutDown();

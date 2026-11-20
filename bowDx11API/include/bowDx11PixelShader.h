@@ -31,6 +31,7 @@ class Dx11PixelShader : public PixelShader
    * @brief
    *  Default destructor
    */
+   FORCEINLINE
    ~Dx11PixelShader();
 
   /// <summary>

@@ -1,5 +1,7 @@
 #include "bowGraphicsAPI.h"
 
+#include <cstring>
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
@@ -11,18 +13,18 @@ Vector<uint8>
 loadImageFromFile(const String& filePath, int32* outWidth, int32* outHeight,
                                            int32* outChanells) {
 
-  Vector<uint8_t> imageData;
+  Vector<uint8> imageData;
 
   uint8* data = stbi_load(filePath.c_str(),
                           outWidth, outHeight, outChanells, STBI_rgb_alpha);
 
   if (data) {
     imageData.resize((*outWidth) * (*outHeight) * STBI_rgb_alpha);
-    memcpy(imageData.data(), data, imageData.size());
+    std::memcpy(imageData.data(), data, imageData.size());
     stbi_image_free(data);
   }
   else {
-    std::cout << "Error loading image: " << filePath << std::endl;
+    BOW_LOG_ERROR( "Error loading image: " << filePath << std::endl);
   }
 
   return imageData;

@@ -14,6 +14,7 @@ public:
    m_InputLayout(nullptr)
   {}
  
+  FORCEINLINE
   ~Dx11VertexShader();
  
   ID3D11VertexShader* m_shader;

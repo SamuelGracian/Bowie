@@ -136,28 +136,20 @@ public:
   bool
   init(WeakPtr<DisplaySurface> handleWindow) override;
   
-  /**
-  * @brief
-  *  Clean up function, releases all the objects.
-  * @param none
-  * @return none
-  */
-  virtual
-  void
-  cleanUpResources() override;
+
 
   /**
   * @brief
   *  Draw indexed, non instanced primitives. Internally this function sets the 
   *  Base Vertex Location as 0
-  * @param indexCount: number of indices to draw.
-  *  startVertexLocation: location of the first index read by the GPU from 
+  * @param indexCount: number of indices to drawIndexed.
+  *  startIndexLocation: location of the first index read by the GPU from 
   the buffer.
   * @return none
   */
   virtual
   void
-  draw(uint32 indexCount, uint32 startVertexLocation) override;
+  drawIndexed(uint32 indexCount, uint32 startIndexLocation) override;
 
   /**
   * @brief
@@ -268,7 +260,7 @@ public:
   */
   virtual
   void
-  setTopology(WeakPtr<Topology> topology) override;
+  setTopology(TOPOLOGY_TYPE::E _type) override;
 
   /**
   * @brief
@@ -504,7 +496,7 @@ public:
 
   /**
   * @brief
-  *  Checks if a pixel is being occluded to decide to draw it or no.
+  *  Checks if a pixel is being occluded to decide to drawIndexed it or no.
   * @param WeakPtr<DepthStencilView> shadowDepth, Vector3 worldPos,
   *  Matrix4 shadowView, Matrix4 shadowProjection, float bias.
   * @return bool
@@ -529,6 +521,16 @@ public:
   
 
 private:
+
+  /**
+  * @brief
+  *  Clean up function, releases all the objects.
+  * @param none
+  * @return none
+  */
+  virtual
+  void
+  cleanUpResources() override;
 
   /**
   * @brief

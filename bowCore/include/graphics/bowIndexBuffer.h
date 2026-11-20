@@ -33,6 +33,7 @@ class IndexBuffer :public BaseBuffer
   * @brief
   *  Default destructor
   */
+  FORCEINLINE
   ~IndexBuffer();
 };
 

@@ -56,7 +56,7 @@ bool DisplaySurface::init(int32 _width, int32 _height, const String& windowName)
     nullptr, nullptr, GetModuleHandle(nullptr), nullptr);
 
   if (!hwnd) {
-    std::cout << "Window could not be created" << std::endl;
+    BOW_LOG_ERROR("Window could not be created" << std::endl);
     return false;
   }
 

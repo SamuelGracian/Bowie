@@ -68,4 +68,7 @@ add_subdirectory(bowUtilities)
 add_subdirectory(bowUtilitiesTest)
 add_subdirectory(bowCore)
 add_subdirectory(bowCoreTest)
-add_subdirectory(bowDx11API)
+
+if(WIN32) 
+  add_subdirectory(bowDx11API)
+endif()

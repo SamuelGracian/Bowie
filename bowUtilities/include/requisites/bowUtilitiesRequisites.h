@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 
 #include "bowPlatformDefines.h"
 #include "bowPlatformTypes.h"
