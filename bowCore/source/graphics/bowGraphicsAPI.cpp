@@ -49,4 +49,4 @@ GraphicsAPI::createTexture2DFromFile(const String& _filePath) {
   return createTexture2DWithImageData(imgData, width, height);
 }
 
-}/// namespace bowEngneSDK
+}/// name space bowEngneSDK

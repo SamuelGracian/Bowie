@@ -147,7 +147,7 @@ void updateCameraInput(float deltaTime,
 }
 
 int main() {
-  
+
   /// VARIABLES
   bool running = true;
   /* WINDOW */

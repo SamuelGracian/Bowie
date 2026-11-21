@@ -1,0 +1,14 @@
+D:/DEV/REPOS/Bowie/buldCmakeTest/CMakeFiles/ALL_BUILD.dir
+D:/DEV/REPOS/Bowie/buldCmakeTest/CMakeFiles/ZERO_CHECK.dir
+D:/DEV/REPOS/Bowie/buldCmakeTest/bowUtilities/CMakeFiles/bowUtilities.dir
+D:/DEV/REPOS/Bowie/buldCmakeTest/bowUtilitiesTest/CMakeFiles/bowUtilitiesTest.dir
+D:/DEV/REPOS/Bowie/buldCmakeTest/bowUtilitiesTest/CMakeFiles/Experimental.dir
+D:/DEV/REPOS/Bowie/buldCmakeTest/bowUtilitiesTest/CMakeFiles/Nightly.dir
+D:/DEV/REPOS/Bowie/buldCmakeTest/bowUtilitiesTest/CMakeFiles/Continuous.dir
+D:/DEV/REPOS/Bowie/buldCmakeTest/bowUtilitiesTest/CMakeFiles/NightlyMemoryCheck.dir
+D:/DEV/REPOS/Bowie/buldCmakeTest/_deps/catch2-build/CMakeFiles/ALL_BUILD.dir
+D:/DEV/REPOS/Bowie/buldCmakeTest/_deps/catch2-build/src/CMakeFiles/Catch2.dir
+D:/DEV/REPOS/Bowie/buldCmakeTest/_deps/catch2-build/src/CMakeFiles/Catch2WithMain.dir
+D:/DEV/REPOS/Bowie/buldCmakeTest/bowCore/CMakeFiles/bowCore.dir
+D:/DEV/REPOS/Bowie/buldCmakeTest/bowCoreTest/CMakeFiles/bowCoreTest.dir
+D:/DEV/REPOS/Bowie/buldCmakeTest/bowDx11API/CMakeFiles/bowDx11API.dir

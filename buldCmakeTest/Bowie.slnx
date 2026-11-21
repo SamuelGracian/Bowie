@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Solution>
+	<Configurations>
+		<BuildType Name="Debug"/>
+		<BuildType Name="Release"/>
+		<BuildType Name="MinSizeRel"/>
+		<BuildType Name="RelWithDebInfo"/>
+		<Platform Name="x64"/>
+	</Configurations>
+	<Project Path="_deps/catch2-build/src/Catch2.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="8d538cbe-01bf-4a2e-a98a-6c368fdf13d7">
+		<BuildDependency Project="ZERO_CHECK.vcxproj"/>
+	</Project>
+	<Project Path="_deps/catch2-build/src/Catch2WithMain.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="8bd3552a-2cfb-4a59-ab15-2031b97ada1e">
+		<BuildDependency Project="_deps/catch2-build/src/Catch2.vcxproj"/>
+		<BuildDependency Project="ZERO_CHECK.vcxproj"/>
+	</Project>
+	<Project Path="bowCore/bowCore.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="a7e0c51f-65ec-337c-9d60-1025e4c8916e">
+		<BuildDependency Project="ZERO_CHECK.vcxproj"/>
+		<BuildDependency Project="bowUtilities/bowUtilities.vcxproj"/>
+	</Project>
+	<Project Path="bowCoreTest/bowCoreTest.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="ca0d4371-381c-38d8-9295-540afd0522da">
+		<BuildDependency Project="ZERO_CHECK.vcxproj"/>
+		<BuildDependency Project="bowCore/bowCore.vcxproj"/>
+		<BuildDependency Project="bowDx11API/bowDx11API.vcxproj"/>
+		<BuildDependency Project="bowUtilities/bowUtilities.vcxproj"/>
+	</Project>
+	<Project Path="bowDx11API/bowDx11API.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="c542ddd2-2245-31cb-8d51-46b47c176147">
+		<BuildDependency Project="ZERO_CHECK.vcxproj"/>
+		<BuildDependency Project="bowCore/bowCore.vcxproj"/>
+		<BuildDependency Project="bowUtilities/bowUtilities.vcxproj"/>
+	</Project>
+	<Project Path="bowUtilities/bowUtilities.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="23192381-19c6-3930-86ff-a10862992c08">
+		<BuildDependency Project="ZERO_CHECK.vcxproj"/>
+	</Project>
+	<Project Path="bowUtilitiesTest/bowUtilitiesTest.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="76688931-7f2b-3958-8752-a66bea9e6922">
+		<BuildDependency Project="_deps/catch2-build/src/Catch2.vcxproj"/>
+		<BuildDependency Project="_deps/catch2-build/src/Catch2WithMain.vcxproj"/>
+		<BuildDependency Project="ZERO_CHECK.vcxproj"/>
+		<BuildDependency Project="bowUtilities/bowUtilities.vcxproj"/>
+	</Project>
+	<Folder Name="/CMakePredefinedTargets/">
+		<Project Path="ALL_BUILD.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="af5b6c68-882a-3896-9406-dc7ebd427b83" DefaultStartup="true">
+			<BuildDependency Project="_deps/catch2-build/src/Catch2.vcxproj"/>
+			<BuildDependency Project="_deps/catch2-build/src/Catch2WithMain.vcxproj"/>
+			<BuildDependency Project="ZERO_CHECK.vcxproj"/>
+			<BuildDependency Project="bowCore/bowCore.vcxproj"/>
+			<BuildDependency Project="bowCoreTest/bowCoreTest.vcxproj"/>
+			<BuildDependency Project="bowDx11API/bowDx11API.vcxproj"/>
+			<BuildDependency Project="bowUtilities/bowUtilities.vcxproj"/>
+			<BuildDependency Project="bowUtilitiesTest/bowUtilitiesTest.vcxproj"/>
+			<Build Solution="Debug|*" Project="false"/>
+			<Build Solution="Release|*" Project="false"/>
+			<Build Solution="MinSizeRel|*" Project="false"/>
+			<Build Solution="RelWithDebInfo|*" Project="false"/>
+		</Project>
+		<Project Path="ZERO_CHECK.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="2ecbbaa0-2955-3381-bb7f-93f46e4e27ac"/>
+	</Folder>
+	<Folder Name="/CTestDashboardTargets/">
+		<Project Path="bowUtilitiesTest/Continuous.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="9f3c65f9-74bf-3176-8d26-8ae61eecd2f3">
+			<BuildDependency Project="ZERO_CHECK.vcxproj"/>
+			<Build Solution="Debug|*" Project="false"/>
+			<Build Solution="Release|*" Project="false"/>
+			<Build Solution="MinSizeRel|*" Project="false"/>
+			<Build Solution="RelWithDebInfo|*" Project="false"/>
+		</Project>
+		<Project Path="bowUtilitiesTest/Experimental.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="f84a4ea0-2c99-3475-adb4-f231e7ab5167">
+			<BuildDependency Project="ZERO_CHECK.vcxproj"/>
+			<Build Solution="Debug|*" Project="false"/>
+			<Build Solution="Release|*" Project="false"/>
+			<Build Solution="MinSizeRel|*" Project="false"/>
+			<Build Solution="RelWithDebInfo|*" Project="false"/>
+		</Project>
+		<Project Path="bowUtilitiesTest/Nightly.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="40a27300-a40a-3209-ab02-13ad1c50de98">
+			<BuildDependency Project="ZERO_CHECK.vcxproj"/>
+			<Build Solution="Debug|*" Project="false"/>
+			<Build Solution="Release|*" Project="false"/>
+			<Build Solution="MinSizeRel|*" Project="false"/>
+			<Build Solution="RelWithDebInfo|*" Project="false"/>
+		</Project>
+		<Project Path="bowUtilitiesTest/NightlyMemoryCheck.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="b975ffcb-8302-354f-a3cc-ba4cba92a8c2">
+			<BuildDependency Project="ZERO_CHECK.vcxproj"/>
+			<Build Solution="Debug|*" Project="false"/>
+			<Build Solution="Release|*" Project="false"/>
+			<Build Solution="MinSizeRel|*" Project="false"/>
+			<Build Solution="RelWithDebInfo|*" Project="false"/>
+		</Project>
+	</Folder>
+</Solution>
