@@ -243,17 +243,6 @@ public:
 
   /**
   * @brief
-  *  Creates a topology.
-  *  Sets as default the topology as a Triangle list.
-  * @param type: topology type.
-  * @return SharedPtr Topology
-  */
-  virtual
-  SPtr<Topology>
-  createTopology(TOPOLOGY_TYPE::E type) override;
-
-  /**
-  * @brief
   *  Sets the topology.
   * @param topology: topology to set.
   * @return none

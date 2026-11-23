@@ -4,6 +4,10 @@
 #include <filesystem>
 #include <chrono>
 
+#include "assimp/Importer.hpp"
+#include "assimp/scene.h"
+#include "assimp/postprocess.h"
+
 #include "bowGraphicsAPI.h"
 #include "bowRenderTargetView.h"
 #include "bowMath.h"
@@ -49,6 +53,8 @@ struct SimpleVertex
   Vector4 tangent;
   Vector4 binormals;
   Vector2 texture;
+
+  SimpleVertex()= default;
 
   SimpleVertex(
     const Vector4& pos,
@@ -146,6 +152,106 @@ void updateCameraInput(float deltaTime,
   at = eye + forward;
 }
 
+
+bool
+importModel(const String& fileName, Vector<SimpleVertex>& outVertices,
+            Vector<uint16>& outIndices) {
+
+  Assimp::Importer importer;
+  
+  const aiScene* scene = importer.ReadFile(
+    fileName,
+    aiProcess_Triangulate |
+    aiProcess_FlipUVs |
+    aiProcess_JoinIdenticalVertices |
+    aiProcess_CalcTangentSpace);
+
+  if (!scene || (scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) ||
+      !scene->mRootNode) {
+    BOW_LOG_ERROR("Error loading model"
+                  << importer.GetErrorString()
+                  << std::endl);
+    return false;
+  }
+
+  for (unsigned int meshIndex = 0; meshIndex < scene->mNumMeshes; ++meshIndex) {
+    aiMesh* mesh = scene->mMeshes[meshIndex];
+    if (!mesh) {
+      continue;
+    }
+    const uint32 vertexOffset = static_cast<uint32>(outVertices.size());
+
+    for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
+      SimpleVertex vertex;
+      vertex.position = Vector4(
+        mesh->mVertices[i].x,
+        mesh->mVertices[i].y,
+        mesh->mVertices[i].z,
+        1.0f);
+
+      if (mesh->HasNormals() && mesh->mNormals) {
+        vertex.normals = Vector4(
+          mesh->mNormals[i].x,
+          mesh->mNormals[i].y,
+          mesh->mNormals[i].z,
+          0.0f);
+      }
+      else {
+        vertex.normals = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+      }
+
+      if (mesh->HasTangentsAndBitangents() && mesh->mTangents
+          && mesh->mBitangents) {
+
+        vertex.tangent = Vector4(
+          mesh->mTangents[i].x,
+          mesh->mTangents[i].y,
+          mesh->mTangents[i].z,
+          0.0f);
+
+        vertex.binormals = Vector4(
+          mesh->mBitangents[i].x,
+          mesh->mBitangents[i].y,
+          mesh->mBitangents[i].z,
+          0.0f);
+      }
+      else {
+        vertex.tangent = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+        vertex.binormals = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+      }
+
+      if (mesh->mTextureCoords[0]) {
+        vertex.texture = Vector2(
+          mesh->mTextureCoords[0][i].x,
+          mesh->mTextureCoords[0][i].y);
+      }
+      else {
+        vertex.texture = Vector2(0.0f, 0.0f);
+      }
+
+      outVertices.push_back(vertex);
+    }
+
+    for (unsigned int i = 0; i < mesh->mNumFaces; ++i) {
+      const aiFace& face = mesh->mFaces[i];
+
+      for (unsigned int j = 0; j < face.mNumIndices; ++j) {
+        uint32 index = vertexOffset + face.mIndices[j];
+
+        if (index > UINT16_MAX) {
+          BOW_LOG_ERROR("Error: model has too many vertices for uint16_t indices."
+                        << std::endl);
+          return false;
+        }
+
+        outIndices.push_back(static_cast<uint16>(index));
+      }
+    }
+  }
+return true;
+
+}
+
 int main() {
 
   /// VARIABLES
@@ -217,10 +323,10 @@ int main() {
 
   /// SHADERS
   SPtr<PixelShader>p_ShaderShader = grapi.createPixelShader(
-                                     readFileToString(L"RawData/Shaders.fxh"),
-                                     "PShader",
-                                     defines,
-                                     4);
+                   readFileToString(L"RawData/shaders/pixelShaders/Shaders.fxh"),
+                  "PShader",
+                  defines,
+                  4);
   if (!p_ShaderShader)     {
     std::cout << "Failed to create shader" << std::endl;
     GraphicsAPI::shutDown();
@@ -228,10 +334,10 @@ int main() {
   }
 
   SPtr<PixelShader>p_pixelShader1 = grapi.createPixelShader(
-                                   readFileToString(L"RawData/PixelShader.fxh"),
-                                   "PShader",
-                                   defines,
-                                   4);
+              readFileToString(L"RawData//shaders/pixelShaders/PixelShader.fxh"),
+              "PShader",
+              defines,
+              4);
   if (!p_pixelShader1) {
     std::cout << "Failed to create pixel shader" << std::endl;
     GraphicsAPI::shutDown();
@@ -239,7 +345,10 @@ int main() {
   }
 
   SPtr<VertexShader> p_vertexShader = grapi.createVertexShader(
-    readFileToString(L"RawData/VertexShader.fxh"), "VShader", defines, 4);
+    readFileToString(L"RawData//shaders/vertexShaders/VertexShader.fxh"),
+    "VShader",
+    defines,
+    4);
   if (!p_vertexShader) {
     std::cout << "Failed to create vertex shader" << std::endl;
     GraphicsAPI::shutDown();
@@ -458,6 +567,7 @@ int main() {
   SPtr<VertexBuffer> p_cubeVertexBuffer = nullptr;
   SPtr<IndexBuffer> p_cubeIndexBuffer = nullptr;
 
+
   //uint32 cubeIndexCount = 0;
 
   SPtr<IndexBuffer> p_indexBuffer = nullptr;
@@ -471,8 +581,35 @@ int main() {
                                             static_cast<uint32>(cubeVertex.size()),
                                             cubeVertex.data());
 
+
+  /// ASSIMP MODEL
+  Vector<SimpleVertex> modelVertices;
+  Vector<uint16> modelIndices;
+
+  importModel("RawData/models/drakefire_pistol_low.obj",
+              modelVertices,
+              modelIndices);
+  uint32 pistolIndexCount = 0;
+
+  SPtr<VertexBuffer> p_pistolVertexbuffer = nullptr;
+  SPtr<IndexBuffer> p_pistolIndexBuffer = nullptr;
+
+  if (!modelVertices.empty() && !modelIndices.empty()) {
+    p_pistolVertexbuffer =
+      grapi.createVertexBuffer(sizeof(SimpleVertex) * 
+                               static_cast<uint32>(modelVertices.size()),
+                               modelVertices.data());
+
+    p_pistolIndexBuffer =
+      grapi.createIndexBuffer(sizeof(uint16) * 
+                              static_cast<uint32>(modelIndices.size()),
+                              modelIndices.data());
+
+    pistolIndexCount = static_cast<uint32>(modelIndices.size());
+  }
+
+
   /// TOPOLOGY
-  SPtr <Topology> p_topology = grapi.createTopology(TOPOLOGY_TYPE::kTriangleList);
 
   /// RASTERIZER STATE
   SPtr<RasterizerState> p_rasterizer = nullptr;
@@ -497,14 +634,29 @@ int main() {
                                                                            1,
                                                                            1);
 
-  SPtr<Texture2D>cubeTexture = grapi.createTexture2DFromFile("RawData/Rocks.jpg");
+  SPtr<Texture2D>cubeTexture =
+    grapi.createTexture2DFromFile("RawData/textures/Rocks.jpg");
   if (!cubeTexture) {
     std::cout << "Failed to load texture" << std::endl;
     GraphicsAPI::shutDown();
     return -1;
   }
 
-  SPtr<Texture2D>cubeTex2 = grapi.createTexture2DFromFile("RawData/12.jpg");
+  //SPtr<Texture2D>cubeTex2 =
+  //  grapi.createTexture2DFromFile("RawData/textures/12.jpg"); /// Cube 2
+
+
+  /// MODEL TEXTURES
+
+  SPtr<Texture2D> normalTexture =
+    grapi.createTexture2DFromFile("RawData/Textures/base_normal.jpg");
+
+  SPtr<Texture2D> albedoTexture =
+    grapi.createTexture2DFromFile("RawData/Textures/drakefire_pistol_low_a.jpg");
+
+  SPtr<Texture2D> specularTexture =
+    grapi.createTexture2DFromFile("RawData/Textures/base_metallic.jpg");
+
 
   while (running == true ) {
     if (!window->processMessages()) {
@@ -556,7 +708,6 @@ int main() {
 
     grapi.setVertexShader(p_vertexShader);
     grapi.setPixelShader(p_ShaderShader);
-    //grapi.setPixelShader(p_pixelShader1);
 
     grapi.setSamplerState(0, p_sampler);
 
@@ -574,8 +725,11 @@ int main() {
       sizeof(SimpleVertex),
       0
     );
-    grapi.setIndexBuffer(p_indexBuffer, TEXTURE_FORMAT::kR16_UINT);
-    grapi.setConstBuffer(p_constBufferCamera, 0);
+    grapi.setIndexBuffer(p_indexBuffer,
+                         TEXTURE_FORMAT::kR16_UINT);
+    
+    grapi.setConstBuffer(p_constBufferCamera,
+                         0);
 
     grapi.drawIndexed(
       static_cast<uint32>(cubeIndices.size()),
@@ -586,14 +740,48 @@ int main() {
     modelWorld *= translationMatrix;
     cameraData.worldMatrix = modelWorld;
 
-    grapi.updateConstBuffer(p_constBufferCamera,
-                            sizeof(GeneralConstBuffer),
-                            &cameraData);
+    grapi.setVertexShader(p_vertexShader);
+    grapi.setPixelShader(p_pixelShader1);
+    grapi.setTopology(TOPOLOGY_TYPE::kTriangleList);
+    grapi.setVertexBuffer(p_pistolVertexbuffer,
+                          sizeof(SimpleVertex),
+                          0);
 
-    grapi.setTexture2D(1, cubeTex2);
+    grapi.setIndexBuffer(p_pistolIndexBuffer,
+                         TEXTURE_FORMAT::kR16_UINT);
+    grapi.setConstBuffer(p_constBufferCamera,
+                         0);
 
-    grapi.drawIndexed(
-      static_cast<uint32>(cubeIndices.size()), 0);
+    if (normalTexture) {
+      grapi.setTexture2D(2,
+                         normalTexture);
+    }
+    if (albedoTexture) {
+      grapi.setTexture2D(3,
+                         albedoTexture);
+    }
+
+    if (specularTexture) {
+      grapi.setTexture2D(4,
+                         specularTexture);
+    }
+
+    grapi.drawIndexed(pistolIndexCount, 0);
+
+    /// cube 2
+
+    //Matrix4 translationMatrix = Matrix4::fromTranslationVector({ 75.f,75.f,75.f });
+    //modelWorld *= translationMatrix;
+    //cameraData.worldMatrix = modelWorld;
+
+    //grapi.updateConstBuffer(p_constBufferCamera,
+    //                        sizeof(GeneralConstBuffer),
+    //                        &cameraData);
+
+    /*grapi.setTexture2D(1, cubeTex2);*/ 
+
+ /*   grapi.drawIndexed(
+      static_cast<uint32>(cubeIndices.size()), 0);*/
 
     p_swapChain->present(1, 0);
   }

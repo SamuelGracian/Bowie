@@ -838,7 +838,7 @@ Dx11GraphicsAPI::setIndexBuffer(WeakPtr<IndexBuffer>buffer,
 
 void
 Dx11GraphicsAPI::updateConstBuffer(WeakPtr<ConstBuffer>_buffer,
-                             const uint32 byteWidth, void* _data) {
+                                   const uint32 byteWidth, void* _data) {
   if (m_immediateContext == nullptr || _buffer.expired() || _data == nullptr) {
     return;
   }
@@ -855,16 +855,6 @@ Dx11GraphicsAPI::updateConstBuffer(WeakPtr<ConstBuffer>_buffer,
                                         _data,
                                         0,
                                         0);
-}
-
-SPtr<Topology>
-Dx11GraphicsAPI::createTopology(TOPOLOGY_TYPE::E _type) {
-  auto topo = makeShared<Dx11Topology>();
-
-  topo->setType(_type);
-
-
-  return topo;
 }
 
 void

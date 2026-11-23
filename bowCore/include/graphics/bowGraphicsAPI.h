@@ -167,15 +167,6 @@ public:
 
   /**
   * @brief
-  *  Creates a new topology object.
-  * @param type: type of the topology.
-  * @return Topology object.
-  */
-  virtual SPtr<Topology>
-  createTopology(TOPOLOGY_TYPE::E _type = TOPOLOGY_TYPE::kTriangleList) = 0;
-
-  /**
-  * @brief
   *  Sets the topology to the immediate context.
   * @param topology: topology to set.
   * @return none
