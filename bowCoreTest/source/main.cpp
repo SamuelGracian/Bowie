@@ -164,7 +164,8 @@ importModel(const String& fileName, Vector<SimpleVertex>& outVertices,
     aiProcess_Triangulate |
     aiProcess_FlipUVs |
     aiProcess_JoinIdenticalVertices |
-    aiProcess_CalcTangentSpace);
+    aiProcess_CalcTangentSpace |
+    aiProcess_MakeLeftHanded);
 
   if (!scene || (scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) ||
       !scene->mRootNode) {
@@ -356,9 +357,10 @@ int main() {
   }
 
   /// DEPTH STENCIL VIEW
-  SPtr<DepthStencilView> p_depthSV = grapi.createDepthStencil(window->getClientWidth(),
-                                                              window->getClientHeight(),
-                                                              TEXTURE_FORMAT::kD24_UNORM_S8_UINT);
+  SPtr<DepthStencilView> p_depthSV =
+    grapi.createDepthStencil(window->getClientWidth(),
+                             window->getClientHeight(),
+                             TEXTURE_FORMAT::kD24_UNORM_S8_UINT);
 
   /// SWAP CHAIN
   SPtr<SwapChain> p_swapChain = grapi.createSwapChain(window,
@@ -740,8 +742,12 @@ int main() {
     modelWorld *= translationMatrix;
     cameraData.worldMatrix = modelWorld;
 
+    grapi.updateConstBuffer(p_constBufferCamera,
+                        sizeof(GeneralConstBuffer),
+                        &cameraData);
+
     grapi.setVertexShader(p_vertexShader);
-    grapi.setPixelShader(p_pixelShader1);
+    grapi.setPixelShader(p_ShaderShader);
     grapi.setTopology(TOPOLOGY_TYPE::kTriangleList);
     grapi.setVertexBuffer(p_pistolVertexbuffer,
                           sizeof(SimpleVertex),
@@ -749,20 +755,19 @@ int main() {
 
     grapi.setIndexBuffer(p_pistolIndexBuffer,
                          TEXTURE_FORMAT::kR16_UINT);
-    grapi.setConstBuffer(p_constBufferCamera,
-                         0);
+
 
     if (normalTexture) {
-      grapi.setTexture2D(2,
+      grapi.setTexture2D(0,
                          normalTexture);
     }
     if (albedoTexture) {
-      grapi.setTexture2D(3,
+      grapi.setTexture2D(1,
                          albedoTexture);
     }
 
     if (specularTexture) {
-      grapi.setTexture2D(4,
+      grapi.setTexture2D(2,
                          specularTexture);
     }
 
