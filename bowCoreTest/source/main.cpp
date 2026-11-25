@@ -16,6 +16,7 @@
 #include "bowVector3.h"
 #include "bowSwapChain.h"
 #include "bowWindow.h"
+#include "bow3DModel.h"
 
 #include "bowDynamicLibrary.h"
 
@@ -585,18 +586,18 @@ int main() {
 
 
   /// ASSIMP MODEL
-  Vector<SimpleVertex> modelVertices;
-  Vector<uint16> modelIndices;
+  //Vector<SimpleVertex> modelVertices;
+  //Vector<uint16> modelIndices;
 
-  importModel("RawData/models/drakefire_pistol_low.obj",
-              modelVertices,
-              modelIndices);
-  uint32 pistolIndexCount = 0;
+  //importModel("RawData/models/drakefire_pistol_low.obj",
+  //            modelVertices,
+  //            modelIndices);
+  //uint32 pistolIndexCount = 0;
 
-  SPtr<VertexBuffer> p_pistolVertexbuffer = nullptr;
-  SPtr<IndexBuffer> p_pistolIndexBuffer = nullptr;
+  //SPtr<VertexBuffer> p_pistolVertexbuffer = nullptr;
+  //SPtr<IndexBuffer> p_pistolIndexBuffer = nullptr;
 
-  if (!modelVertices.empty() && !modelIndices.empty()) {
+ /* if (!modelVertices.empty() && !modelIndices.empty()) {
     p_pistolVertexbuffer =
       grapi.createVertexBuffer(sizeof(SimpleVertex) * 
                                static_cast<uint32>(modelVertices.size()),
@@ -608,8 +609,13 @@ int main() {
                               modelIndices.data());
 
     pistolIndexCount = static_cast<uint32>(modelIndices.size());
-  }
+  }*/
 
+  Model3D pistol;
+  if (!pistol.load("RawData/models/drakefire_pistol_low.obj") ||
+      !pistol.createBuffers(grapi)) {
+    BOW_LOG_ERROR("Failed to load model" << std::endl);
+  }
 
   /// TOPOLOGY
 
@@ -660,7 +666,7 @@ int main() {
     grapi.createTexture2DFromFile("RawData/Textures/base_metallic.jpg");
 
 
-  while (running == true ) {
+  while (running == true) {
     if (!window->processMessages()) {
       running = false;
     }
@@ -729,7 +735,7 @@ int main() {
     );
     grapi.setIndexBuffer(p_indexBuffer,
                          TEXTURE_FORMAT::kR16_UINT);
-    
+
     grapi.setConstBuffer(p_constBufferCamera,
                          0);
 
@@ -743,54 +749,66 @@ int main() {
     cameraData.worldMatrix = modelWorld;
 
     grapi.updateConstBuffer(p_constBufferCamera,
-                        sizeof(GeneralConstBuffer),
-                        &cameraData);
+                            sizeof(GeneralConstBuffer),
+                            &cameraData);
 
     grapi.setVertexShader(p_vertexShader);
     grapi.setPixelShader(p_ShaderShader);
     grapi.setTopology(TOPOLOGY_TYPE::kTriangleList);
-    grapi.setVertexBuffer(p_pistolVertexbuffer,
-                          sizeof(SimpleVertex),
-                          0);
+    //grapi.setVertexBuffer(p_pistolVertexbuffer,
+    //                      sizeof(SimpleVertex),
+    //                      0);
 
-    grapi.setIndexBuffer(p_pistolIndexBuffer,
-                         TEXTURE_FORMAT::kR16_UINT);
+    //grapi.setIndexBuffer(p_pistolIndexBuffer,
+    //                     TEXTURE_FORMAT::kR16_UINT);
 
+    if (pistol.isValid()) {
+      grapi.setVertexBuffer(
+        pistol.getVertexBuffer(),
+        sizeof(ModelVertex),
+        0);
 
-    if (normalTexture) {
-      grapi.setTexture2D(0,
-                         normalTexture);
+      grapi.setIndexBuffer(
+        pistol.getIndexBuffer(),
+        TEXTURE_FORMAT::kR16_UINT);
+
+      if (normalTexture) {
+        grapi.setTexture2D(0,
+                           normalTexture);
+      }
+      if (albedoTexture) {
+        grapi.setTexture2D(1,
+                           albedoTexture);
+      }
+
+      if (specularTexture) {
+        grapi.setTexture2D(2,
+                           specularTexture);
+      }
+
+      grapi.drawIndexed(
+        pistol.getIndexCount(),
+        0);
+
+      /// cube 2
+
+      //Matrix4 translationMatrix = Matrix4::fromTranslationVector({ 75.f,75.f,75.f });
+      //modelWorld *= translationMatrix;
+      //cameraData.worldMatrix = modelWorld;
+
+      //grapi.updateConstBuffer(p_constBufferCamera,
+      //                        sizeof(GeneralConstBuffer),
+      //                        &cameraData);
+
+      /*grapi.setTexture2D(1, cubeTex2);*/
+
+   /*   grapi.drawIndexed(
+        static_cast<uint32>(cubeIndices.size()), 0);*/
+
+      p_swapChain->present(1, 0);
     }
-    if (albedoTexture) {
-      grapi.setTexture2D(1,
-                         albedoTexture);
-    }
-
-    if (specularTexture) {
-      grapi.setTexture2D(2,
-                         specularTexture);
-    }
-
-    grapi.drawIndexed(pistolIndexCount, 0);
-
-    /// cube 2
-
-    //Matrix4 translationMatrix = Matrix4::fromTranslationVector({ 75.f,75.f,75.f });
-    //modelWorld *= translationMatrix;
-    //cameraData.worldMatrix = modelWorld;
-
-    //grapi.updateConstBuffer(p_constBufferCamera,
-    //                        sizeof(GeneralConstBuffer),
-    //                        &cameraData);
-
-    /*grapi.setTexture2D(1, cubeTex2);*/ 
-
- /*   grapi.drawIndexed(
-      static_cast<uint32>(cubeIndices.size()), 0);*/
-
-    p_swapChain->present(1, 0);
   }
-
-  GraphicsAPI::shutDown();
-  return 0;
+    GraphicsAPI::shutDown();
+    return 0;
+  
 }

@@ -25,7 +25,8 @@ Model3D::load(const String& fileName) {
     aiProcess_Triangulate |
     aiProcess_FlipUVs |
     aiProcess_JoinIdenticalVertices |
-    aiProcess_CalcTangentSpace);
+    aiProcess_CalcTangentSpace |
+    aiProcess_MakeLeftHanded);
 
   if (!scene || (scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) || !scene->mRootNode) {
     BOW_LOG_ERROR( "Error loading model: " << importer.GetErrorString() << std::endl);
@@ -126,7 +127,7 @@ Model3D::getVertices() const {
 
 bool
 Model3D::createBuffers(GraphicsAPI& grapi) {
-  if (isValid()) {
+  if (!isValid()) {
     return false;
   }
 

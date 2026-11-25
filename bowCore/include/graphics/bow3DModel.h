@@ -32,16 +32,17 @@ struct ModelVertex
 class Model3D
 {
  public:
-  /**
-  * @brief 
-  *  Default constructor, sets everything as 0 or nullptr.
-  */
-  Model3D() = default;
+  ///**
+  //* @brief 
+  //*  Default constructor, sets everything as 0 or nullptr.
+  //*/
+  //Model3D() = default;
 
-  /**
-  * @brief
-  *  Default destructor
-  */
+  ///**
+  //* @brief
+  //*  Default destructor
+  //*/
+  BOW_CORE_EXPORT
   ~Model3D();
 
   /**
@@ -50,25 +51,32 @@ class Model3D
   * @praram
   * @return true if the model was imported correctly.
   */
+  BOW_CORE_EXPORT
   bool
   load(const String& fileName);
 
+  BOW_CORE_EXPORT
   bool
   isValid() const;
 
+  BOW_CORE_EXPORT
   uint32
   getIndexCount()const;
 
   const
+  BOW_CORE_EXPORT
   Vector<ModelVertex>&
   getVertices()const;
 
+  BOW_CORE_EXPORT
   bool
   createBuffers(GraphicsAPI& grapi);
 
+  BOW_CORE_EXPORT
   SPtr<VertexBuffer>
   getVertexBuffer()const;
 
+  BOW_CORE_EXPORT
   SPtr<IndexBuffer>
   getIndexBuffer()const;
 
