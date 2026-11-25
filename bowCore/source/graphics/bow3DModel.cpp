@@ -15,99 +15,142 @@ Model3D::~Model3D() {
   }
   }
 
-//bool
-//Model3D::importModel(const String& fileName,
-//                     Vector<uint16>& outIndices,
-//                     Vector<SimpleVertex>& outVertex) {
+bool
+Model3D::load(const String& fileName) {
 
-  //Assimp::Importer importer;
+  Assimp::Importer importer;
 
-  //const aiScene* scene = importer.ReadFile(
-  //  fileName,
-  //  aiProcess_Triangulate |
-  //  aiProcess_FlipUVs |
-  //  aiProcess_JoinIdenticalVertices |
-  //  aiProcess_CalcTangentSpace);
+  const aiScene* scene = importer.ReadFile(
+    fileName,
+    aiProcess_Triangulate |
+    aiProcess_FlipUVs |
+    aiProcess_JoinIdenticalVertices |
+    aiProcess_CalcTangentSpace);
 
-  //if (!scene || (scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) || !scene->mRootNode) {
-  //  BOW_LOG_ERROR( "Error loading model: " << importer.GetErrorString() << std::endl);
-  //  return false;
-  //}
+  if (!scene || (scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) || !scene->mRootNode) {
+    BOW_LOG_ERROR( "Error loading model: " << importer.GetErrorString() << std::endl);
+    return false;
+  }
 
-  ////for (unsigned int meshIndex = scene->mNumMeshes -1 ; meshIndex != 0; meshIndex--)
-  //for (unsigned int meshIndex = 0; meshIndex < scene->mNumMeshes; ++meshIndex) {
-  //  aiMesh* mesh = scene->mMeshes[meshIndex];
-  //  if (!mesh)
-  //    continue;
+  //for (unsigned int meshIndex = scene->mNumMeshes -1 ; meshIndex != 0; meshIndex--)
+  for (unsigned int meshIndex = 0; meshIndex < scene->mNumMeshes; ++meshIndex) {
+    aiMesh* mesh = scene->mMeshes[meshIndex];
+    if (!mesh)
+      continue;
 
-  //  const uint32_t vertexOffset = static_cast<uint32_t>(outVertex.size());
+    const uint32_t vertexOffset = static_cast<uint32_t>(m_vertices.size());
 
-  //  for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
-  //    SimpleVertex vertex;
-  //    vertex.Pos = Vector4(
-  //      mesh->mVertices[i].x,
-  //      mesh->mVertices[i].y,
-  //      mesh->mVertices[i].z,
-  //      1.0f);
+    for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
+      ModelVertex vertex;
+      vertex.position = Vector4(
+        mesh->mVertices[i].x,
+        mesh->mVertices[i].y,
+        mesh->mVertices[i].z,
+        1.0f);
 
-  //    if (mesh->HasNormals() && mesh->mNormals) {
-  //      vertex.Normals = Vector4(
-  //        mesh->mNormals[i].x,
-  //        mesh->mNormals[i].y,
-  //        mesh->mNormals[i].z,
-  //        0.0f);
-  //    }
-  //    else {
-  //      vertex.Normals = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
-  //    }
+      if (mesh->HasNormals() && mesh->mNormals) {
+        vertex.normals = Vector4(
+          mesh->mNormals[i].x,
+          mesh->mNormals[i].y,
+          mesh->mNormals[i].z,
+          0.0f);
+      }
+      else {
+        vertex.normals = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+      }
 
-  //    if (mesh->HasTangentsAndBitangents() && mesh->mTangents && mesh->mBitangents) {
-  //      vertex.Tangent = Vector4(
-  //        mesh->mTangents[i].x,
-  //        mesh->mTangents[i].y,
-  //        mesh->mTangents[i].z,
-  //        0.0f);
+      if (mesh->HasTangentsAndBitangents() && mesh->mTangents && mesh->mBitangents) {
+        vertex.tangents = Vector4(
+          mesh->mTangents[i].x,
+          mesh->mTangents[i].y,
+          mesh->mTangents[i].z,
+          0.0f);
 
-  //      vertex.Binormal = Vector4(
-  //        mesh->mBitangents[i].x,
-  //        mesh->mBitangents[i].y,
-  //        mesh->mBitangents[i].z,
-  //        0.0f);
-  //    }
-  //    else {
-  //      vertex.Tangent = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
-  //      vertex.Binormal = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
-  //    }
+        vertex.binormals = Vector4(
+          mesh->mBitangents[i].x,
+          mesh->mBitangents[i].y,
+          mesh->mBitangents[i].z,
+          0.0f);
+      }
+      else {
+        vertex.tangents = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+        vertex.binormals = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+      }
 
-  //    if (mesh->mTextureCoords[0]) {
-  //      vertex.Tex = Vector2(
-  //        mesh->mTextureCoords[0][i].x,
-  //        mesh->mTextureCoords[0][i].y);
-  //    }
-  //    else {
-  //      vertex.Tex = Vector2(0.0f, 0.0f);
-  //    }
+      if (mesh->mTextureCoords[0]) {
+        vertex.texture = Vector2(
+          mesh->mTextureCoords[0][i].x,
+          mesh->mTextureCoords[0][i].y);
+      }
+      else {
+        vertex.texture = Vector2(0.0f, 0.0f);
+      }
 
-  //    outVertex.push_back(vertex);
-  //  }
+      m_vertices.push_back(vertex);
+    }
 
-  //  for (unsigned int i = 0; i < mesh->mNumFaces; ++i) {
-  //    const aiFace& face = mesh->mFaces[i];
+    for (unsigned int i = 0; i < mesh->mNumFaces; ++i) {
+      const aiFace& face = mesh->mFaces[i];
 
-  //    for (unsigned int j = 0; j < face.mNumIndices; ++j) {
-  //      uint32_t index = vertexOffset + face.mIndices[j];
+      for (unsigned int j = 0; j < face.mNumIndices; ++j) {
+        uint32_t index = vertexOffset + face.mIndices[j];
 
-  //      if (index > UINT16_MAX) {
-  //        std::cout << "Error: model has too many vertices for uint16_t indices." << std::endl;
-  //        return false;
-  //      }
+        if (index > UINT16_MAX) {
+          std::cout << "Error: model has too many vertices for uint16_t indices." << std::endl;
+          return false;
+        }
 
-  //      outIndices.push_back(static_cast<uint16_t>(index));
-  //    }
-  //  }
-  //}
+        m_indices.push_back(static_cast<uint16_t>(index));
+      }
+    }
+  }
 
-//  return true;
-//}
-  
+  return true;
+}
+
+bool
+Model3D::isValid() const {
+  return !m_vertices.empty() && !m_indices.empty();
+}
+
+uint32
+Model3D::getIndexCount() const {
+  return static_cast<uint32>(m_indices.size());
+}
+
+const
+Vector<ModelVertex>& 
+Model3D::getVertices() const {
+  return m_vertices;
+}
+
+bool
+Model3D::createBuffers(GraphicsAPI& grapi) {
+  if (isValid()) {
+    return false;
+  }
+
+  m_vertexBuffer = grapi.createVertexBuffer(
+    sizeof(ModelVertex) * static_cast<uint32>(m_vertices.size()),
+    m_vertices.data());
+
+  m_indexBuffer = grapi.createIndexBuffer(
+    sizeof(uint16) * static_cast<uint32>(m_indices.size()),
+    m_indices.data());
+
+  return m_vertexBuffer != nullptr && m_indexBuffer != nullptr;
+}
+
+SPtr<VertexBuffer> 
+Model3D::getVertexBuffer() const {
+  return m_vertexBuffer;
+}
+
+SPtr<IndexBuffer> 
+Model3D::getIndexBuffer() const {
+  return m_indexBuffer;
+}
+
+
+
 }
