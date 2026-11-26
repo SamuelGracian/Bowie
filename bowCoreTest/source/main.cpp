@@ -135,49 +135,7 @@ void updateCameraInput(float deltaTime,
   at = eye + forward;
 }
 
-//namespace MATERIAL_TEXTURES
-//{
-//enum E
-//{
-//  kNormal = 0,
-//  kAlbedo = 1,
-//  kSpecular = 2
-//};
-//}
 
-//class Material
-//{
-//public:
-//  Material() = default;
-//
-//  void
-//  loadTextures(const Map<MATERIAL_TEXTURES::E, String>& texturePath) {
-//    for (const auto& texturePair : texturePath) {
-//      SPtr<Texture2D> texture =
-//        GraphicsAPI::instance().createTexture2DFromFile(texturePair.second);
-//      if (texture) {
-//        textures[texturePair.first] = texture;
-//      }
-//      else {
-//        BOW_LOG_ERROR("Failed to load texture" << texturePair.second << std::endl);
-//      }
-//    }
-//  }
-//  void
-//  setMaterial()const {
-//    GraphicsAPI& grapi = GraphicsAPI::instance();
-//    for (const auto& texturePair : textures) {
-//      if (!texturePair.second) {
-//        BOW_LOG_ERROR("Texture not loaded for type" << static_cast<int> (texturePair.first) << std::endl);
-//        continue;
-//      }
-//      grapi.setTexture2D(static_cast<uint32>(texturePair.first), texturePair.second);
-//    }
-//  }
-//
-//private :
-//  Map<MATERIAL_TEXTURES::E, SPtr<Texture2D>> textures;
-//};
 
 struct Actor {
   Model3D model; /// model component
@@ -328,6 +286,12 @@ int main() {
   SPtr<ConstBuffer> p_constBufferCamera = 
     grapi.createConstBuffer(sizeof(GeneralConstBuffer));
 
+  if (!p_constBufferCamera) {
+    BOW_LOG_ERROR("Failed to create camera const buffer" << std::endl);
+    GraphicsAPI::shutDown();
+    return -1;
+  }
+
   /// ASSIMP MODEL
   Vector<Actor> actors;
 
@@ -364,7 +328,7 @@ int main() {
 
   /// RASTERIZER STATE
   SPtr<RasterizerState> p_rasterizer = nullptr;
-  p_rasterizer = grapi.createRasterizerState(CULL_MODE::kCULL_BACK,
+  p_rasterizer = grapi.createRasterizerState(CULL_MODE::kCULL_FRONT,
                                              FILL_MODE::kFILL_SOLID, true);
   if (!p_rasterizer)     {
     std::cout << "Failed to create rasterizer state" << std::endl;
@@ -403,6 +367,10 @@ int main() {
     cameraData.View = view;
     cameraData.cameraPosition = Eye;
 
+    grapi.updateConstBuffer(
+      p_constBufferCamera,
+      sizeof(GeneralConstBuffer),
+      &cameraData);
 
     grapi.setRenderTargetViews(gRenderTVS,
                                p_depthSV);
@@ -426,6 +394,8 @@ int main() {
     grapi.setVertexShader(p_vertexShader);
     grapi.setPixelShader(p_ShaderShader);
     grapi.setTopology(TOPOLOGY_TYPE::kTriangleList);
+
+    grapi.setConstBuffer(p_constBufferCamera,0);
 
     for (const Actor& actor : actors) {
       /// set material

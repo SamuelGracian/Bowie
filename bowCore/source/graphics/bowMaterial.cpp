@@ -3,7 +3,7 @@
 namespace bowEngineSDK
 {
 void
-Material::loadTexture(const Map<MATERIAL_TEXTURES::E, String>& texturePack) {
+Material::loadTexture(const Map<MATERIAL_TEXTURES::E, String>& texturePath) {
   for (const auto& texturePair : texturePath) {
     SPtr<Texture2D> texture =
       GraphicsAPI::instance().createTexture2DFromFile(texturePair.second);

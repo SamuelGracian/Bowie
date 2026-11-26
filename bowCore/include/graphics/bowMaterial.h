@@ -1,6 +1,8 @@
 #pragma once 
 
 #include "bowCoreRequisites.h"
+#include "bowTexture2D.h"
+#include "bowGraphicsAPI.h"
 
 namespace bowEngineSDK
 {
@@ -14,15 +16,18 @@ enum E
 };
 }
 
-class Material
+class BOW_CORE_EXPORT Material
 {
 public:
   Material() = default;
 
   void
-  loadTexture(const Map<MATERIAL_TEXTURES::E, String>& texturePack);
+  loadTexture(const Map<MATERIAL_TEXTURES::E, String>& texturePath);
 
   void
   setMaterial() const;
+
+ private:
+   Map<MATERIAL_TEXTURES::E, SPtr<Texture2D>> textures;
 };
 }
