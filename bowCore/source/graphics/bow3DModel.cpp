@@ -1,4 +1,4 @@
-#include "bow3DModel.h"
+#include "bowModel.h"
 
 #include "assimp/Importer.hpp"
 #include "assimp/scene.h"

@@ -10,13 +10,14 @@
 
 #include "bowGraphicsAPI.h"
 #include "bowRenderTargetView.h"
+#include "bowMaterial.h"
 #include "bowMath.h"
 #include "bowMatrix.h"
+#include "bowModel.h"
 #include "bowVector4.h"
 #include "bowVector3.h"
 #include "bowSwapChain.h"
 #include "bowWindow.h"
-#include "bow3DModel.h"
 
 #include "bowDynamicLibrary.h"
 
@@ -47,25 +48,6 @@ struct MoveVertex
   float d;
 };
 
-struct SimpleVertex
-{
-  Vector4 position;
-  Vector4 normals;
-  Vector4 tangent;
-  Vector4 binormals;
-  Vector2 texture;
-
-  SimpleVertex()= default;
-
-  SimpleVertex(
-    const Vector4& pos,
-    const Vector4& normal,
-    const Vector4& tan,
-    const Vector4& binormal,
-    const Vector2& tex)
-    : position(pos), normals(normal), tangent(tan), binormals(binormal),
-    texture(tex) {}
-};/// Simple vertex struct
 
 String
 readFileToString(const WString& _filePath) {
@@ -153,106 +135,56 @@ void updateCameraInput(float deltaTime,
   at = eye + forward;
 }
 
-
-bool
-importModel(const String& fileName, Vector<SimpleVertex>& outVertices,
-            Vector<uint16>& outIndices) {
-
-  Assimp::Importer importer;
-  
-  const aiScene* scene = importer.ReadFile(
-    fileName,
-    aiProcess_Triangulate |
-    aiProcess_FlipUVs |
-    aiProcess_JoinIdenticalVertices |
-    aiProcess_CalcTangentSpace |
-    aiProcess_MakeLeftHanded);
-
-  if (!scene || (scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) ||
-      !scene->mRootNode) {
-    BOW_LOG_ERROR("Error loading model"
-                  << importer.GetErrorString()
-                  << std::endl);
-    return false;
-  }
-
-  for (unsigned int meshIndex = 0; meshIndex < scene->mNumMeshes; ++meshIndex) {
-    aiMesh* mesh = scene->mMeshes[meshIndex];
-    if (!mesh) {
-      continue;
-    }
-    const uint32 vertexOffset = static_cast<uint32>(outVertices.size());
-
-    for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
-      SimpleVertex vertex;
-      vertex.position = Vector4(
-        mesh->mVertices[i].x,
-        mesh->mVertices[i].y,
-        mesh->mVertices[i].z,
-        1.0f);
-
-      if (mesh->HasNormals() && mesh->mNormals) {
-        vertex.normals = Vector4(
-          mesh->mNormals[i].x,
-          mesh->mNormals[i].y,
-          mesh->mNormals[i].z,
-          0.0f);
-      }
-      else {
-        vertex.normals = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
-      }
-
-      if (mesh->HasTangentsAndBitangents() && mesh->mTangents
-          && mesh->mBitangents) {
-
-        vertex.tangent = Vector4(
-          mesh->mTangents[i].x,
-          mesh->mTangents[i].y,
-          mesh->mTangents[i].z,
-          0.0f);
-
-        vertex.binormals = Vector4(
-          mesh->mBitangents[i].x,
-          mesh->mBitangents[i].y,
-          mesh->mBitangents[i].z,
-          0.0f);
-      }
-      else {
-        vertex.tangent = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
-        vertex.binormals = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
-      }
-
-      if (mesh->mTextureCoords[0]) {
-        vertex.texture = Vector2(
-          mesh->mTextureCoords[0][i].x,
-          mesh->mTextureCoords[0][i].y);
-      }
-      else {
-        vertex.texture = Vector2(0.0f, 0.0f);
-      }
-
-      outVertices.push_back(vertex);
-    }
-
-    for (unsigned int i = 0; i < mesh->mNumFaces; ++i) {
-      const aiFace& face = mesh->mFaces[i];
-
-      for (unsigned int j = 0; j < face.mNumIndices; ++j) {
-        uint32 index = vertexOffset + face.mIndices[j];
-
-        if (index > UINT16_MAX) {
-          BOW_LOG_ERROR("Error: model has too many vertices for uint16_t indices."
-                        << std::endl);
-          return false;
-        }
-
-        outIndices.push_back(static_cast<uint16>(index));
-      }
-    }
-  }
-return true;
-
+namespace MATERIAL_TEXTURES
+{
+enum E
+{
+  kNormal = 0,
+  kAlbedo = 1,
+  kSpecular = 2
+};
 }
+
+class Material
+{
+public:
+  Material() = default;
+
+  void
+  loadTextures(const Map<MATERIAL_TEXTURES::E, String>& texturePath) {
+    for (const auto& texturePair : texturePath) {
+      SPtr<Texture2D> texture =
+        GraphicsAPI::instance().createTexture2DFromFile(texturePair.second);
+      if (texture) {
+        textures[texturePair.first] = texture;
+      }
+      else {
+        BOW_LOG_ERROR("Failed to load texture" << texturePair.second << std::endl);
+      }
+    }
+  }
+  void
+  setMaterial()const {
+    GraphicsAPI& grapi = GraphicsAPI::instance();
+    for (const auto& texturePair : textures) {
+      if (!texturePair.second) {
+        BOW_LOG_ERROR("Texture not loaded for type" << static_cast<int> (texturePair.first) << std::endl);
+        continue;
+      }
+      grapi.setTexture2D(static_cast<uint32>(texturePair.first), texturePair.second);
+    }
+  }
+
+private :
+  Map<MATERIAL_TEXTURES::E, SPtr<Texture2D>> textures;
+};
+
+struct Actor {
+  Model3D model; /// model component
+  Material material; /// material component
+  Matrix4 worldMatrix; /// transform
+};
+
 
 int main() {
 
@@ -263,7 +195,6 @@ int main() {
   float height = 600;
   /* DELTA TIME */
   auto pre = std::chrono::high_resolution_clock::now();
-  float time = 0.0f;
   /* COLORS */
   float semiClearColor[4] = { 0.02f, 0.08f, 0.20f, 1.0f };
   /* FLAG */
@@ -280,9 +211,8 @@ int main() {
                                              width / height,
                                              0.01f,1000.0f);
 
-  /// WORLD MATRIX AND TRANSLATIONS
   Matrix4 modelWorldScale = Matrix4::fromScaleVector(Vector3(50, 50, 50));
-  Vector3 modelWorldTranslation(0.0f, 0.0f, 0.0f);
+  Vector3 modelWorldTranslation(75.0f, 75.0f, 75.0f);
 
   /// INIT WINDOW
   auto window = makeShared<DisplaySurface>();
@@ -398,226 +328,39 @@ int main() {
   SPtr<ConstBuffer> p_constBufferCamera = 
     grapi.createConstBuffer(sizeof(GeneralConstBuffer));
 
-  /// CUBE OBJECTS
-  Vector<SimpleVertex> cubeVertex {
-    // Front
-    // Normal (0,0,1)
-    SimpleVertex({-1.0f, 1.0f, 1.0f, 1.0f},
-                 {0.0f, 0.0f, 1.0f, 0.0f},
-                 {1.0f, 0.0f, 0.0f, 0.0f},
-                 {0.0f, 1.0f, 0.0f, 0.0f},
-                 {0.0f, 0.0f}),
-
-    SimpleVertex({ 1.0f,  1.0f, 1.0f, 1.0f},
-                 {0.0f, 0.0f, 1.0f, 0.0f},
-                 {1.0f, 0.0f, 0.0f, 0.0f},
-                 {0.0f, 1.0f, 0.0f, 0.0f},
-                 {1.0f, 0.0f}),
-
-    SimpleVertex({ 1.0f, -1.0f, 1.0f, 1.0f},
-                 {0.0f, 0.0f, 1.0f, 0.0f},
-                 {1.0f, 0.0f, 0.0f, 0.0f},
-                 {0.0f, 1.0f, 0.0f, 0.0f},
-                 {1.0f, 1.0f}),
-
-    SimpleVertex({-1.0f, -1.0f, 1.0f, 1.0f},
-                 {0.0f, 0.0f, 1.0f, 0.0f},
-                 {1.0f, 0.0f, 0.0f, 0.0f},
-                 {0.0f, 1.0f, 0.0f, 0.0f},
-                 {0.0f, 1.0f}),
-
-    // BACK (-Z)
-    SimpleVertex({ 1.0f, 1.0f, -1.0f, 1.0f},
-                 {0.0f, 0.0f, -1.0f, 0.0f},
-                 {-1.0f, 0.0f, 0.0f, 0.0f},
-                 {0.0f, 1.0f, 0.0f, 0.0f},
-                 {0.0f, 0.0f}),
-
-    SimpleVertex({-1.0f, 1.0f, -1.0f, 1.0f},
-                 {0.0f, 0.0f, -1.0f, 0.0f},
-                 {-1.0f, 0.0f, 0.0f, 0.0f},
-                 {0.0f, 1.0f, 0.0f, 0.0f},
-                 {1.0f, 0.0f}),
-
-    SimpleVertex({-1.0f, -1.0f, -1.0f, 1.0f},
-                 {0.0f, 0.0f, -1.0f, 0.0f},
-                 {-1.0f, 0.0f, 0.0f, 0.0f},
-                 {0.0f, 1.0f, 0.0f, 0.0f},
-                 {1.0f, 1.0f}),
-
-    SimpleVertex({ 1.0f, -1.0f, -1.0f, 1.0f},
-                 {0.0f, 0.0f, -1.0f, 0.0f},
-                 {-1.0f, 0.0f, 0.0f, 0.0f},
-                 {0.0f, 1.0f, 0.0f, 0.0f},
-                 {0.0f, 1.0f}),
-
-    // RIGHT (+X)
-    SimpleVertex({ 1.0f, 1.0f, 1.0f, 1.0f},
-                 {1.0f, 0.0f, 0.0f, 0.0f},
-                 {0.0f, 0.0f, -1.0f, 0.0f},
-                 {0.0f, 1.0f, 0.0f, 0.0f},
-                 {0.0f, 0.0f}),
-
-    SimpleVertex({ 1.0f,  1.0f, -1.0f, 1.0f},
-                 {1.0f, 0.0f, 0.0f, 0.0f},
-                 {0.0f, 0.0f, -1.0f, 0.0f},
-                 {0.0f, 1.0f, 0.0f, 0.0f},
-                 {1.0f, 0.0f}),
-
-    SimpleVertex({ 1.0f, -1.0f, -1.0f, 1.0f},
-                 {1.0f, 0.0f, 0.0f, 0.0f},
-                 {0.0f, 0.0f, -1.0f, 0.0f},
-                 {0.0f, 1.0f, 0.0f, 0.0f},
-                 {1.0f, 1.0f}),
-
-    SimpleVertex({1.0f, -1.0f,1.0f, 1.0f},
-                 {1.0f, 0.0f, 0.0f, 0.0f},
-                 {0.0f, 0.0f, -1.0f, 0.0f},
-                 {0.0f, 1.0f, 0.0f, 0.0f},
-                 {0.0f, 1.0f}),
-
-    // LEFT (-X)
-    SimpleVertex({-1.0f, 1.0f, -1.0f, 1.0f},
-                 {-1.0f, 0.0f, 0.0f, 0.0f},
-                 {0.0f, 0.0f, 1.0f, 0.0f},
-                 {0.0f, 1.0f, 0.0f, 0.0f},
-                 {0.0f, 0.0f}),
-
-    SimpleVertex({-1.0f, 1.0f, 1.0f, 1.0f},
-                 {-1.0f, 0.0f, 0.0f, 0.0f},
-                 {0.0f, 0.0f, 1.0f, 0.0f},
-                 {0.0f, 1.0f, 0.0f, 0.0f},
-                 {1.0f, 0.0f}),
-
-    SimpleVertex({-1.0f, -1.0f, 1.0f, 1.0f},
-                 {-1.0f, 0.0f, 0.0f, 0.0f},
-                 {0.0f, 0.0f, 1.0f, 0.0f},
-                 {0.0f, 1.0f, 0.0f, 0.0f},
-                 {1.0f, 1.0f}),
-
-    SimpleVertex({-1.0f, -1.0f, -1.0f, 1.0f},
-                 {-1.0f, 0.0f, 0.0f, 0.0f},
-                 {0.0f, 0.0f, 1.0f, 0.0f},
-                 {0.0f, 1.0f, 0.0f, 0.0f},
-                 {0.0f, 1.0f}),
-
-    // TOP (+Y)
-    SimpleVertex({-1.0f, 1.0f, -1.0f, 1.0f},
-                 {0.0f, 1.0f, 0.0f, 0.0f},
-                 {1.0f, 0.0f, 0.0f, 0.0f},
-                 {0.0f, 0.0f,-1.0f, 0.0f},
-                 {0.0f, 0.0f}),
-
-    SimpleVertex({ 1.0f, 1.0f, -1.0f, 1.0f},
-                {0.0f, 1.0f, 0.0f, 0.0f},
-                {1.0f, 0.0f, 0.0f, 0.0f},
-                {0.0f, 0.0f,-1.0f, 0.0f},
-                {1.0f, 0.0f}),
-
-    SimpleVertex({ 1.0f, 1.0f, 1.0f, 1.0f},
-                 {0.0f, 1.0f, 0.0f, 0.0f},
-                 {1.0f, 0.0f, 0.0f, 0.0f},
-                 {0.0f, 0.0f,-1.0f, 0.0f},
-                 {1.0f, 1.0f}),
-
-    SimpleVertex({-1.0f, 1.0f, 1.0f, 1.0f},
-                 {0.0f, 1.0f, 0.0f, 0.0f},
-                 {1.0f, 0.0f, 0.0f, 0.0f},
-                 {0.0f, 0.0f,-1.0f, 0.0f},
-                 {0.0f, 1.0f}),
-
-    // BOTTOM (-Y)
-    SimpleVertex({-1.0f, -1.0f, 1.0f, 1.0f},
-                 {0.0f, -1.0f, 0.0f, 0.0f},
-                 {1.0f, 0.0f, 0.0f, 0.0f},
-                 {0.0f, 0.0f, 1.0f, 0.0f},
-                 {0.0f, 0.0f}),
-
-    SimpleVertex({ 1.0f, -1.0f, 1.0f, 1.0f},
-                 {0.0f,-1.0f, 0.0f, 0.0f},
-                 {1.0f, 0.0f, 0.0f, 0.0f},
-                 {0.0f, 0.0f, 1.0f, 0.0f},
-                 {1.0f, 0.0f}),
-
-    SimpleVertex({ 1.0f, -1.0f, -1.0f, 1.0f},
-                 {0.0f, -1.0f, 0.0f, 0.0f},
-                 {1.0f, 0.0f, 0.0f, 0.0f},
-                 {0.0f, 0.0f, 1.0f, 0.0f},
-                 {1.0f, 1.0f}),
-
-    SimpleVertex({-1.0f, -1.0f, -1.0f, 1.0f},
-                 {0.0f,-1.0f, 0.0f, 0.0f},
-                 {1.0f, 0.0f, 0.0f, 0.0f},
-                 {0.0f, 0.0f, 1.0f, 0.0f},
-                 {0.0f, 1.0f})
-  };
-
-  Vector<uint16> cubeIndices = {
-    /// front
-    0,1,2,0,2,3,
-    /// back
-    4,5,6,4,6,7,
-    /// right
-    8,9,10,8,10,11,
-    /// left
-    12,13,14,12,14,15,
-    /// Top
-    16,17,18,16,18,19,
-    /// bottom
-    20,21,22,20,22,23
-  };
-
-  SPtr<VertexBuffer> p_cubeVertexBuffer = nullptr;
-  SPtr<IndexBuffer> p_cubeIndexBuffer = nullptr;
-
-
-  //uint32 cubeIndexCount = 0;
-
-  SPtr<IndexBuffer> p_indexBuffer = nullptr;
-  SPtr<VertexBuffer> p_vertexBuffer = nullptr;
-
-  p_indexBuffer = grapi.createIndexBuffer(sizeof(uint16) * 
-                                          static_cast<uint32> (cubeIndices.size()),
-                                          cubeIndices.data());
-
-  p_vertexBuffer = grapi.createVertexBuffer(sizeof(SimpleVertex) *
-                                            static_cast<uint32>(cubeVertex.size()),
-                                            cubeVertex.data());
-
-
   /// ASSIMP MODEL
-  //Vector<SimpleVertex> modelVertices;
-  //Vector<uint16> modelIndices;
+  Vector<Actor> actors;
 
-  //importModel("RawData/models/drakefire_pistol_low.obj",
-  //            modelVertices,
-  //            modelIndices);
-  //uint32 pistolIndexCount = 0;
+  Actor pistolActor;
 
-  //SPtr<VertexBuffer> p_pistolVertexbuffer = nullptr;
-  //SPtr<IndexBuffer> p_pistolIndexBuffer = nullptr;
-
- /* if (!modelVertices.empty() && !modelIndices.empty()) {
-    p_pistolVertexbuffer =
-      grapi.createVertexBuffer(sizeof(SimpleVertex) * 
-                               static_cast<uint32>(modelVertices.size()),
-                               modelVertices.data());
-
-    p_pistolIndexBuffer =
-      grapi.createIndexBuffer(sizeof(uint16) * 
-                              static_cast<uint32>(modelIndices.size()),
-                              modelIndices.data());
-
-    pistolIndexCount = static_cast<uint32>(modelIndices.size());
-  }*/
-
-  Model3D pistol;
-  if (!pistol.load("RawData/models/drakefire_pistol_low.obj") ||
-      !pistol.createBuffers(grapi)) {
+  Model3D pistolModel;
+  if (!pistolModel.load("RawData/models/drakefire_pistol_low.obj")) {
     BOW_LOG_ERROR("Failed to load model" << std::endl);
+    return -1;
   }
 
-  /// TOPOLOGY
+  if (!pistolModel.createBuffers(grapi)) {
+    BOW_LOG_ERROR("Failed to create buffers" << std::endl);
+    return -1;
+  }
+
+  pistolActor.model = pistolModel;
+
+  std::cout << "Vertices" << pistolModel.getVertices().size()
+    << " , Indices" << pistolModel.getIndexCount()
+    << std::endl;
+
+  pistolActor.material.loadTextures({
+   { MATERIAL_TEXTURES::kNormal,"RawData/Textures/base_normal.jpg" },
+   { MATERIAL_TEXTURES::kAlbedo, "RawData/Textures/drakefire_pistol_low_a.jpg" },
+   { MATERIAL_TEXTURES::kSpecular, "RawData/Textures/base_metallic.jpg"}
+                                    });
+
+  pistolActor.worldMatrix = Matrix4::IDENTITY * modelWorldScale;
+
+  pistolActor.worldMatrix *= Matrix4::fromTranslationVector(modelWorldTranslation);
+
+  actors.push_back(pistolActor);
 
   /// RASTERIZER STATE
   SPtr<RasterizerState> p_rasterizer = nullptr;
@@ -642,29 +385,6 @@ int main() {
                                                                            1,
                                                                            1);
 
-  SPtr<Texture2D>cubeTexture =
-    grapi.createTexture2DFromFile("RawData/textures/Rocks.jpg");
-  if (!cubeTexture) {
-    std::cout << "Failed to load texture" << std::endl;
-    GraphicsAPI::shutDown();
-    return -1;
-  }
-
-  //SPtr<Texture2D>cubeTex2 =
-  //  grapi.createTexture2DFromFile("RawData/textures/12.jpg"); /// Cube 2
-
-
-  /// MODEL TEXTURES
-
-  SPtr<Texture2D> normalTexture =
-    grapi.createTexture2DFromFile("RawData/Textures/base_normal.jpg");
-
-  SPtr<Texture2D> albedoTexture =
-    grapi.createTexture2DFromFile("RawData/Textures/drakefire_pistol_low_a.jpg");
-
-  SPtr<Texture2D> specularTexture =
-    grapi.createTexture2DFromFile("RawData/Textures/base_metallic.jpg");
-
 
   while (running == true) {
     if (!window->processMessages()) {
@@ -676,7 +396,6 @@ int main() {
     pre = now;
 
     const float deltaTime = elapsed.count();
-    time += elapsed.count();
 
     updateCameraInput(deltaTime, Eye, At, Up);
 
@@ -684,22 +403,6 @@ int main() {
     cameraData.View = view;
     cameraData.cameraPosition = Eye;
 
-    const float angle = time * 0.5f;
-    const float cosine = Math::cos(angle);
-    const float sine = Math::sin(angle);
-
-    Matrix4 modelWorldRotation = Matrix4::fromRotationMatrix(
-      1.0f, 0.0f, 0.0f,
-      0.0f, cosine, sine,
-      0.0f, -sine, cosine
-    );
-
-    Matrix4 modelWorld = modelWorldRotation * modelWorldScale;
-    cameraData.worldMatrix = modelWorld;
-
-    grapi.updateConstBuffer(p_constBufferCamera,
-                            sizeof(GeneralConstBuffer),
-                            &cameraData);
 
     grapi.setRenderTargetViews(gRenderTVS,
                                p_depthSV);
@@ -718,95 +421,30 @@ int main() {
     grapi.setPixelShader(p_ShaderShader);
 
     grapi.setSamplerState(0, p_sampler);
-
-    grapi.setTopology(TOPOLOGY_TYPE::kTriangleList);
-
-    grapi.setTexture2D(0,
-                       defaultNormalTexture);
-    grapi.setTexture2D(1,
-                       cubeTexture ? cubeTexture : defaultAlbedoTexture);
-
-    grapi.setTexture2D(2, defaultSpecularTexture);
-
-    grapi.setVertexBuffer(
-      p_vertexBuffer,
-      sizeof(SimpleVertex),
-      0
-    );
-    grapi.setIndexBuffer(p_indexBuffer,
-                         TEXTURE_FORMAT::kR16_UINT);
-
-    grapi.setConstBuffer(p_constBufferCamera,
-                         0);
-
-    grapi.drawIndexed(
-      static_cast<uint32>(cubeIndices.size()),
-      0
-    );
-
-    Matrix4 translationMatrix = Matrix4::fromTranslationVector({ 75.f,75.f,75.f });
-    modelWorld *= translationMatrix;
-    cameraData.worldMatrix = modelWorld;
-
-    grapi.updateConstBuffer(p_constBufferCamera,
-                            sizeof(GeneralConstBuffer),
-                            &cameraData);
+    
 
     grapi.setVertexShader(p_vertexShader);
     grapi.setPixelShader(p_ShaderShader);
     grapi.setTopology(TOPOLOGY_TYPE::kTriangleList);
-    //grapi.setVertexBuffer(p_pistolVertexbuffer,
-    //                      sizeof(SimpleVertex),
-    //                      0);
 
-    //grapi.setIndexBuffer(p_pistolIndexBuffer,
-    //                     TEXTURE_FORMAT::kR16_UINT);
+    for (const Actor& actor : actors) {
+      /// set material
+      actor.material.setMaterial();
 
-    if (pistol.isValid()) {
-      grapi.setVertexBuffer(
-        pistol.getVertexBuffer(),
-        sizeof(ModelVertex),
-        0);
+      /// actor transform
+      cameraData.worldMatrix = actor.worldMatrix;
+      grapi.updateConstBuffer(p_constBufferCamera,
+                              sizeof(GeneralConstBuffer),
+                              &cameraData);
 
-      grapi.setIndexBuffer(
-        pistol.getIndexBuffer(),
-        TEXTURE_FORMAT::kR16_UINT);
+      /// set model buffers
+      grapi.setVertexBuffer(actor.model.getVertexBuffer(), sizeof(ModelVertex), 0);
+      grapi.setIndexBuffer(actor.model.getIndexBuffer(), TEXTURE_FORMAT::kR16_UINT);
 
-      if (normalTexture) {
-        grapi.setTexture2D(0,
-                           normalTexture);
-      }
-      if (albedoTexture) {
-        grapi.setTexture2D(1,
-                           albedoTexture);
-      }
-
-      if (specularTexture) {
-        grapi.setTexture2D(2,
-                           specularTexture);
-      }
-
-      grapi.drawIndexed(
-        pistol.getIndexCount(),
-        0);
-
-      /// cube 2
-
-      //Matrix4 translationMatrix = Matrix4::fromTranslationVector({ 75.f,75.f,75.f });
-      //modelWorld *= translationMatrix;
-      //cameraData.worldMatrix = modelWorld;
-
-      //grapi.updateConstBuffer(p_constBufferCamera,
-      //                        sizeof(GeneralConstBuffer),
-      //                        &cameraData);
-
-      /*grapi.setTexture2D(1, cubeTex2);*/
-
-   /*   grapi.drawIndexed(
-        static_cast<uint32>(cubeIndices.size()), 0);*/
-
-      p_swapChain->present(1, 0);
+      grapi.drawIndexed(actor.model.getIndexCount(), 0);
     }
+    p_swapChain->present(1, 0);
+    
   }
     GraphicsAPI::shutDown();
     return 0;
