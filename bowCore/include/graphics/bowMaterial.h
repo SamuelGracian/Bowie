@@ -2,7 +2,9 @@
 
 #include "bowCoreRequisites.h"
 
-namespace MATERIAL_TEXTURE
+namespace bowEngineSDK
+{
+namespace MATERIAL_TEXTURES
 {
 enum E
 {
@@ -12,15 +14,13 @@ enum E
 };
 }
 
-namespace bowEngineSDK
-{
 class Material
 {
 public:
   Material() = default;
 
   void
-  loadTexture(const Map<MATERIAL_TEXTURE::E, String>& texturePack);
+  loadTexture(const Map<MATERIAL_TEXTURES::E, String>& texturePack);
 
   void
   setMaterial() const;

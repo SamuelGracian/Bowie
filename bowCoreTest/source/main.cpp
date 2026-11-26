@@ -135,49 +135,49 @@ void updateCameraInput(float deltaTime,
   at = eye + forward;
 }
 
-namespace MATERIAL_TEXTURES
-{
-enum E
-{
-  kNormal = 0,
-  kAlbedo = 1,
-  kSpecular = 2
-};
-}
+//namespace MATERIAL_TEXTURES
+//{
+//enum E
+//{
+//  kNormal = 0,
+//  kAlbedo = 1,
+//  kSpecular = 2
+//};
+//}
 
-class Material
-{
-public:
-  Material() = default;
-
-  void
-  loadTextures(const Map<MATERIAL_TEXTURES::E, String>& texturePath) {
-    for (const auto& texturePair : texturePath) {
-      SPtr<Texture2D> texture =
-        GraphicsAPI::instance().createTexture2DFromFile(texturePair.second);
-      if (texture) {
-        textures[texturePair.first] = texture;
-      }
-      else {
-        BOW_LOG_ERROR("Failed to load texture" << texturePair.second << std::endl);
-      }
-    }
-  }
-  void
-  setMaterial()const {
-    GraphicsAPI& grapi = GraphicsAPI::instance();
-    for (const auto& texturePair : textures) {
-      if (!texturePair.second) {
-        BOW_LOG_ERROR("Texture not loaded for type" << static_cast<int> (texturePair.first) << std::endl);
-        continue;
-      }
-      grapi.setTexture2D(static_cast<uint32>(texturePair.first), texturePair.second);
-    }
-  }
-
-private :
-  Map<MATERIAL_TEXTURES::E, SPtr<Texture2D>> textures;
-};
+//class Material
+//{
+//public:
+//  Material() = default;
+//
+//  void
+//  loadTextures(const Map<MATERIAL_TEXTURES::E, String>& texturePath) {
+//    for (const auto& texturePair : texturePath) {
+//      SPtr<Texture2D> texture =
+//        GraphicsAPI::instance().createTexture2DFromFile(texturePair.second);
+//      if (texture) {
+//        textures[texturePair.first] = texture;
+//      }
+//      else {
+//        BOW_LOG_ERROR("Failed to load texture" << texturePair.second << std::endl);
+//      }
+//    }
+//  }
+//  void
+//  setMaterial()const {
+//    GraphicsAPI& grapi = GraphicsAPI::instance();
+//    for (const auto& texturePair : textures) {
+//      if (!texturePair.second) {
+//        BOW_LOG_ERROR("Texture not loaded for type" << static_cast<int> (texturePair.first) << std::endl);
+//        continue;
+//      }
+//      grapi.setTexture2D(static_cast<uint32>(texturePair.first), texturePair.second);
+//    }
+//  }
+//
+//private :
+//  Map<MATERIAL_TEXTURES::E, SPtr<Texture2D>> textures;
+//};
 
 struct Actor {
   Model3D model; /// model component
@@ -350,7 +350,7 @@ int main() {
     << " , Indices" << pistolModel.getIndexCount()
     << std::endl;
 
-  pistolActor.material.loadTextures({
+  pistolActor.material.loadTexture({
    { MATERIAL_TEXTURES::kNormal,"RawData/Textures/base_normal.jpg" },
    { MATERIAL_TEXTURES::kAlbedo, "RawData/Textures/drakefire_pistol_low_a.jpg" },
    { MATERIAL_TEXTURES::kSpecular, "RawData/Textures/base_metallic.jpg"}
