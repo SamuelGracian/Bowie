@@ -18,3 +18,4 @@ SET_ENGINE_DEFAULTS(bowCoreTest)
 target_link_libraries(bowCoreTest PRIVATE bowCore)
 
 add_dependencies (bowCoreTest bowDx11API)
+

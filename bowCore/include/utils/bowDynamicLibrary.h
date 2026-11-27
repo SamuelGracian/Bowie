@@ -13,8 +13,9 @@ public:
   BOW_CORE_EXPORT
   ~DynamicLibrary() = default;
   
+  NODISCARD 
   BOW_CORE_EXPORT
-  NODISCARD bool
+  bool
   load();
 
   

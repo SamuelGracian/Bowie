@@ -1,0 +1,25 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/CMake/share/cmake-4.2/Modules/CTest.cmake
+C:/Program Files/CMake/share/cmake-4.2/Modules/CTestTargets.cmake
+C:/Program Files/CMake/share/cmake-4.2/Modules/CTestUseLaunchers.cmake
+C:/Program Files/CMake/share/cmake-4.2/Modules/DartConfiguration.tcl.in
+C:/Program Files/CMake/share/cmake-4.2/Modules/ExternalProject/PatchInfo.txt.in
+C:/Program Files/CMake/share/cmake-4.2/Modules/ExternalProject/RepositoryInfo.txt.in
+C:/Program Files/CMake/share/cmake-4.2/Modules/ExternalProject/UpdateInfo.txt.in
+C:/Program Files/CMake/share/cmake-4.2/Modules/ExternalProject/gitclone.cmake.in
+C:/Program Files/CMake/share/cmake-4.2/Modules/ExternalProject/gitupdate.cmake.in
+C:/Program Files/CMake/share/cmake-4.2/Modules/ExternalProject/shared_internal_commands.cmake
+C:/Program Files/CMake/share/cmake-4.2/Modules/ExternalProject/stepscript.cmake.in
+C:/Program Files/CMake/share/cmake-4.2/Modules/FetchContent.cmake
+C:/Program Files/CMake/share/cmake-4.2/Modules/FindGit.cmake
+C:/Program Files/CMake/share/cmake-4.2/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files/CMake/share/cmake-4.2/Modules/FindPackageMessage.cmake
+C:/Program Files/CMake/share/cmake-4.2/Templates/CTestScript.cmake.in
+D:/DEV/REPOS/Bowie/bowUtilitiesTest/CMakeLists.txt
+D:/DEV/REPOS/Bowie/buldCmakeTest/CMakeFiles/cmake.verify_globs
+D:/DEV/REPOS/Bowie/buldCmakeTest/CMakeFiles/fc-tmp/catch2/catch2-gitclone.cmake
+D:/DEV/REPOS/Bowie/buldCmakeTest/CMakeFiles/fc-tmp/catch2/catch2-gitupdate.cmake
+D:/DEV/REPOS/Bowie/buldCmakeTest/CMakeFiles/fc-tmp/catch2/download.cmake
+D:/DEV/REPOS/Bowie/buldCmakeTest/CMakeFiles/fc-tmp/catch2/patch.cmake
+D:/DEV/REPOS/Bowie/buldCmakeTest/CMakeFiles/fc-tmp/catch2/update.cmake
+D:/DEV/REPOS/Bowie/buldCmakeTest/_deps/catch2-src/extras/Catch.cmake

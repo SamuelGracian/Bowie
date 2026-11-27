@@ -1,0 +1,14 @@
+{
+	"InstallScripts" : 
+	[
+		"D:/DEV/REPOS/Bowie/buldCmakeTest/cmake_install.cmake",
+		"D:/DEV/REPOS/Bowie/buldCmakeTest/bowUtilities/cmake_install.cmake",
+		"D:/DEV/REPOS/Bowie/buldCmakeTest/bowUtilitiesTest/cmake_install.cmake",
+		"D:/DEV/REPOS/Bowie/buldCmakeTest/_deps/catch2-build/cmake_install.cmake",
+		"D:/DEV/REPOS/Bowie/buldCmakeTest/_deps/catch2-build/src/cmake_install.cmake",
+		"D:/DEV/REPOS/Bowie/buldCmakeTest/bowCore/cmake_install.cmake",
+		"D:/DEV/REPOS/Bowie/buldCmakeTest/bowCoreTest/cmake_install.cmake",
+		"D:/DEV/REPOS/Bowie/buldCmakeTest/bowDx11API/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

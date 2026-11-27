@@ -37,6 +37,12 @@ public:
   */
   AAB(const Vector3& min, const Vector3& max);
 
+  /**
+  * @brief
+  *  Something something
+  */
+  AAB(const Vector<Vector3>& dots);
+
   /*
   * @brief
   *  Default constructor.
@@ -77,6 +83,9 @@ public:
   */
   void
   moveTo(const Vector3& position);
+
+  void
+  growthByPoint(const Vector3& point);
 
   /********************************************/
   /*  MEMBERS  */

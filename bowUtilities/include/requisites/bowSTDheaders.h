@@ -35,13 +35,13 @@ namespace bowEngineSDK
   using UnorderedMap = std::unordered_map<K, V>;
   
   template <typename T, typename... Args>
-  [[nodiscard]]
+  NODISCARD
   SPtr<T> makeShared(Args&&... args) {
     return std::make_shared<T>(std::forward<Args>(args)...);
   }
   
   template <typename T, typename U>
-  [[nodiscard]]
+  NODISCARD
   SPtr<T> staticPointerCast(const SPtr<U>& pointer) noexcept {
     return std::static_pointer_cast<T>(pointer);
   }

@@ -1,0 +1,5 @@
+if(EXISTS "D:/DEV/REPOS/Bowie/buldCmakeTest/bowUtilitiesTest/bowUtilitiesTest-b12d07c_tests.cmake")
+  include("D:/DEV/REPOS/Bowie/buldCmakeTest/bowUtilitiesTest/bowUtilitiesTest-b12d07c_tests.cmake")
+else()
+  add_test(bowUtilitiesTest_NOT_BUILT-b12d07c bowUtilitiesTest_NOT_BUILT-b12d07c)
+endif()
