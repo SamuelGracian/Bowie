@@ -4,6 +4,9 @@
 
 namespace bowEngineSDK
 {
+const Vector3 Vector3::ZERO = Vector3(0.0f, 0.0f, 0.0f);
+const Vector3 Vector3::UP = Vector3(0.f, 1.0f, 0.0f);
+
 Vector3::Vector3(float X, float Y, float Z)
   :x(X),
    y(Y),

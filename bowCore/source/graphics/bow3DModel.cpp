@@ -3,6 +3,7 @@
 #include "assimp/Importer.hpp"
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
+#include "bowGraphicsAPI.h"
 
 namespace bowEngineSDK
 {
@@ -106,6 +107,7 @@ Model3D::load(const String& fileName) {
     }
   }
 
+  calculateBoundingBox();
   return true;
 }
 
@@ -126,10 +128,12 @@ Model3D::getVertices() const {
 }
 
 bool
-Model3D::createBuffers(GraphicsAPI& grapi) {
+Model3D::createBuffers() {
   if (!isValid()) {
     return false;
   }
+
+  GraphicsAPI& grapi = GraphicsAPI::instance();
 
   m_vertexBuffer = grapi.createVertexBuffer(
     sizeof(ModelVertex) * static_cast<uint32>(m_vertices.size()),
@@ -152,6 +156,13 @@ Model3D::getIndexBuffer() const {
   return m_indexBuffer;
 }
 
-
+void
+Model3D::calculateBoundingBox() {
+  for (const ModelVertex& vertex : m_vertices) {
+    m_boundingBox.growthByPoint({ vertex.position.x,
+                                  vertex.position.y,
+                                  vertex.position.z});
+  }
+}
 
 }

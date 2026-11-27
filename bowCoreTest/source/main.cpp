@@ -18,6 +18,7 @@
 #include "bowVector3.h"
 #include "bowSwapChain.h"
 #include "bowWindow.h"
+#include "bowCube.h"
 
 #include "bowDynamicLibrary.h"
 
@@ -87,7 +88,7 @@ void updateCameraInput(float deltaTime,
                        Vector3& eye,
                        Vector3& at,
                        const Vector3& up) {
-  constexpr float cameraSpeed = 150.0f;
+  constexpr float cameraSpeed = 15.0f;
 
   Vector3 forward = at - eye;
   forward.y = 0.0f;
@@ -158,19 +159,11 @@ int main() {
   /* FLAG */
   uint8 flag = CLEAR_FLAGS::kDepth | CLEAR_FLAGS::kStencil;
 
-  /// Cameras
-  Vector3 Eye(150.0f, 150.0f, 500.0f);
-  Vector3 At(0.0f, 0.0f, 0.0f);
-  Vector3 Up(0.0f, 1.0f, 0.0f);
-
-
-  Matrix4 view = Matrix4::lookAt(Eye, At, Up);
+  Vector3 at(0.0f, 0.0f, 0.0f);
   Matrix4 perspective = Matrix4::perspective(Math::PI / 4.0f,
                                              width / height,
-                                             0.01f,1000.0f);
+                                             0.01f, 1000.0f);
 
-  Matrix4 modelWorldScale = Matrix4::fromScaleVector(Vector3(50, 50, 50));
-  Vector3 modelWorldTranslation(75.0f, 75.0f, 75.0f);
 
   /// INIT WINDOW
   auto window = makeShared<DisplaySurface>();
@@ -212,12 +205,12 @@ int main() {
   }
 
   /// SHADERS
-  SPtr<PixelShader>p_ShaderShader = grapi.createPixelShader(
+  SPtr<PixelShader>p_shaderShader = grapi.createPixelShader(
                    readFileToString(L"RawData/shaders/pixelShaders/Shaders.fxh"),
                   "PShader",
                   defines,
                   4);
-  if (!p_ShaderShader)     {
+  if (!p_shaderShader)     {
     std::cout << "Failed to create shader" << std::endl;
     GraphicsAPI::shutDown();
     return-1;
@@ -275,12 +268,12 @@ int main() {
 
   ///const buffer for camera
   GeneralConstBuffer cameraData;
-  cameraData.View = view;
+  //cameraData.View = view;
   cameraData.Perspective = perspective;
   cameraData.worldMatrix = Matrix4::IDENTITY;
   cameraData.shadowView = Matrix4::IDENTITY;
   cameraData.shadowProjection = Matrix4::IDENTITY;
-  cameraData.cameraPosition = Eye;
+  //cameraData.cameraPosition = Eye;
   cameraData.Shininess = 2;
 
   SPtr<ConstBuffer> p_constBufferCamera = 
@@ -288,50 +281,6 @@ int main() {
 
   if (!p_constBufferCamera) {
     BOW_LOG_ERROR("Failed to create camera const buffer" << std::endl);
-    GraphicsAPI::shutDown();
-    return -1;
-  }
-
-  /// ASSIMP MODEL
-  Vector<Actor> actors;
-
-  Actor pistolActor;
-
-  Model3D pistolModel;
-  if (!pistolModel.load("RawData/models/drakefire_pistol_low.obj")) {
-    BOW_LOG_ERROR("Failed to load model" << std::endl);
-    return -1;
-  }
-
-  if (!pistolModel.createBuffers(grapi)) {
-    BOW_LOG_ERROR("Failed to create buffers" << std::endl);
-    return -1;
-  }
-
-  pistolActor.model = pistolModel;
-
-  std::cout << "Vertices" << pistolModel.getVertices().size()
-    << " , Indices" << pistolModel.getIndexCount()
-    << std::endl;
-
-  pistolActor.material.loadTexture({
-   { MATERIAL_TEXTURES::kNormal,"RawData/Textures/base_normal.jpg" },
-   { MATERIAL_TEXTURES::kAlbedo, "RawData/Textures/drakefire_pistol_low_a.jpg" },
-   { MATERIAL_TEXTURES::kSpecular, "RawData/Textures/base_metallic.jpg"}
-                                    });
-
-  pistolActor.worldMatrix = Matrix4::IDENTITY * modelWorldScale;
-
-  pistolActor.worldMatrix *= Matrix4::fromTranslationVector(modelWorldTranslation);
-
-  actors.push_back(pistolActor);
-
-  /// RASTERIZER STATE
-  SPtr<RasterizerState> p_rasterizer = nullptr;
-  p_rasterizer = grapi.createRasterizerState(CULL_MODE::kCULL_FRONT,
-                                             FILL_MODE::kFILL_SOLID, true);
-  if (!p_rasterizer)     {
-    std::cout << "Failed to create rasterizer state" << std::endl;
     GraphicsAPI::shutDown();
     return -1;
   }
@@ -350,6 +299,85 @@ int main() {
                                                                            1);
 
 
+  /// ASSIMP MODEL
+  Vector<Actor> actors;
+
+  Actor pistolActor;
+
+  Model3D pistolModel;
+  if (!pistolModel.load("RawData/models/drakefire_pistol_low.obj")) {
+    BOW_LOG_ERROR("Failed to load model" << std::endl);
+    return -1;
+  }
+
+  if (!pistolModel.createBuffers()) {
+    BOW_LOG_ERROR("Failed to create buffers" << std::endl);
+    return -1;
+  }
+
+  pistolActor.model = pistolModel;
+
+  std::cout << "Vertices" << pistolModel.getVertices().size()
+    << " , Indices" << pistolModel.getIndexCount()
+    << std::endl;
+
+  pistolActor.material.loadTexture({
+   { MATERIAL_TEXTURES::kNormal,"RawData/Textures/base_normal.jpg" },
+   { MATERIAL_TEXTURES::kAlbedo, "RawData/Textures/drakefire_pistol_low_a.jpg" },
+   { MATERIAL_TEXTURES::kSpecular, "RawData/Textures/base_metallic.jpg"}
+                                    });
+
+  pistolActor.worldMatrix = Matrix4::IDENTITY;
+
+  actors.push_back(pistolActor);
+
+  AAB boundingBox = pistolModel.getBoundingBox(); /// Pistol's bounding box
+  Vector3 lookingAt = boundingBox.getCenter();
+  Vector3 eye = lookingAt - Vector3(0.0f, 0.0f, boundingBox.getSize().z + 5);
+  Matrix4 view;
+
+  /// rex model
+  Actor rexActor;
+  Model3D rexModel;
+  if (!rexModel.load("RawData/models/rex_norm.obj")) {
+    BOW_LOG_ERROR("Failed to load model" << std::endl);
+    return -1;
+  }
+
+  if (!rexModel.createBuffers()) {
+    BOW_LOG_ERROR("Failed to create buffers" << std::endl);
+    return -1;
+  }
+
+  rexActor.model = rexModel;
+
+  SPtr<Texture2D> rexTexture = grapi.createTexture2DFromFile("RawData/textures/Rex_C.bmp");
+
+  rexActor.material.setTexture(MATERIAL_TEXTURES::kNormal,
+                               defaultNormalTexture);
+
+  rexActor.material.setTexture(MATERIAL_TEXTURES::kAlbedo,
+                               rexTexture);
+
+  rexActor.material.setTexture(MATERIAL_TEXTURES::kSpecular,
+                               defaultSpecularTexture);
+
+  rexActor.worldMatrix = 
+    Matrix4::IDENTITY * Matrix4::fromTranslationVector(Vector3(3.0f, 3.0f, 3.0f));
+
+  actors.push_back(rexActor);
+
+  /// RASTERIZER STATE
+  SPtr<RasterizerState> p_rasterizer = nullptr;
+  p_rasterizer = grapi.createRasterizerState(CULL_MODE::kCULL_BACK,
+                                             FILL_MODE::kFILL_SOLID, true);
+  if (!p_rasterizer)     {
+    std::cout << "Failed to create rasterizer state" << std::endl;
+    GraphicsAPI::shutDown();
+    return -1;
+  }
+
+
   while (running == true) {
     if (!window->processMessages()) {
       running = false;
@@ -361,11 +389,14 @@ int main() {
 
     const float deltaTime = elapsed.count();
 
-    updateCameraInput(deltaTime, Eye, At, Up);
+    updateCameraInput(deltaTime,
+                      eye,
+                      lookingAt,
+                      Vector3::UP);
 
-    view = Matrix4::lookAt(Eye, At, Up);
+    view = Matrix4::lookAt(eye, lookingAt, Vector3::UP);
     cameraData.View = view;
-    cameraData.cameraPosition = Eye;
+    cameraData.cameraPosition = eye;
 
     grapi.updateConstBuffer(
       p_constBufferCamera,
@@ -386,16 +417,15 @@ int main() {
     grapi.setRasterizerState(p_rasterizer);
 
     grapi.setVertexShader(p_vertexShader);
-    grapi.setPixelShader(p_ShaderShader);
+    grapi.setPixelShader(p_shaderShader);
 
     grapi.setSamplerState(0, p_sampler);
     
 
     grapi.setVertexShader(p_vertexShader);
-    grapi.setPixelShader(p_ShaderShader);
+    grapi.setPixelShader(p_shaderShader);
     grapi.setTopology(TOPOLOGY_TYPE::kTriangleList);
 
-    grapi.setConstBuffer(p_constBufferCamera,0);
 
     for (const Actor& actor : actors) {
       /// set material
@@ -406,6 +436,7 @@ int main() {
       grapi.updateConstBuffer(p_constBufferCamera,
                               sizeof(GeneralConstBuffer),
                               &cameraData);
+      grapi.setConstBuffer(p_constBufferCamera, 0);
 
       /// set model buffers
       grapi.setVertexBuffer(actor.model.getVertexBuffer(), sizeof(ModelVertex), 0);

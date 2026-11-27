@@ -225,6 +225,8 @@ public:
   FORCEINLINE bool
   operator!=(const Vector3& vector) const noexcept;
 
+  static const Vector3 ZERO;
+  static const Vector3 UP;
 
   float x;
   float y;

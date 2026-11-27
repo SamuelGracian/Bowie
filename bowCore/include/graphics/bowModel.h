@@ -10,12 +10,9 @@
 #pragma once 
 
 #include "bowCoreRequisites.h"
-#include "bowVertexBuffer.h"
-#include "bowIndexBuffer.h"
+#include "bowCube.h"
 #include "bowVector2.h"
 #include "bowVector4.h"
-#include "bowGraphicsAPI.h"
-
 
 namespace bowEngineSDK
 {
@@ -29,6 +26,9 @@ struct ModelVertex
   Vector2 texture;
 };
 
+class IndexBuffer;
+class VertexBuffer;
+
 class Model3D
 {
  public:
@@ -36,7 +36,7 @@ class Model3D
   //* @brief 
   //*  Default constructor, sets everything as 0 or nullptr.
   //*/
-  //Model3D() = default;
+   Model3D() : m_boundingBox(AAB(Vector3::ZERO, Vector3::ZERO)) {};
 
   ///**
   //* @brief
@@ -70,7 +70,7 @@ class Model3D
 
   BOW_CORE_EXPORT
   bool
-  createBuffers(GraphicsAPI& grapi);
+  createBuffers();
 
   BOW_CORE_EXPORT
   SPtr<VertexBuffer>
@@ -80,7 +80,20 @@ class Model3D
   SPtr<IndexBuffer>
   getIndexBuffer()const;
 
+  NODISCARD
+  BOW_CORE_EXPORT
+  FORCEINLINE
+  AAB
+  getBoundingBox()const {
+    return m_boundingBox;
+  }
+
  private:
+  void
+  calculateBoundingBox();
+
+ private:
+   AAB m_boundingBox;
    Vector<ModelVertex> m_vertices;
    Vector<uint16> m_indices;
    SPtr<VertexBuffer> m_vertexBuffer;
