@@ -8,6 +8,7 @@
 #include <vector>
 #include <map>
 #include <unordered_map>
+#include <type_traits>
 
 #include "bowPlatformTypes.h"
 

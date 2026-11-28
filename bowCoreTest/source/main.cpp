@@ -8,12 +8,14 @@
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
 
+#include "bowComponent.h"
+#include "bowActor.h"
 #include "bowGraphicsAPI.h"
 #include "bowRenderTargetView.h"
 #include "bowMaterial.h"
 #include "bowMath.h"
 #include "bowMatrix.h"
-#include "bowModel.h"
+//#include "bowModel.h"
 #include "bowVector4.h"
 #include "bowVector3.h"
 #include "bowSwapChain.h"
@@ -136,13 +138,6 @@ void updateCameraInput(float deltaTime,
   at = eye + forward;
 }
 
-
-
-struct Actor {
-  Model3D model; /// model component
-  Material material; /// material component
-  Matrix4 worldMatrix; /// transform
-};
 
 
 int main() {
@@ -300,72 +295,75 @@ int main() {
 
 
   /// ASSIMP MODEL
-  Vector<Actor> actors;
+  //Vector<Actor> actors;
 
   Actor pistolActor;
 
-  Model3D pistolModel;
-  if (!pistolModel.load("RawData/models/drakefire_pistol_low.obj")) {
-    BOW_LOG_ERROR("Failed to load model" << std::endl);
-    return -1;
-  }
+  pistolActor.hasComponent<Component>();
+  //Model3D pistolModel;
+  //if (!pistolModel.load("RawData/models/drakefire_pistol_low.obj")) {
+  //  BOW_LOG_ERROR("Failed to load model" << std::endl);
+  //  return -1;
+  //}
 
-  if (!pistolModel.createBuffers()) {
-    BOW_LOG_ERROR("Failed to create buffers" << std::endl);
-    return -1;
-  }
+  //if (!pistolModel.createBuffers()) {
+  //  BOW_LOG_ERROR("Failed to create buffers" << std::endl);
+  //  return -1;
+  //}
 
-  pistolActor.model = pistolModel;
+  ////pistolActor.model = pistolModel;
 
-  std::cout << "Vertices" << pistolModel.getVertices().size()
-    << " , Indices" << pistolModel.getIndexCount()
-    << std::endl;
+  //std::cout << "Vertices" << pistolModel.getVertices().size()
+  //  << " , Indices" << pistolModel.getIndexCount()
+  //  << std::endl;
 
-  pistolActor.material.loadTexture({
-   { MATERIAL_TEXTURES::kNormal,"RawData/Textures/base_normal.jpg" },
-   { MATERIAL_TEXTURES::kAlbedo, "RawData/Textures/drakefire_pistol_low_a.jpg" },
-   { MATERIAL_TEXTURES::kSpecular, "RawData/Textures/base_metallic.jpg"}
-                                    });
+  ////pistolActor.material.loadTexture({
+  //// { MATERIAL_TEXTURES::kNormal,"RawData/Textures/base_normal.jpg" },
+  //// { MATERIAL_TEXTURES::kAlbedo, "RawData/Textures/drakefire_pistol_low_a.jpg" },
+  //// { MATERIAL_TEXTURES::kSpecular, "RawData/Textures/base_metallic.jpg"}
+  ////                                  });
 
-  pistolActor.worldMatrix = Matrix4::IDENTITY;
+  ////pistolActor.worldMatrix = Matrix4::IDENTITY;
 
-  actors.push_back(pistolActor);
+  //actors.push_back(pistolActor);
 
-  AAB boundingBox = pistolModel.getBoundingBox(); /// Pistol's bounding box
-  Vector3 lookingAt = boundingBox.getCenter();
-  Vector3 eye = lookingAt - Vector3(0.0f, 0.0f, boundingBox.getSize().z + 5);
-  Matrix4 view;
+  //AAB boundingBox = pistolModel.getBoundingBox(); /// Pistol's bounding box
+  //Vector3 lookingAt = boundingBox.getCenter();
+  //Vector3 eye = lookingAt - Vector3(0.0f, 0.0f, boundingBox.getSize().z + 5);
+  //Matrix4 view;
 
-  /// rex model
-  Actor rexActor;
-  Model3D rexModel;
-  if (!rexModel.load("RawData/models/rex_norm.obj")) {
-    BOW_LOG_ERROR("Failed to load model" << std::endl);
-    return -1;
-  }
+  ///// rex model
+  //Actor rexActor;
 
-  if (!rexModel.createBuffers()) {
-    BOW_LOG_ERROR("Failed to create buffers" << std::endl);
-    return -1;
-  }
+  //rexActor.hasComponent <Vector3> ();
+  //Model3D rexModel;
+  //if (!rexModel.load("RawData/models/rex_norm.obj")) {
+  //  BOW_LOG_ERROR("Failed to load model" << std::endl);
+  //  return -1;
+  //}
 
-  rexActor.model = rexModel;
+  //if (!rexModel.createBuffers()) {
+  //  BOW_LOG_ERROR("Failed to create buffers" << std::endl);
+  //  return -1;
+  //}
 
-  SPtr<Texture2D> rexTexture = grapi.createTexture2DFromFile("RawData/textures/Rex_C.bmp");
+  //rexActor.model = rexModel;
 
-  rexActor.material.setTexture(MATERIAL_TEXTURES::kNormal,
-                               defaultNormalTexture);
+  //SPtr<Texture2D> rexTexture = grapi.createTexture2DFromFile("RawData/textures/Rex_C.bmp");
 
-  rexActor.material.setTexture(MATERIAL_TEXTURES::kAlbedo,
-                               rexTexture);
+  //rexActor.material.setTexture(MATERIAL_TEXTURES::kNormal,
+  //                             defaultNormalTexture);
 
-  rexActor.material.setTexture(MATERIAL_TEXTURES::kSpecular,
-                               defaultSpecularTexture);
+  //rexActor.material.setTexture(MATERIAL_TEXTURES::kAlbedo,
+  //                             rexTexture);
 
-  rexActor.worldMatrix = 
-    Matrix4::IDENTITY * Matrix4::fromTranslationVector(Vector3(3.0f, 3.0f, 3.0f));
+  //rexActor.material.setTexture(MATERIAL_TEXTURES::kSpecular,
+  //                             defaultSpecularTexture);
 
-  actors.push_back(rexActor);
+  //rexActor.worldMatrix = 
+  //  Matrix4::IDENTITY * Matrix4::fromTranslationVector(Vector3(3.0f, 3.0f, 3.0f));
+
+  //actors.push_back(rexActor);
 
   /// RASTERIZER STATE
   SPtr<RasterizerState> p_rasterizer = nullptr;
@@ -387,16 +385,16 @@ int main() {
     std::chrono::duration<float> elapsed = now - pre;
     pre = now;
 
-    const float deltaTime = elapsed.count();
+    //const float deltaTime = elapsed.count();
 
-    updateCameraInput(deltaTime,
+    /*updateCameraInput(deltaTime,
                       eye,
                       lookingAt,
-                      Vector3::UP);
+                      Vector3::UP);*/
 
-    view = Matrix4::lookAt(eye, lookingAt, Vector3::UP);
-    cameraData.View = view;
-    cameraData.cameraPosition = eye;
+    //view = Matrix4::lookAt(eye, lookingAt, Vector3::UP);
+    //cameraData.View = view;
+    //cameraData.cameraPosition = eye;
 
     grapi.updateConstBuffer(
       p_constBufferCamera,
@@ -427,7 +425,7 @@ int main() {
     grapi.setTopology(TOPOLOGY_TYPE::kTriangleList);
 
 
-    for (const Actor& actor : actors) {
+    /*for (const Actor& actor : actors) {
       /// set material
       actor.material.setMaterial();
 
@@ -443,7 +441,7 @@ int main() {
       grapi.setIndexBuffer(actor.model.getIndexBuffer(), TEXTURE_FORMAT::kR16_UINT);
 
       grapi.drawIndexed(actor.model.getIndexCount(), 0);
-    }
+    }*/
     p_swapChain->present(1, 0);
     
   }

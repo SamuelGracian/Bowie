@@ -23,10 +23,22 @@ Material::setMaterial() const {
   GraphicsAPI& grapi = GraphicsAPI::instance();
   for (const auto& texturePair : textures) {
     if (!texturePair.second) {
-      BOW_LOG_ERROR("Texture not loaded for type" << static_cast<int> (texturePair.first) << std::endl);
+      BOW_LOG_ERROR("Texture not loaded for type" << 
+                    static_cast<int> (texturePair.first) << std::endl);
       continue;
     }
     grapi.setTexture2D(static_cast<uint32>(texturePair.first), texturePair.second);
   }
 }
+
+bool
+Material::isValid()const {
+  if (textures.empty()) {
+    BOW_LOG_ERROR("Empty textures map" << std::endl);
+    return false;
+  }
+  return true;
+}
+
+
 }

@@ -39,7 +39,7 @@ public:
 
   /*
   * @brief
-  *  Cosntructor from Vector2.
+  *  Constructor from Vector2.
   */
   Vector3(const Vector2& vector, float Z);
 
